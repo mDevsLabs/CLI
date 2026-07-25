@@ -1,72 +1,416 @@
 [
-  { "id": "nvidia/nemotron-3-ultra-550b-a55b", "name": "Nemotron 3 Ultra 550B A55B", "contextWindow": 512288, "maxOutput": 65536 },
-  { "id": "nvidia/nemotron-3-super-120b-a12b", "name": "Nemotron 3 Super 120B A12B", "contextWindow": 1000000, "maxOutput": 65536 },
-  { "id": "nvidia/nemotron-3-nano-30b-a3b", "name": "Nemotron 3 Nano 30B A3B", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning", "name": "Nemotron 3 Nano Omni 30B A3B Reasoning", "contextWindow": 256000, "maxOutput": 65536 },
-  { "id": "nvidia/nemotron-nano-3-30b-a3b", "name": "Nemotron Nano 3 30B A3B", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "nvidia/nemotron-nano-12b-v2-vl", "name": "Nemotron Nano 12B v2 VL", "contextWindow": 128000, "maxOutput": 16384 },
-  { "id": "nvidia/nvidia-nemotron-nano-9b-v2", "name": "Nemotron Nano 9B v2", "contextWindow": 128000, "maxOutput": 16384 },
-  { "id": "nvidia/nemotron-3.5-content-safety", "name": "Nemotron 3.5 Content Safety", "contextWindow": 128000, "maxOutput": 8192 },
-  { "id": "nvidia/nemotron-4-340b-instruct", "name": "Nemotron 4 340B Instruct", "contextWindow": 4096, "maxOutput": 4096 },
-  { "id": "nvidia/nemotron-mini-4b-instruct", "name": "Nemotron Mini 4B Instruct", "contextWindow": 4096, "maxOutput": 4096 },
-  { "id": "nvidia/llama-3.1-nemotron-ultra-253b-v1", "name": "Llama 3.1 Nemotron Ultra 253B v1", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "nvidia/llama-3.3-nemotron-super-49b-v1.5", "name": "Llama 3.3 Nemotron Super 49B v1.5", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "nvidia/llama-3.3-nemotron-super-49b-v1", "name": "Llama 3.3 Nemotron Super 49B v1", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "nvidia/llama-3.1-nemotron-70b-instruct", "name": "Llama 3.1 Nemotron 70B Instruct", "contextWindow": 131072, "maxOutput": 4096 },
-  { "id": "nvidia/llama-3.1-nemotron-51b-instruct", "name": "Llama 3.1 Nemotron 51B Instruct", "contextWindow": 131072, "maxOutput": 4096 },
-  { "id": "nvidia/llama-3.1-nemotron-nano-8b-v1", "name": "Llama 3.1 Nemotron Nano 8B v1", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "nvidia/llama-3.1-nemotron-nano-vl-8b-v1", "name": "Llama 3.1 Nemotron Nano VL 8B v1", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "nvidia/llama-3.1-nemoguard-8b-content-safety", "name": "Llama 3.1 NemoGuard 8B Content Safety", "contextWindow": 8192, "maxOutput": 4096 },
-  { "id": "nvidia/llama-3.1-nemoguard-8b-topic-control", "name": "Llama 3.1 NemoGuard 8B Topic Control", "contextWindow": 8192, "maxOutput": 4096 },
-  { "id": "nvidia/llama-3.1-nemotron-safety-guard-8b-v3", "name": "Llama 3.1 Nemotron Safety Guard 8B v3", "contextWindow": 8192, "maxOutput": 4096 },
-  { "id": "nvidia/cosmos-reason2-8b", "name": "Cosmos Reason 2 8B", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "deepseek-ai/deepseek-v4-pro", "name": "DeepSeek V4 Pro", "contextWindow": 1000000, "maxOutput": 384000 },
-  { "id": "deepseek-ai/deepseek-v4-flash", "name": "DeepSeek V4 Flash", "contextWindow": 1000000, "maxOutput": 384000 },
-  { "id": "z-ai/glm-5.2", "name": "GLM 5.2", "contextWindow": 1048576, "maxOutput": 131072 },
-  { "id": "moonshotai/kimi-k2.6", "name": "Kimi K2.6", "contextWindow": 262144, "maxOutput": 262144 },
-  { "id": "minimaxai/minimax-m3", "name": "MiniMax M3", "contextWindow": 1048576, "maxOutput": 512000 },
-  { "id": "minimaxai/minimax-m2.7", "name": "MiniMax M2.7", "contextWindow": 204800, "maxOutput": 131072 },
-  { "id": "qwen/qwen3.5-397b-a17b", "name": "Qwen 3.5 397B A17B", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "qwen/qwen3-next-80b-a3b-instruct", "name": "Qwen3 Next 80B A3B Instruct", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "google/gemma-4-31b-it", "name": "Gemma 4 31B IT", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "google/diffusiongemma-26b-a4b-it", "name": "DiffusionGemma 26B A4B IT", "contextWindow": 131072, "maxOutput": 32768 },
-  { "id": "google/gemma-3-12b-it", "name": "Gemma 3 12B IT", "contextWindow": 131072, "maxOutput": 16384 },
-  { "id": "google/gemma-3-4b-it", "name": "Gemma 3 4B IT", "contextWindow": 131072, "maxOutput": 16384 },
-  { "id": "google/gemma-3n-e4b-it", "name": "Gemma 3n E4B IT", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "google/gemma-3n-e2b-it", "name": "Gemma 3n E2B IT", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "openai/gpt-oss-120b", "name": "GPT-OSS 120B", "contextWindow": 131072, "maxOutput": 131072 },
-  { "id": "openai/gpt-oss-20b", "name": "GPT-OSS 20B", "contextWindow": 131072, "maxOutput": 131072 },
-  { "id": "mistralai/mistral-medium-3.5-128b", "name": "Mistral Medium 3.5 128B", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistralai/mistral-small-4-119b-2603", "name": "Mistral Small 4 119B", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistralai/ministral-14b-instruct-2512", "name": "Ministral 3 14B Instruct", "contextWindow": 262144, "maxOutput": 32768 },
-  { "id": "mistralai/mistral-nemotron", "name": "Mistral Nemotron", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "mistralai/mistral-large-2-instruct", "name": "Mistral Large 2 Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "mistralai/codestral-22b-instruct-v0.1", "name": "Codestral 22B Instruct", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "mistralai/mistral-7b-instruct-v0.3", "name": "Mistral 7B Instruct v0.3", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "mistralai/mixtral-8x22b-v0.1", "name": "Mixtral 8x22B", "contextWindow": 65536, "maxOutput": 8192 },
-  { "id": "mistralai/mixtral-8x7b-instruct-v0.1", "name": "Mixtral 8x7B Instruct", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "meta/llama-4-maverick-17b-128e-instruct", "name": "Llama 4 Maverick 17B 128E", "contextWindow": 1048576, "maxOutput": 16384 },
-  { "id": "meta/llama-3.3-70b-instruct", "name": "Llama 3.3 70B Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.1-70b-instruct", "name": "Llama 3.1 70B Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.1-8b-instruct", "name": "Llama 3.1 8B Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.2-90b-vision-instruct", "name": "Llama 3.2 90B Vision Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.2-11b-vision-instruct", "name": "Llama 3.2 11B Vision Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.2-3b-instruct", "name": "Llama 3.2 3B Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-3.2-1b-instruct", "name": "Llama 3.2 1B Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "meta/llama-guard-4-12b", "name": "Llama Guard 4 12B", "contextWindow": 1048576, "maxOutput": 8192 },
-  { "id": "poolside/laguna-xs-2.1", "name": "Poolside Laguna XS 2.1", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "thinkingmachines/inkling", "name": "Thinking Machines Inkling", "contextWindow": 524288, "maxOutput": 65536 },
-  { "id": "stepfun-ai/step-3.7-flash", "name": "StepFun Step 3.7 Flash", "contextWindow": 131072, "maxOutput": 32768 },
-  { "id": "stepfun-ai/step-3.5-flash", "name": "StepFun Step 3.5 Flash", "contextWindow": 131072, "maxOutput": 32768 },
-  { "id": "bytedance/seed-oss-36b-instruct", "name": "ByteDance Seed-OSS 36B Instruct", "contextWindow": 524288, "maxOutput": 32768 },
-  { "id": "microsoft/phi-3.5-moe-instruct", "name": "Phi-3.5 MoE Instruct", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "ibm/granite-3.0-8b-instruct", "name": "IBM Granite 3.0 8B Instruct", "contextWindow": 4096, "maxOutput": 4096 },
-  { "id": "ai21labs/jamba-1.5-large-instruct", "name": "AI21 Jamba 1.5 Large Instruct", "contextWindow": 256000, "maxOutput": 4096 },
-  { "id": "writer/palmyra-creative-122b", "name": "Writer Palmyra Creative 122B", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "writer/palmyra-med-70b", "name": "Writer Palmyra Med 70B", "contextWindow": 32768, "maxOutput": 4096 },
-  { "id": "writer/palmyra-fin-70b-32k", "name": "Writer Palmyra Fin 70B 32k", "contextWindow": 32768, "maxOutput": 4096 },
-  { "id": "sarvamai/sarvam-m", "name": "Sarvam-M", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "01-ai/yi-large", "name": "Yi Large", "contextWindow": 32768, "maxOutput": 4096 },
-  { "id": "databricks/dbrx-instruct", "name": "DBRX Instruct", "contextWindow": 32768, "maxOutput": 4096 },
-  { "id": "upstage/solar-10.7b-instruct", "name": "Solar 10.7B Instruct", "contextWindow": 4096, "maxOutput": 4096 }
+  {
+    "id": "nvidia/nemotron-3-ultra-550b-a55b",
+    "name": "Nemotron 3 Ultra 550B A55B",
+    "contextWindow": 512288,
+    "maxOutput": 65536
+  },
+  {
+    "id": "nvidia/nemotron-3-super-120b-a12b",
+    "name": "Nemotron 3 Super 120B A12B",
+    "contextWindow": 1000000,
+    "maxOutput": 65536
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-30b-a3b",
+    "name": "Nemotron 3 Nano 30B A3B",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+    "name": "Nemotron 3 Nano Omni 30B A3B Reasoning",
+    "contextWindow": 256000,
+    "maxOutput": 65536
+  },
+  {
+    "id": "nvidia/nemotron-nano-3-30b-a3b",
+    "name": "Nemotron Nano 3 30B A3B",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "nvidia/nemotron-nano-12b-v2-vl",
+    "name": "Nemotron Nano 12B v2 VL",
+    "contextWindow": 128000,
+    "maxOutput": 16384
+  },
+  {
+    "id": "nvidia/nvidia-nemotron-nano-9b-v2",
+    "name": "Nemotron Nano 9B v2",
+    "contextWindow": 128000,
+    "maxOutput": 16384
+  },
+  {
+    "id": "nvidia/nemotron-3.5-content-safety",
+    "name": "Nemotron 3.5 Content Safety",
+    "contextWindow": 128000,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/nemotron-4-340b-instruct",
+    "name": "Nemotron 4 340B Instruct",
+    "contextWindow": 4096,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/nemotron-mini-4b-instruct",
+    "name": "Nemotron Mini 4B Instruct",
+    "contextWindow": 4096,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-ultra-253b-v1",
+    "name": "Llama 3.1 Nemotron Ultra 253B v1",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+    "name": "Llama 3.3 Nemotron Super 49B v1.5",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/llama-3.3-nemotron-super-49b-v1",
+    "name": "Llama 3.3 Nemotron Super 49B v1",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-70b-instruct",
+    "name": "Llama 3.1 Nemotron 70B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-51b-instruct",
+    "name": "Llama 3.1 Nemotron 51B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+    "name": "Llama 3.1 Nemotron Nano 8B v1",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-nano-vl-8b-v1",
+    "name": "Llama 3.1 Nemotron Nano VL 8B v1",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "nvidia/llama-3.1-nemoguard-8b-content-safety",
+    "name": "Llama 3.1 NemoGuard 8B Content Safety",
+    "contextWindow": 8192,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/llama-3.1-nemoguard-8b-topic-control",
+    "name": "Llama 3.1 NemoGuard 8B Topic Control",
+    "contextWindow": 8192,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-safety-guard-8b-v3",
+    "name": "Llama 3.1 Nemotron Safety Guard 8B v3",
+    "contextWindow": 8192,
+    "maxOutput": 4096
+  },
+  {
+    "id": "nvidia/cosmos-reason2-8b",
+    "name": "Cosmos Reason 2 8B",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "deepseek-ai/deepseek-v4-pro",
+    "name": "DeepSeek V4 Pro",
+    "contextWindow": 1000000,
+    "maxOutput": 384000
+  },
+  {
+    "id": "deepseek-ai/deepseek-v4-flash",
+    "name": "DeepSeek V4 Flash",
+    "contextWindow": 1000000,
+    "maxOutput": 384000
+  },
+  {
+    "id": "z-ai/glm-5.2",
+    "name": "GLM 5.2",
+    "contextWindow": 1048576,
+    "maxOutput": 131072
+  },
+  {
+    "id": "moonshotai/kimi-k2.6",
+    "name": "Kimi K2.6",
+    "contextWindow": 262144,
+    "maxOutput": 262144
+  },
+  {
+    "id": "minimaxai/minimax-m3",
+    "name": "MiniMax M3",
+    "contextWindow": 1048576,
+    "maxOutput": 512000
+  },
+  {
+    "id": "minimaxai/minimax-m2.7",
+    "name": "MiniMax M2.7",
+    "contextWindow": 204800,
+    "maxOutput": 131072
+  },
+  {
+    "id": "qwen/qwen3.5-397b-a17b",
+    "name": "Qwen 3.5 397B A17B",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "qwen/qwen3-next-80b-a3b-instruct",
+    "name": "Qwen3 Next 80B A3B Instruct",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "google/gemma-4-31b-it",
+    "name": "Gemma 4 31B IT",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "google/gemma-3-12b-it",
+    "name": "Gemma 3 12B IT",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  },
+  {
+    "id": "google/gemma-3-4b-it",
+    "name": "Gemma 3 4B IT",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  },
+  {
+    "id": "google/gemma-3n-e4b-it",
+    "name": "Gemma 3n E4B IT",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "google/gemma-3n-e2b-it",
+    "name": "Gemma 3n E2B IT",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "openai/gpt-oss-120b",
+    "name": "GPT-OSS 120B",
+    "contextWindow": 131072,
+    "maxOutput": 131072
+  },
+  {
+    "id": "openai/gpt-oss-20b",
+    "name": "GPT-OSS 20B",
+    "contextWindow": 131072,
+    "maxOutput": 131072
+  },
+  {
+    "id": "mistralai/mistral-medium-3.5-128b",
+    "name": "Mistral Medium 3.5 128B",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistralai/mistral-small-4-119b-2603",
+    "name": "Mistral Small 4 119B",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistralai/ministral-14b-instruct-2512",
+    "name": "Ministral 3 14B Instruct",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "mistralai/mistral-nemotron",
+    "name": "Mistral Nemotron",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "mistralai/mistral-large-2-instruct",
+    "name": "Mistral Large 2 Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "mistralai/codestral-22b-instruct-v0.1",
+    "name": "Codestral 22B Instruct",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct-v0.3",
+    "name": "Mistral 7B Instruct v0.3",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "mistralai/mixtral-8x22b-v0.1",
+    "name": "Mixtral 8x22B",
+    "contextWindow": 65536,
+    "maxOutput": 8192
+  },
+  {
+    "id": "mistralai/mixtral-8x7b-instruct-v0.1",
+    "name": "Mixtral 8x7B Instruct",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-4-maverick-17b-128e-instruct",
+    "name": "Llama 4 Maverick 17B 128E",
+    "contextWindow": 1048576,
+    "maxOutput": 16384
+  },
+  {
+    "id": "meta/llama-3.3-70b-instruct",
+    "name": "Llama 3.3 70B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.1-70b-instruct",
+    "name": "Llama 3.1 70B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.1-8b-instruct",
+    "name": "Llama 3.1 8B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.2-90b-vision-instruct",
+    "name": "Llama 3.2 90B Vision Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.2-11b-vision-instruct",
+    "name": "Llama 3.2 11B Vision Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.2-3b-instruct",
+    "name": "Llama 3.2 3B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-3.2-1b-instruct",
+    "name": "Llama 3.2 1B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "meta/llama-guard-4-12b",
+    "name": "Llama Guard 4 12B",
+    "contextWindow": 1048576,
+    "maxOutput": 8192
+  },
+  {
+    "id": "poolside/laguna-xs-2.1",
+    "name": "Poolside Laguna XS 2.1",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "thinkingmachines/inkling",
+    "name": "Thinking Machines Inkling",
+    "contextWindow": 524288,
+    "maxOutput": 65536
+  },
+  {
+    "id": "stepfun-ai/step-3.7-flash",
+    "name": "StepFun Step 3.7 Flash",
+    "contextWindow": 131072,
+    "maxOutput": 32768
+  },
+  {
+    "id": "stepfun-ai/step-3.5-flash",
+    "name": "StepFun Step 3.5 Flash",
+    "contextWindow": 131072,
+    "maxOutput": 32768
+  },
+  {
+    "id": "bytedance/seed-oss-36b-instruct",
+    "name": "ByteDance Seed-OSS 36B Instruct",
+    "contextWindow": 524288,
+    "maxOutput": 32768
+  },
+  {
+    "id": "microsoft/phi-3.5-moe-instruct",
+    "name": "Phi-3.5 MoE Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "ibm/granite-3.0-8b-instruct",
+    "name": "IBM Granite 3.0 8B Instruct",
+    "contextWindow": 4096,
+    "maxOutput": 4096
+  },
+  {
+    "id": "ai21labs/jamba-1.5-large-instruct",
+    "name": "AI21 Jamba 1.5 Large Instruct",
+    "contextWindow": 256000,
+    "maxOutput": 4096
+  },
+  {
+    "id": "writer/palmyra-creative-122b",
+    "name": "Writer Palmyra Creative 122B",
+    "contextWindow": 131072,
+    "maxOutput": 8192
+  },
+  {
+    "id": "writer/palmyra-med-70b",
+    "name": "Writer Palmyra Med 70B",
+    "contextWindow": 32768,
+    "maxOutput": 4096
+  },
+  {
+    "id": "writer/palmyra-fin-70b-32k",
+    "name": "Writer Palmyra Fin 70B 32k",
+    "contextWindow": 32768,
+    "maxOutput": 4096
+  },
+  {
+    "id": "sarvamai/sarvam-m",
+    "name": "Sarvam-M",
+    "contextWindow": 32768,
+    "maxOutput": 8192
+  },
+  {
+    "id": "01-ai/yi-large",
+    "name": "Yi Large",
+    "contextWindow": 32768,
+    "maxOutput": 4096
+  },
+  {
+    "id": "databricks/dbrx-instruct",
+    "name": "DBRX Instruct",
+    "contextWindow": 32768,
+    "maxOutput": 4096
+  },
+  {
+    "id": "upstage/solar-10.7b-instruct",
+    "name": "Solar 10.7B Instruct",
+    "contextWindow": 4096,
+    "maxOutput": 4096
+  }
 ]

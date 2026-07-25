@@ -1,8 +1,8 @@
-<h1 align="center">mAI CLI</h1>
+<h1 align="center">🤖 mAI CLI</h1>
 
 <p align="center">
-  <strong>The open-source multi-provider agentic coding CLI for your terminal.</strong><br>
-  Use your Claude Max subscription, GPT-5, Gemini, Grok, or run local models (Ollama, MLX, LM Studio) for free.
+  <strong>Le CLI open-source multi-fournisseurs pour le coding agentique, directement dans votre terminal.</strong><br>
+  Utilisez votre abonnement Claude Max, GPT-5, Gemini, Grok, ou lancez des modèles locaux (Ollama, MLX, LM Studio) gratuitement.
 </p>
 
 <p align="center">
@@ -13,44 +13,44 @@
 
 ---
 
-## Summary
+## ✨ Résumé
 
-**mAI CLI** is an open-source agentic coding assistant that brings powerful AI pair programming directly into your terminal. Works with **12+ AI providers**: Claude (including direct Claude Max subscription support), OpenAI, Google Gemini, xAI Grok, DeepSeek, Mistral, Groq, AWS Bedrock, and local models via Ollama, LM Studio, and Apple Silicon MLX.
+**mAI CLI** est un assistant de coding agentique open-source qui apporte la programmation assistée par IA directement dans votre terminal. Compatible avec **12+ fournisseurs d’IA** : Claude (y compris l’abonnement Claude Max en direct), OpenAI, Google Gemini, xAI Grok, DeepSeek, Mistral, Groq, AWS Bedrock, ainsi que les modèles locaux via Ollama, LM Studio et MLX sur Apple Silicon.
 
 ---
 
-## Installation
+## 📦 Installation
 
-### macOS (Homebrew)
+### 🍎 macOS (Homebrew)
 ```bash
 brew install mDevsLabs/mAI-CLI/mai
 ```
 
-### Linux / WSL
+### 🐧 Linux / WSL
 
-**Stable (main branch)**:
+**Stable (branche main)** :
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/main/scripts/install-remote.sh | bash
 ```
 
-**Canary (canary branch)**:
+**Canary (branche canary)** :
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/canary/scripts/install-canary.sh | bash
 ```
 
-### Windows 10 / 11
+### 🪟 Windows 10 / 11
 
-**Stable (main branch)**:
+**Stable (branche main)** :
 ```cmd
 powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/main/scripts/install-remote.ps1 | iex"
 ```
 
-**Canary (canary branch)**:
+**Canary (branche canary)** :
 ```cmd
 powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/canary/scripts/install-canary.ps1 | iex"
 ```
 
-### From Source (All Platforms)
+### 🛠️ Depuis les sources (toutes plateformes)
 ```bash
 git clone https://github.com/mDevsLabs/mAI-CLI.git
 cd mAI-CLI
@@ -58,13 +58,13 @@ bash scripts/install-user.sh       # macOS / Linux / WSL
 powershell -ExecutionPolicy Bypass -File scripts\install-user.ps1   # Windows
 ```
 
-### Update
+### 🔄 Mise à jour
 ```bash
 mai --update
 ```
 
 ---
 
-## License
+## 📄 Licence
 
-This project is licensed under the **Apache 2.0 License**. See the [LICENSE](LICENSE) file for details.
+Ce projet est sous licence **Apache 2.0**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.

@@ -9,9 +9,10 @@ interface ModelSelectorProps {
   initialSearch?: string;
   onComplete: (providerId: string, modelId: string) => void;
   onCancel: () => void;
+  isSettingsMenu?: boolean;
 }
 
-export function ModelSelector({ initialSearch, onComplete, onCancel }: ModelSelectorProps) {
+export function ModelSelector({ initialSearch, onComplete, onCancel, isSettingsMenu }: ModelSelectorProps) {
   const settings = loadSettings();
   const allProviders = getAllProviders();
   const [searchQuery, setSearchQuery] = useState(initialSearch || "");
@@ -48,7 +49,11 @@ export function ModelSelector({ initialSearch, onComplete, onCancel }: ModelSele
     <Box flexDirection="column" paddingLeft={2} paddingY={1}>
       <Box marginBottom={1}>
         <Text bold color="cyan">Select a model </Text>
-        <Text dimColor>(session only — use /settings to change the default)</Text>
+        {isSettingsMenu ? (
+          <Text dimColor>(This will be your default model)</Text>
+        ) : (
+          <Text dimColor>(session only — use /settings to change the default)</Text>
+        )}
       </Box>
 
       <Box marginBottom={1}>

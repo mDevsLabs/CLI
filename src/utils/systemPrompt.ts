@@ -1,5 +1,47 @@
 import type { ResponseMode } from "../config/settings.js";
 
+/** ISO-ish language codes used in settings → English name for system prompt phrasing. */
+export const AI_LANGUAGES: Array<{ code: string; name: string; nativeName: string }> = [
+  { code: "auto", name: "Auto (prompt language)", nativeName: "Auto" },
+  { code: "en", name: "English", nativeName: "English" },
+  { code: "es", name: "Spanish", nativeName: "Español" },
+  { code: "fr", name: "French", nativeName: "Français" },
+  { code: "de", name: "German", nativeName: "Deutsch" },
+  { code: "it", name: "Italian", nativeName: "Italiano" },
+  { code: "pt", name: "Portuguese", nativeName: "Português" },
+  { code: "nl", name: "Dutch", nativeName: "Nederlands" },
+  { code: "ru", name: "Russian", nativeName: "Русский" },
+  { code: "zh", name: "Chinese (Simplified)", nativeName: "简体中文" },
+  { code: "zh-TW", name: "Chinese (Traditional)", nativeName: "繁體中文" },
+  { code: "ja", name: "Japanese", nativeName: "日本語" },
+  { code: "ko", name: "Korean", nativeName: "한국어" },
+  { code: "ar", name: "Arabic", nativeName: "العربية" },
+  { code: "hi", name: "Hindi", nativeName: "हिन्दी" },
+  { code: "tr", name: "Turkish", nativeName: "Türkçe" },
+  { code: "pl", name: "Polish", nativeName: "Polski" },
+  { code: "sv", name: "Swedish", nativeName: "Svenska" },
+  { code: "no", name: "Norwegian", nativeName: "Norsk" },
+  { code: "da", name: "Danish", nativeName: "Dansk" },
+  { code: "fi", name: "Finnish", nativeName: "Suomi" },
+  { code: "el", name: "Greek", nativeName: "Ελληνικά" },
+  { code: "cs", name: "Czech", nativeName: "Čeština" },
+  { code: "ro", name: "Romanian", nativeName: "Română" },
+  { code: "hu", name: "Hungarian", nativeName: "Magyar" },
+  { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt" },
+];
+
+export function getLanguageLabel(code?: string): string {
+  if (!code || code === "auto") return "Auto (prompt language)";
+  return AI_LANGUAGES.find((l) => l.code === code)?.name ?? code;
+}
+
+function languageInstruction(code?: string): string | undefined {
+  if (!code || code === "auto") return undefined;
+  const lang = AI_LANGUAGES.find((l) => l.code === code);
+  if (!lang) return undefined;
+  return `LANGUAGE: Always reply in ${lang.name} (${lang.nativeName}). Match this language for all conversational text, explanations, and summaries. Keep code, identifiers, file paths, shell commands, and technical tokens unchanged.`;
+}
+
 const CONCISE_PROMPT = `You are mAI CLI, an agentic coding assistant running in the user's terminal.
 
 EXECUTION RULES (how you work):
@@ -131,6 +173,7 @@ export function buildSystemPrompt(options: {
   projectFiles?: string[];
   gitBranch?: string;
   customInstructions?: string;
+  aiLanguage?: string;
 }): string {
   const base = options.mode === "concise" ? CONCISE_PROMPT : EXPLANATIVE_PROMPT;
   const sections: string[] = [base];
@@ -148,6 +191,11 @@ Format:
 [your actual response/actions here]
 
 Always think before acting. The thinking block helps you make better decisions.`);
+  }
+
+  const langLine = languageInstruction(options.aiLanguage);
+  if (langLine) {
+    sections.push(`\n${langLine}`);
   }
 
   sections.push(`\nWORKING DIRECTORY: ${options.cwd}`);

@@ -5,6 +5,9 @@ import TextInput from "ink-text-input";
 import { loadSettings, saveSettings, getCustomProviders, type OpenAgentSettings } from "../config/settings.js";
 import { getAllProviders, getProvider } from "../providers/index.js";
 import { getProjectFiles } from "../utils/fileAutocomplete.js";
+import { AI_LANGUAGES, getLanguageLabel } from "../utils/systemPrompt.js";
+import { PaginatedSelect } from "./PaginatedSelect.js";
+import { ModelSelector } from "./ModelSelector.js";
 
 interface SettingsMenuProps {
   onClose: () => void;
@@ -13,10 +16,10 @@ interface SettingsMenuProps {
 type Step =
   | "main"
   | "provider"
-  | "model"
   | "instructions-type"
   | "instructions-text"
   | "instructions-file"
+  | "instructions-language"
   | "ignored-dirs"
   | "channel"
   | "default-mode";
@@ -24,7 +27,6 @@ type Step =
 export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
   const [settings, setSettingsState] = useState<OpenAgentSettings>(() => loadSettings());
   const [step, setStep] = useState<Step>("main");
-  const [selectedProvider, setSelectedProvider] = useState<string>(settings.provider || "openai");
   const [customText, setCustomText] = useState<string>(settings.customInstructionsText || "");
   const [filePath, setFilePath] = useState<string>(settings.customInstructionsFilePath || "");
   const [ignoredInput, setIgnoredInput] = useState<string>((settings.ignoredDirectories || []).join(", "));
@@ -63,7 +65,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
           : settings.customInstructionsType === "file"
           ? `File (${settings.customInstructionsFilePath || ""})`
           : "None"
-      }`,
+      } · Lang: ${getLanguageLabel(settings.aiLanguage)}`,
       value: "instructions",
     },
     {
@@ -102,30 +104,13 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
     }
   };
 
-  const providers = getAllProviders();
-  const providerItems = providers.map((p) => ({ label: p.config.name, value: p.config.id }));
-
-  const handleProviderSelect = (item: { value: string }) => {
-    setSelectedProvider(item.value);
-    setStep("model");
-  };
-
-  const currentProviderObj = getProvider(selectedProvider);
-  const modelItems = (currentProviderObj?.config.models || []).map((m: { id: string; name: string }) => ({
-    label: m.name,
-    value: m.id,
-  }));
-
-  const handleModelSelect = (item: { value: string }) => {
-    const updated = { ...settings, provider: selectedProvider, model: item.value };
-    saveSettings(updated);
-    setSettingsState(updated);
-    setStep("main");
-  };
-
   const instructionTypeItems = [
     { label: "Direct Text (Max 1000 chars)", value: "text" },
     { label: "File Path (From project directory)", value: "file" },
+    {
+      label: `AI Spoken Language: ${getLanguageLabel(settings.aiLanguage)}`,
+      value: "language",
+    },
     { label: "Clear Instructions", value: "clear" },
   ];
 
@@ -134,6 +119,8 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
       setStep("instructions-text");
     } else if (item.value === "file") {
       setStep("instructions-file");
+    } else if (item.value === "language") {
+      setStep("instructions-language");
     } else if (item.value === "clear") {
       const updated = {
         ...settings,
@@ -145,6 +132,24 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
       setSettingsState(updated);
       setStep("main");
     }
+  };
+
+  const languageItems = AI_LANGUAGES.map((l) => ({
+    label: l.code === "auto"
+      ? `${l.name}  ← default`
+      : `${l.name} (${l.nativeName})`,
+    value: l.code,
+    isCurrent: (settings.aiLanguage || "auto") === l.code,
+  }));
+
+  const handleLanguageSelect = (item: { value: string }) => {
+    const updated: OpenAgentSettings = {
+      ...settings,
+      aiLanguage: item.value === "auto" ? undefined : item.value,
+    };
+    saveSettings(updated);
+    setSettingsState(updated);
+    setStep("main");
   };
 
   const handleTextSubmit = (value: string) => {
@@ -214,29 +219,46 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
       )}
 
       {step === "provider" && (
-        <Box flexDirection="column">
-          <Box marginBottom={1}>
-            <Text bold>Select Provider:</Text>
-          </Box>
-          <SelectInput items={providerItems} onSelect={handleProviderSelect} />
-        </Box>
-      )}
-
-      {step === "model" && (
-        <Box flexDirection="column">
-          <Box marginBottom={1}>
-            <Text bold>Select Model for {selectedProvider}:</Text>
-          </Box>
-          <SelectInput items={modelItems} onSelect={handleModelSelect} />
-        </Box>
+        <ModelSelector
+          isSettingsMenu={true}
+          onComplete={(providerId, modelId) => {
+            const updated = { ...settings, provider: providerId, model: modelId };
+            saveSettings(updated);
+            setSettingsState(updated);
+            setStep("main");
+          }}
+          onCancel={() => setStep("main")}
+        />
       )}
 
       {step === "instructions-type" && (
         <Box flexDirection="column">
           <Box marginBottom={1}>
-            <Text bold>Custom Instructions Type:</Text>
+            <Text bold>Custom Instructions:</Text>
           </Box>
           <SelectInput items={instructionTypeItems} onSelect={handleInstructionTypeSelect} />
+        </Box>
+      )}
+
+      {step === "instructions-language" && (
+        <Box flexDirection="column">
+          <Box marginBottom={1}>
+            <Text bold>AI Spoken Language:</Text>
+          </Box>
+          <Text dimColor>
+            Default follows the language of the user prompt. A fixed language adds a system instruction.
+          </Text>
+          <Box marginTop={1} />
+          <PaginatedSelect
+            items={languageItems}
+            pageSize={10}
+            initialIndex={Math.max(
+              0,
+              AI_LANGUAGES.findIndex((l) => l.code === (settings.aiLanguage || "auto"))
+            )}
+            onSelect={(item) => handleLanguageSelect({ value: item.value })}
+            onCancel={() => setStep("instructions-type")}
+          />
         </Box>
       )}
 

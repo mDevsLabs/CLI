@@ -1,24 +1,86 @@
 [
-  { "id": "mistral-medium-3-5", "name": "Mistral Medium 3.5", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistral-medium-latest", "name": "Mistral Medium (latest)", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistral-small-2603", "name": "Mistral Small 4", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistral-small-latest", "name": "Mistral Small (latest)", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistral-large-2512", "name": "Mistral Large 3", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "mistral-large-latest", "name": "Mistral Large (latest)", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "devstral-2512", "name": "Devstral 2", "contextWindow": 262144, "maxOutput": 65536 },
-  { "id": "ministral-14b-2512", "name": "Ministral 3 14B", "contextWindow": 262144, "maxOutput": 32768 },
-  { "id": "ministral-8b-2512", "name": "Ministral 3 8B", "contextWindow": 262144, "maxOutput": 32768 },
-  { "id": "ministral-3b-2512", "name": "Ministral 3 3B", "contextWindow": 131072, "maxOutput": 32768 },
-  { "id": "codestral-2508", "name": "Codestral", "contextWindow": 256000, "maxOutput": 32768 },
-  { "id": "codestral-latest", "name": "Codestral (latest)", "contextWindow": 256000, "maxOutput": 32768 },
-  { "id": "labs-leanstral-1-5", "name": "Leanstral 1.5 (Labs)", "contextWindow": 131072, "maxOutput": 32768 },
-  { "id": "voxtral-tts-2603", "name": "Voxtral TTS", "contextWindow": 32000, "maxOutput": 8192 },
-  { "id": "voxtral-small-2507", "name": "Voxtral Small 24B", "contextWindow": 32000, "maxOutput": 8192 },
-  { "id": "voxtral-mini-transcribe-2602", "name": "Voxtral Mini Transcribe 2", "contextWindow": 32000, "maxOutput": 8192 },
-  { "id": "voxtral-mini-transcribe-realtime-2602", "name": "Voxtral Mini Transcribe Realtime", "contextWindow": 32000, "maxOutput": 8192 },
-  { "id": "mistral-ocr-4-0", "name": "OCR 4", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "mistral-ocr-2512", "name": "OCR 3", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "mistral-moderation-2603", "name": "Mistral Moderation 2", "contextWindow": 131072, "maxOutput": 8192 },
-  { "id": "codestral-embed-2505", "name": "Codestral Embed", "contextWindow": 32768, "maxOutput": 8192 },
-  { "id": "mistral-embed", "name": "Mistral Embed", "contextWindow": 32768, "maxOutput": 8192 }
+  {
+    "id": "mistral-medium-3-5",
+    "name": "Mistral Medium 3.5",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistral-medium-latest",
+    "name": "Mistral Medium (latest)",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistral-small-2603",
+    "name": "Mistral Small 4",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistral-small-latest",
+    "name": "Mistral Small (latest)",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistral-large-2512",
+    "name": "Mistral Large 3",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "mistral-large-latest",
+    "name": "Mistral Large (latest)",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "devstral-2512",
+    "name": "Devstral 2",
+    "contextWindow": 262144,
+    "maxOutput": 65536
+  },
+  {
+    "id": "ministral-14b-2512",
+    "name": "Ministral 3 14B",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "ministral-8b-2512",
+    "name": "Ministral 3 8B",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "ministral-3b-2512",
+    "name": "Ministral 3 3B",
+    "contextWindow": 131072,
+    "maxOutput": 32768
+  },
+  {
+    "id": "codestral-2508",
+    "name": "Codestral",
+    "contextWindow": 256000,
+    "maxOutput": 32768
+  },
+  {
+    "id": "codestral-latest",
+    "name": "Codestral (latest)",
+    "contextWindow": 256000,
+    "maxOutput": 32768
+  },
+  {
+    "id": "labs-leanstral-1-5",
+    "name": "Leanstral 1.5 (Labs)",
+    "contextWindow": 131072,
+    "maxOutput": 32768
+  },
+  {
+    "id": "voxtral-small-2507",
+    "name": "Voxtral Small 24B",
+    "contextWindow": 32000,
+    "maxOutput": 8192
+  }
 ]

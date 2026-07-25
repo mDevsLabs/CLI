@@ -121,4 +121,4 @@ if (pattern.test(readme)) {
 
 if (updated !== readme) writeFileSync(readmePath, updated);
 
-console.log("Stats:", stats);
+console.log("📊 Stats:", stats);

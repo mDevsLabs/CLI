@@ -17,6 +17,8 @@ export interface OpenAgentSettings {
   customInstructionsType?: "text" | "file";
   customInstructionsText?: string;
   customInstructionsFilePath?: string;
+  /** AI spoken language code (e.g. "fr", "en"). "auto" or undefined = follow the user prompt language. */
+  aiLanguage?: string;
   updateChannel?: "stable" | "canary";
   ignoredDirectories?: string[];
   customProviders?: CustomProvider[];

@@ -59,25 +59,25 @@ function Remove-FromUserPath($dir) {
   }
 }
 
-function Uninstall-mAI CLI {
-  Write-Step "Uninstalling mAI CLI..."
+function Uninstall-mAICLI {
+  Write-Step "🔧 Uninstalling mAI CLI..."
   if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir }
   if (Test-Path $BinDir)     { Remove-Item -Recurse -Force $BinDir }
   Remove-FromUserPath $BinDir
   if ((Test-Path $InstallRoot) -and -not (Get-ChildItem -Force $InstallRoot)) {
     Remove-Item -Force $InstallRoot
   }
-  Write-Ok "mAI CLI removed."
+  Write-Ok "✅ mAI CLI removed."
   Write-Host "  (Sessions and config under $InstallRoot were preserved if present.)"
 }
 
 Write-Host ""
-Write-Step "Installing mAI CLI..."
+Write-Step "🔧 Installing mAI CLI..."
 Write-Host ""
 
 if (Test-Path $InstallDir) {
   Write-Host ""
-  Write-Warn "mAI CLI is already installed at $InstallDir"
+  Write-Warn "⚠️ mAI CLI is already installed at $InstallDir"
   Write-Host ""
   Write-Host "    [u] Update    — reinstall over existing"
   Write-Host "    [r] Remove    — uninstall"
@@ -85,14 +85,14 @@ if (Test-Path $InstallDir) {
   Write-Host ""
   $choice = Read-Choice "  Choice [u/r/c]" @("u", "r", "c", "update", "remove", "cancel")
   switch -Regex ($choice) {
-    "^(u|update)$" { Write-Step "Updating..."; Write-Host "" }
-    "^(r|remove)$" { Uninstall-mAI CLI; exit 0 }
+    "^(u|update)$" { Write-Step "🔄 Updating..."; Write-Host "" }
+    "^(r|remove)$" { Uninstall-mAICLI; exit 0 }
     "^(c|cancel)$" { Write-Host "  Cancelled."; exit 0 }
   }
 }
 
 if (-not (Test-Cmd "node")) {
-  Write-Warn "Node.js not found."
+  Write-Warn "⚠️ Node.js not found."
   if (Test-Cmd "winget") {
     Write-Step "Installing Node.js LTS via winget..."
     $code = Invoke-Native -Quiet { winget install -e --id OpenJS.NodeJS.LTS --silent --accept-source-agreements --accept-package-agreements }
@@ -142,7 +142,7 @@ Copy-Item -Recurse (Join-Path $ScriptDir "bin")  (Join-Path $InstallDir "bin")
 
 Push-Location $InstallDir
 try {
-  Write-Step "Installing dependencies (this can take a minute)..."
+  Write-Step "📦 Installing dependencies (this can take a minute)..."
   $code = Invoke-Native -Quiet { npm install --loglevel=error }
   if ($code -ne 0) { Write-Err "npm install failed (exit $code). Rerun and watch output for the cause."; exit 1 }
   $code = Invoke-Native -Quiet { npm install tsx --loglevel=error }
@@ -169,11 +169,11 @@ if ($pathParts -notcontains $BinDir) {
   $newPath = if ($userPath) { "$userPath;$BinDir" } else { $BinDir }
   [System.Environment]::SetEnvironmentVariable("Path", $newPath, "User")
   $env:Path = "$env:Path;$BinDir"
-  Write-Ok "Added $BinDir to user PATH"
+  Write-Ok "✅ Added $BinDir to user PATH"
 }
 
 Write-Host ""
-Write-Ok "mAI CLI installed!"
+Write-Ok "✅ mAI CLI installed!"
 Write-Host ""
 Write-Host "  Run: mai"
 Write-Host ""

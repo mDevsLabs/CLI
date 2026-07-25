@@ -6,11 +6,11 @@ BIN_DIR="$HOME/.local/bin"
 BIN_LINK="$BIN_DIR/mai"
 
 echo ""
-echo "  Installing mAI CLI..."
+echo "  🔧 Installing mAI CLI..."
 echo ""
 
 if ! command -v node &>/dev/null; then
-  echo "  Node.js not found. Installing..."
+  echo "  ⚠️ Node.js not found. Installing..."
   if command -v apt-get &>/dev/null; then
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - 2>/dev/null
     sudo apt-get install -y nodejs 2>/dev/null
@@ -26,14 +26,14 @@ fi
 
 NODE_VER=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
 if [ "$NODE_VER" -lt 18 ]; then
-  echo "  Node.js 18+ required. You have $(node -v)."
+  echo "  ⚠️ Node.js 18+ required. You have $(node -v)."
   exit 1
 fi
 
 mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
 if [ -d "$INSTALL_DIR/node_modules" ]; then
-  echo "  Removing previous installation..."
+  echo "  🗑️ Removing previous installation..."
   rm -rf "$INSTALL_DIR"
   mkdir -p "$INSTALL_DIR"
 fi
@@ -46,7 +46,7 @@ cp -R "$SCRIPT_DIR/src" "$INSTALL_DIR/src"
 cp -R "$SCRIPT_DIR/bin" "$INSTALL_DIR/bin"
 
 cd "$INSTALL_DIR"
-echo "  Installing dependencies..."
+echo "  📦 Installing dependencies..."
 npm install --loglevel=error 2>&1 | tail -5
 npm install tsx --loglevel=error 2>&1 | tail -1
 
@@ -68,12 +68,12 @@ fi
 if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
   if [ -n "$SHELL_RC" ]; then
     echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$SHELL_RC"
-    echo "  Added ~/.local/bin to PATH in $SHELL_RC"
+    echo "  ✅ Added ~/.local/bin to PATH in $SHELL_RC"
   fi
 fi
 
 echo ""
-echo "  mAI CLI installed!"
+echo "  ✅ mAI CLI installed!"
 echo ""
 echo "  Run: mai"
 echo ""

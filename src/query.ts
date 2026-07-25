@@ -108,6 +108,7 @@ export async function runQueryLoop(
     projectFiles,
     gitBranch: gitBranch || undefined,
     customInstructions: customInstructions || undefined,
+    aiLanguage: settings.aiLanguage,
   });
 
   const tools = getToolsForProvider();

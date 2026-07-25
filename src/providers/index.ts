@@ -15,6 +15,8 @@ import { anthropicMaxProvider } from "./anthropicMax.js";
 import { ollamaCloudProvider } from "./ollamaCloud.js";
 import { huggingfaceProvider } from "./huggingface.js";
 import { nvidiaProvider } from "./nvidia.js";
+import { cloudflareProvider } from "./cloudflare.js";
+import { fireworksProvider } from "./fireworks.js";
 import type { Provider, ProviderConfig } from "./types.js";
 import type { CustomProvider } from "../config/settings.js";
 import { getCustomProviders } from "../config/settings.js";
@@ -31,6 +33,8 @@ export const providers: Map<string, Provider> = new Map([
   ["deepseek", deepseekProvider],
   ["xai", xaiProvider],
   ["bedrock", bedrockProvider],
+  ["cloudflare", cloudflareProvider],
+  ["fireworks", fireworksProvider],
   ["ollama-cloud", ollamaCloudProvider],
   ["huggingface", huggingfaceProvider],
   ["nvidia", nvidiaProvider],

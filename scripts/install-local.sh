@@ -4,10 +4,10 @@ set -e
 INSTALL_DIR="/usr/local/lib/mai"
 BIN_LINK="/usr/local/bin/mai"
 
-echo "Installing mAI CLI..."
+echo "🔧 Installing mAI CLI..."
 
 if [ -d "$INSTALL_DIR" ]; then
-  echo "Removing previous installation..."
+  echo "  🗑️ Removing previous installation..."
   rm -rf "$INSTALL_DIR"
 fi
 
@@ -32,5 +32,5 @@ rm -f "$BIN_LINK"
 ln -s "$INSTALL_DIR/bin/run.sh" "$BIN_LINK"
 
 echo ""
-echo "mAI CLI installed successfully!"
-echo "Run 'mai' from any terminal to start."
+echo "✅ mAI CLI installed successfully!"
+echo "  Run 'mai' from any terminal to start."

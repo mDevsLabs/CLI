@@ -869,6 +869,8 @@ cmd("debug", ["diag", "network"], "Dev", "Debug mode — test network, show requ
     groq: "api.groq.com",
     deepseek: "api.deepseek.com",
     xai: "api.x.ai",
+    cloudflare: "api.cloudflare.com",
+    fireworks: "api.fireworks.ai",
     ollama: "localhost",
     bedrock: "bedrock-runtime.us-east-1.amazonaws.com",
     alibaba: "dashscope-intl.aliyuncs.com",

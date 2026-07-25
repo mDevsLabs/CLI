@@ -1,0 +1,242 @@
+[
+  {
+    "id": "accounts/fireworks/models/deepseek-v4-flash",
+    "name": "DeepSeek-V4-Flash",
+    "contextWindow": 1048576,
+    "maxOutput": 131072
+  },
+  {
+    "id": "accounts/fireworks/models/deepseek-v4-pro",
+    "name": "DeepSeek-V4-Pro",
+    "contextWindow": 1048576,
+    "maxOutput": 131072
+  },
+  {
+    "id": "accounts/fireworks/models/glm-5p2",
+    "name": "GLM 5.2",
+    "contextWindow": 1048576,
+    "maxOutput": 131072
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3p6-plus",
+    "name": "Qwen3.6 Plus",
+    "contextWindow": 1000000,
+    "maxOutput": 65536
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3p7-max",
+    "name": "Qwen3.7 Max",
+    "contextWindow": 1000000,
+    "maxOutput": 65536
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3p7-plus",
+    "name": "Qwen3.7 Plus",
+    "contextWindow": 1000000,
+    "maxOutput": 65536
+  },
+  {
+    "id": "accounts/fireworks/models/minimax-m3",
+    "name": "Minimax M3",
+    "contextWindow": 512000,
+    "maxOutput": 64000
+  },
+  {
+    "id": "accounts/fireworks/models/gemma-4-26b-a4b-it",
+    "name": "Gemma 4 26B A4B IT",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/gemma-4-31b-it",
+    "name": "Gemma 4 31B IT",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/gemma-4-31b-it-nvfp4",
+    "name": "Gemma 4 31B IT (NVFP4)",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/kimi-k2-instruct-0905",
+    "name": "Kimi K2 Instruct 0905",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/kimi-k2-thinking",
+    "name": "Kimi K2 Thinking",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/kimi-k2p5",
+    "name": "Kimi K2.5",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/kimi-k2p6",
+    "name": "Kimi K2.6",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/kimi-k2p7-code",
+    "name": "Kimi K2.7 Code",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/nvidia-nemotron-3-super-120b-a12b-fp8",
+    "name": "Nemotron 3 Super 120B A12B (FP8)",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/nvidia-nemotron-3-super-120b-a12b-nvfp4",
+    "name": "Nemotron 3 Super 120B A12B (NVFP4)",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/nemotron-3-ultra-bf16",
+    "name": "Nemotron 3 Ultra (BF16)",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+    "name": "Nemotron 3 Ultra (NVFP4)",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-235b-a22b-instruct-2507",
+    "name": "Qwen3 235B A22B Instruct 2507",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-235b-a22b-thinking-2507",
+    "name": "Qwen3 235B A22B Thinking 2507",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-coder-30b-a3b-instruct",
+    "name": "Qwen3 Coder 30B A3B Instruct",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-coder-480b-a35b-instruct",
+    "name": "Qwen3 Coder 480B A35B Instruct",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-vl-235b-a22b-instruct",
+    "name": "Qwen3 VL 235B A22B Instruct",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-vl-235b-a22b-thinking",
+    "name": "Qwen3 VL 235B A22B Thinking",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3p5-397b-a17b",
+    "name": "Qwen3.5 397B A17B",
+    "contextWindow": 262144,
+    "maxOutput": 32768
+  },
+  {
+    "id": "accounts/fireworks/models/glm-5p1",
+    "name": "GLM 5.1",
+    "contextWindow": 202752,
+    "maxOutput": 25344
+  },
+  {
+    "id": "accounts/fireworks/models/glm-4p6",
+    "name": "GLM-4.6",
+    "contextWindow": 202752,
+    "maxOutput": 25344
+  },
+  {
+    "id": "accounts/fireworks/models/glm-5",
+    "name": "GLM-5",
+    "contextWindow": 202752,
+    "maxOutput": 25344
+  },
+  {
+    "id": "accounts/fireworks/models/minimax-m2p7",
+    "name": "MiniMax M2.7",
+    "contextWindow": 196608,
+    "maxOutput": 24576
+  },
+  {
+    "id": "accounts/fireworks/models/minimax-m2p1",
+    "name": "MiniMax-M2.1",
+    "contextWindow": 196608,
+    "maxOutput": 24576
+  },
+  {
+    "id": "accounts/fireworks/models/minimax-m2p5",
+    "name": "MiniMax-M2.5",
+    "contextWindow": 196608,
+    "maxOutput": 24576
+  },
+  {
+    "id": "accounts/fireworks/models/deepseek-r1",
+    "name": "DeepSeek R1 (Fast)",
+    "contextWindow": 163840,
+    "maxOutput": 20480
+  },
+  {
+    "id": "accounts/fireworks/models/deepseek-v3p1",
+    "name": "DeepSeek V3.1",
+    "contextWindow": 163840,
+    "maxOutput": 20480
+  },
+  {
+    "id": "accounts/fireworks/models/deepseek-r1-0528",
+    "name": "Deepseek R1 05/28",
+    "contextWindow": 163840,
+    "maxOutput": 20480
+  },
+  {
+    "id": "accounts/fireworks/models/deepseek-v3p2",
+    "name": "Deepseek v3.2",
+    "contextWindow": 163840,
+    "maxOutput": 20480
+  },
+  {
+    "id": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+    "name": "Llama 3.3 70B Instruct",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  },
+  {
+    "id": "accounts/fireworks/models/gpt-oss-120b",
+    "name": "OpenAI gpt-oss-120b",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  },
+  {
+    "id": "accounts/fireworks/models/gpt-oss-20b",
+    "name": "OpenAI gpt-oss-20b",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  },
+  {
+    "id": "accounts/fireworks/models/qwen3-235b-a22b",
+    "name": "Qwen3 235B A22B",
+    "contextWindow": 131072,
+    "maxOutput": 16384
+  }
+]

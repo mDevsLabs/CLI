@@ -582,10 +582,17 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
 
   if (step === "cloud-key") {
     const provider = getProvider(selectedProvider);
+    const keyHint =
+      selectedProvider === "cloudflare"
+        ? "Format: ACCOUNT_ID:API_TOKEN (32-char account id + token)"
+        : provider?.config.apiKeyUrl;
     return (
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">{provider?.config.name} API key:</Text>
-        <Text dimColor>{provider?.config.apiKeyUrl}</Text>
+        <Text dimColor>{keyHint}</Text>
+        {selectedProvider === "cloudflare" && (
+          <Text dimColor>{provider?.config.apiKeyUrl}</Text>
+        )}
         <Text> </Text>
         {error && <Text color="red">{error}</Text>}
         <Box><Text color="cyan">{"❯ "}</Text><TextInput value={apiKey} onChange={setApiKey} onSubmit={() => {

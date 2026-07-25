@@ -285,7 +285,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       }
     }
 
-    if ((key.upArrow || key.downArrow) && !isProcessing && !permissionPrompt && !terminalMode && autocompleteItems.length === 0) {
+    if ((key.upArrow || key.downArrow) && pickerView === "none" && !isProcessing && !permissionPrompt && !terminalMode && autocompleteItems.length === 0) {
       const hist = inputHistoryRef.current;
       if (hist.length === 0) return;
       if (key.upArrow) {

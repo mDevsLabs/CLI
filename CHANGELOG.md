@@ -4,37 +4,6 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ---
 
-## [Version 0.1.0] - 2026-07-25
-
-### Commandes `/model` et `/provider` séparées
-- **`/model`** : Nouvelle interface de sélection de modèle simple, groupée par provider avec navigation clavier. La sélection s'applique **uniquement pour la session en cours** (pas de sauvegarde sur le disque). Utiliser `/settings` pour changer le modèle par défaut.
-- **`/provider`** : Ouvre désormais le **Provider Manager** complet — configure les clés API, ajoute des modèles et crée des providers personnalisés.
-- **Session override** : `runQueryLoop` accepte désormais un `modelOverride` optionnel pour les sélections de session, sans écraser la config.
-
-### Corrections de bugs & UX UI
-- **Nouveau composant `PaginatedSelect`** : Fenêtre de défilement fixe de 5 éléments pour la sélection de modèle (`/model`) et de provider (`/provider`). Affiche automatiquement `(↑ X More)` en haut et `(↓ Y More)` en bas selon la position.
-- **Curseur `>` suivi dynamiquement** : Le curseur `>` reste désormais toujours visible dans la fenêtre de 5 choix et suit parfaitement les touches haut/bas.
-- **Suppression du débordement de buffer** : La hauteur contrôlée (8 lignes max) empêche la poussée du terminal et résout le problème de défilement vers le haut du CLI.
-- **Nettoyage de l'écran lors de la sortie** : Effacement propre de l'interface (`\x1B[2J\x1B[H`) lors de la fermeture/annulation de n'importe quelle commande (`/model`, `/provider`, `/settings`).
-
-### Custom Providers
-- **Ajout de providers personnalisés** : Via `/provider` → "Add custom provider", flux en 4 étapes (Nom → Format SDK → Base URL → Clé API), puis ajout illimité de modèles.
-- **Formats SDK supportés** : OpenAI-compatible, Anthropic, Google.
-- **Persistance** : Les providers personnalisés sont sauvegardés dans `~/.mai/config.json` (champ `customProviders[]`).
-- **Intégration complète** : Apparaissent dans `/model`, `/provider`, `/settings` et sont disponibles pour les conversations.
-- **Suppression** : Option de suppression d'un provider custom depuis `/provider`.
-
-### Système de permissions amélioré
-- **Nouveau composant `PermissionPrompt`** : Affichage interactif avec navigation clavier lors des demandes de permission outil (Allow / Deny / Always approve).
-- **"Always approve this tool"** : Enregistre une règle permanente dans `~/.mai/permissions.json` via `addRule({ behavior: "allow" })` — élimine les confirmations futures pour ce type d'outil.
-- **Confirmation visuelle** : Message affiché dans le chat après "toujours approuver".
-
-### Paramètres
-- **`/settings`** : Affiche le nombre de providers custom configurés. Bouton "Custom Providers" pour accéder à `/provider`.
-- **`src/config/settings.ts`** : Ajout du type `CustomProvider` et des helpers CRUD (`addCustomProvider`, `removeCustomProvider`, `addModelToCustomProvider`, `getCustomProviders`).
-
----
-
 ## [Version 0.1.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.1.0) - 2026-07-25
 
 ### Rebranding & Installation
@@ -73,3 +42,30 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ### README.md
 - **Refonte épurée du `README.md`** : Structure simplifiée en 3 sections principales (Résumé, Instructions d'installation et Licence Apache 2.0).
+
+### Commandes `/model` et `/provider` séparées
+- **`/model`** : Nouvelle interface de sélection de modèle simple, groupée par provider avec navigation clavier. La sélection s'applique **uniquement pour la session en cours** (pas de sauvegarde sur le disque). Utiliser `/settings` pour changer le modèle par défaut.
+- **`/provider`** : Ouvre désormais le **Provider Manager** complet — configure les clés API, ajoute des modèles et crée des providers personnalisés.
+- **Session override** : `runQueryLoop` accepte désormais un `modelOverride` optionnel pour les sélections de session, sans écraser la config.
+
+### Corrections de bugs & UX UI
+- **Nouveau composant `PaginatedSelect`** : Fenêtre de défilement fixe de 5 éléments pour la sélection de modèle (`/model`) et de provider (`/provider`). Affiche automatiquement `(↑ X More)` en haut et `(↓ Y More)` en bas selon la position.
+- **Curseur `>` suivi dynamiquement** : Le curseur `>` reste désormais toujours visible dans la fenêtre de 5 choix et suit parfaitement les touches haut/bas.
+- **Suppression du débordement de buffer** : La hauteur contrôlée (8 lignes max) empêche la poussée du terminal et résout le problème de défilement vers le haut du CLI.
+- **Nettoyage de l'écran lors de la sortie** : Effacement propre de l'interface (`\x1B[2J\x1B[H`) lors de la fermeture/annulation de n'importe quelle commande (`/model`, `/provider`, `/settings`).
+
+### Custom Providers
+- **Ajout de providers personnalisés** : Via `/provider` → "Add custom provider", flux en 4 étapes (Nom → Format SDK → Base URL → Clé API), puis ajout illimité de modèles.
+- **Formats SDK supportés** : OpenAI-compatible, Anthropic, Google.
+- **Persistance** : Les providers personnalisés sont sauvegardés dans `~/.mai/config.json` (champ `customProviders[]`).
+- **Intégration complète** : Apparaissent dans `/model`, `/provider`, `/settings` et sont disponibles pour les conversations.
+- **Suppression** : Option de suppression d'un provider custom depuis `/provider`.
+
+### Système de permissions amélioré
+- **Nouveau composant `PermissionPrompt`** : Affichage interactif avec navigation clavier lors des demandes de permission outil (Allow / Deny / Always approve).
+- **"Always approve this tool"** : Enregistre une règle permanente dans `~/.mai/permissions.json` via `addRule({ behavior: "allow" })` — élimine les confirmations futures pour ce type d'outil.
+- **Confirmation visuelle** : Message affiché dans le chat après "toujours approuver".
+
+### Paramètres
+- **`/settings`** : Affiche le nombre de providers custom configurés. Bouton "Custom Providers" pour accéder à `/provider`.
+- **`src/config/settings.ts`** : Ajout du type `CustomProvider` et des helpers CRUD (`addCustomProvider`, `removeCustomProvider`, `addModelToCustomProvider`, `getCustomProviders`).
