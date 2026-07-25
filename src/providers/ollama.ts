@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/ollama.json";
+
 const config: ProviderConfig = {
   id: "ollama",
   name: "Ollama (Local)",
@@ -16,14 +18,7 @@ const config: ProviderConfig = {
   category: "local",
   apiKeyEnvVar: "OLLAMA_HOST",
   apiKeyUrl: "https://ollama.com/download",
-  models: [
-    { id: "llama3.3:70b", name: "Llama 3.3 70B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "llama3.2:latest", name: "Llama 3.2", contextWindow: 128000, maxOutput: 8192 },
-    { id: "qwen2.5-coder:32b", name: "Qwen 2.5 Coder 32B", contextWindow: 32768, maxOutput: 8192 },
-    { id: "codellama:34b", name: "CodeLlama 34B", contextWindow: 16384, maxOutput: 8192 },
-    { id: "deepseek-coder-v2:latest", name: "DeepSeek Coder V2", contextWindow: 128000, maxOutput: 8192 },
-    { id: "mistral:latest", name: "Mistral 7B", contextWindow: 32768, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "llama3.2:latest",
   supportsStreaming: true,
   supportsToolUse: true,

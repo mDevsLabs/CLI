@@ -103,7 +103,7 @@ export const xPostTool: Tool = {
         headers: {
           Authorization: authHeader,
           "Content-Type": "application/json",
-          "User-Agent": "OpenAgent/0.1.0",
+          "User-Agent": "mAI-CLI/0.1.0",
         },
         body: JSON.stringify(body),
       });

@@ -54,7 +54,7 @@ export function Setup({ onComplete }: SetupProps) {
       <Box flexDirection="column" padding={1}>
         <Text>{getBanner(columns)}</Text>
         <Text> </Text>
-        <Text bold color="white">Welcome to OpenAgent</Text>
+        <Text bold color="white">Welcome to mAI CLI</Text>
         <Text color="gray">Open-source agentic coding, right in your terminal.</Text>
         <Text> </Text>
         <Box flexDirection="column" marginLeft={2}>

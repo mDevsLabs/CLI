@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-echo "Uninstalling OpenAgent..."
+echo "Uninstalling mAI CLI..."
 
-rm -f /usr/local/bin/openagent
-rm -rf /usr/local/lib/openagent
+rm -f /usr/local/bin/mai
+rm -rf /usr/local/lib/mai
 
-echo "OpenAgent uninstalled."
-echo "Config at ~/.openagent/ was kept. Delete it manually if you want."
+echo "mAI CLI uninstalled."
+echo "Config at ~/.mai/ was kept. Delete it manually if you want."

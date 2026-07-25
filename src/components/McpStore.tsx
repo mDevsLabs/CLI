@@ -35,8 +35,8 @@ type Step =
   | "custom-args"
   | "custom-env";
 
-const CONFIG_PATH = join(homedir(), ".openagent", "mcp_servers.json");
-const CONFIG_DIR = join(homedir(), ".openagent");
+const CONFIG_PATH = join(homedir(), ".mai", "mcp_servers.json");
+const CONFIG_DIR = join(homedir(), ".mai");
 
 function readRawConfig(): { mcpServers: Record<string, McpServerConfig> } {
   if (!existsSync(CONFIG_PATH)) return { mcpServers: {} };
@@ -69,6 +69,7 @@ export function McpStore({ onClose }: McpStoreProps) {
   const [customCommand, setCustomCommand] = useState("");
   const [customArgs, setCustomArgs] = useState("");
   const [customEnvText, setCustomEnvText] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   useInput((_, key) => {
     if (!key.escape) return;
@@ -87,7 +88,7 @@ export function McpStore({ onClose }: McpStoreProps) {
     return (
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">MCP Servers</Text>
-        <Text dimColor>Connect external tools to OpenAgent.</Text>
+        <Text dimColor>Connect external tools to mAI CLI.</Text>
         <Text> </Text>
         <SelectInput
           items={[
@@ -110,7 +111,7 @@ export function McpStore({ onClose }: McpStoreProps) {
           }}
         />
         <Text> </Text>
-        <Text dimColor>Config file: <Text color="cyan">~/.openagent/mcp_servers.json</Text></Text>
+        <Text dimColor>Config file: <Text color="cyan">~/.mai/mcp_servers.json</Text></Text>
         <Text dimColor>Esc to close.</Text>
         {statusMsg && <Text color="green">{statusMsg}</Text>}
       </Box>
@@ -122,7 +123,7 @@ export function McpStore({ onClose }: McpStoreProps) {
     const items = CATALOG.map((entry) => {
       const installed = isInstalled(entry.id);
       return {
-        label: `${entry.name.padEnd(16)} ${entry.description}${installed ? "  ✓" : ""}`,
+        label: `${entry.name.padEnd(16)} ${entry.description}${installed ? "  [OK]" : ""}`,
         value: entry.id,
       };
     });
@@ -144,7 +145,7 @@ export function McpStore({ onClose }: McpStoreProps) {
           limit={10}
         />
         <Text> </Text>
-        <Text dimColor>↑↓ navigate · enter to view · esc to back · ✓ = installed</Text>
+        <Text dimColor>↑↓ navigate · enter to view · esc to back · [OK] = installed</Text>
         {statusMsg && <Text color="green">{statusMsg}</Text>}
       </Box>
     );
@@ -199,7 +200,7 @@ export function McpStore({ onClose }: McpStoreProps) {
               setStep("store-env");
             } else {
               installServer(selected);
-              setStatusMsg(`Installed ${selected.name}. Restart OpenAgent to load it.`);
+              setStatusMsg(`Installed ${selected.name}. Restart mAI CLI to load it.`);
               setRefreshKey((k) => k + 1);
               setStep("store-list");
             }
@@ -233,7 +234,7 @@ export function McpStore({ onClose }: McpStoreProps) {
                 setEnvIdx(envIdx + 1);
               } else {
                 installServer(selected, updated);
-                setStatusMsg(`Installed ${selected.name}. Restart OpenAgent to load it.`);
+                setStatusMsg(`Installed ${selected.name}. Restart mAI CLI to load it.`);
                 setRefreshKey((k) => k + 1);
                 setStep("store-list");
               }
@@ -259,7 +260,7 @@ export function McpStore({ onClose }: McpStoreProps) {
           <Text> </Text>
           <Text dimColor>No servers installed yet. Open the Store or add a Custom one.</Text>
           <Text> </Text>
-          <Text dimColor>Config: <Text color="cyan">~/.openagent/mcp_servers.json</Text></Text>
+          <Text dimColor>Config: <Text color="cyan">~/.mai/mcp_servers.json</Text></Text>
           <Text dimColor>Esc to go back.</Text>
         </Box>
       );
@@ -279,24 +280,43 @@ export function McpStore({ onClose }: McpStoreProps) {
         <Text bold color="cyan">Installed MCP Servers</Text>
         <Text dimColor>● = live and connected · ○ = configured but not yet connected</Text>
         <Text> </Text>
-        <SelectInput
-          items={items}
-          onSelect={(item) => {
-            if (item.value === "__back__") {
-              setStep("tabs");
-              return;
-            }
-            const cfg = readRawConfig();
-            delete cfg.mcpServers[item.value];
-            writeRawConfig(cfg);
-            setStatusMsg(`Removed ${item.value}.`);
-            setRefreshKey((k) => k + 1);
-          }}
-          limit={10}
-        />
+        {confirmDelete ? (
+          <Box flexDirection="column" borderStyle="round" borderColor="red" paddingX={1}>
+            <Text bold color="red">Delete server "{confirmDelete}"?</Text>
+            <Text>This will remove it from ~/.mai/mcp_servers.json</Text>
+            <SelectInput
+              items={[
+                { label: "Cancel", value: "cancel" },
+                { label: "Delete", value: "delete" },
+              ]}
+              onSelect={(item) => {
+                if (item.value === "delete") {
+                  const cfg = readRawConfig();
+                  delete cfg.mcpServers[confirmDelete];
+                  writeRawConfig(cfg);
+                  setStatusMsg(`Removed ${confirmDelete}.`);
+                  setRefreshKey((k) => k + 1);
+                }
+                setConfirmDelete(null);
+              }}
+            />
+          </Box>
+        ) : (
+          <SelectInput
+            items={items}
+            onSelect={(item) => {
+              if (item.value === "__back__") {
+                setStep("tabs");
+                return;
+              }
+              setConfirmDelete(item.value);
+            }}
+            limit={10}
+          />
+        )}
         <Text> </Text>
         <Text dimColor>Enter to remove · Esc to go back</Text>
-        <Text dimColor>Edit directly: <Text color="cyan">~/.openagent/mcp_servers.json</Text></Text>
+        <Text dimColor>Edit directly: <Text color="cyan">~/.mai/mcp_servers.json</Text></Text>
         {statusMsg && <Text color="green">{statusMsg}</Text>}
       </Box>
     );
@@ -412,7 +432,7 @@ export function McpStore({ onClose }: McpStoreProps) {
                 env: Object.keys(env).length > 0 ? env : undefined,
               };
               writeRawConfig(cfg);
-              setStatusMsg(`Added "${customName}". Restart OpenAgent to load it.`);
+              setStatusMsg(`Added "${customName}". Restart mAI CLI to load it.`);
               setRefreshKey((k) => k + 1);
               setStep("tabs");
             }}

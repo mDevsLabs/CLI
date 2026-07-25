@@ -56,7 +56,7 @@ export function DiscordSetup({ onComplete, onCancel }: DiscordSetupProps) {
       `  Channel: ${channelId}\n` +
       `  ${users.length ? `Allowed users: ${users.join(", ")}` : "All users allowed"}\n` +
       `  Users type: !agent <message> in the channel.\n` +
-      `  Bridge starts automatically on next openagent launch.`
+      `  Bridge starts automatically on next mai launch.`
     );
   };
 
@@ -65,7 +65,7 @@ export function DiscordSetup({ onComplete, onCancel }: DiscordSetupProps) {
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">Discord Bridge Setup</Text>
         <Text> </Text>
-        <Text>This connects a Discord bot to OpenAgent so you can</Text>
+        <Text>This connects a Discord bot to mAI CLI so you can</Text>
         <Text>send commands via Discord messages.</Text>
         <Text> </Text>
         <Text>1. Go to: discord.com/developers/applications</Text>

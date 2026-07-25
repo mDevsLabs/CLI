@@ -7,7 +7,7 @@ import { loadSettings } from "./config/settings.js";
 import { shouldPrompt, isDenied, getEffectiveMode } from "./config/permissions.js";
 import { loadContextSession, appendMessage, updateContextSession } from "./session/history.js";
 import { exec } from "node:child_process";
-import { readdirSync, existsSync } from "node:fs";
+import { readdirSync, existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -77,7 +77,8 @@ export async function runQueryLoop(
   sessionId: string,
   callbacks: QueryCallbacks,
   thinking = false,
-  abortSignal?: AbortSignal
+  abortSignal?: AbortSignal,
+  modelOverride?: string
 ): Promise<{ messages: ProviderMessage[]; totalUsage: TokenUsage }> {
   const settings = loadSettings();
   const cwd = process.cwd();
@@ -87,6 +88,18 @@ export async function runQueryLoop(
   const projectFiles = getTopLevelFiles(cwd);
   const contextSession = loadContextSession(cwd);
 
+  let customInstructions = "";
+  if (settings.customInstructionsType === "text" && settings.customInstructionsText) {
+    customInstructions = settings.customInstructionsText.slice(0, 1000);
+  } else if (settings.customInstructionsType === "file" && settings.customInstructionsFilePath) {
+    try {
+      const fullPath = join(cwd, settings.customInstructionsFilePath);
+      if (existsSync(fullPath)) {
+        customInstructions = readFileSync(fullPath, "utf-8");
+      }
+    } catch {}
+  }
+
   const systemPrompt = buildSystemPrompt({
     mode: settings.responseMode,
     cwd,
@@ -94,6 +107,7 @@ export async function runQueryLoop(
     contextSession: contextSession || undefined,
     projectFiles,
     gitBranch: gitBranch || undefined,
+    customInstructions: customInstructions || undefined,
   });
 
   const tools = getToolsForProvider();
@@ -129,12 +143,13 @@ export async function runQueryLoop(
     try {
       let apiKey = settings.apiKey;
 
+      const activeModel = modelOverride || settings.model;
       const stream = tracedProvider.stream(messages, tools, {
-        model: settings.model,
+        model: activeModel,
         apiKey,
         baseUrl: settings.baseUrl,
         systemPrompt,
-        maxTokens: settings.maxTokens || Math.min(provider.config.models.find((m) => m.id === settings.model)?.maxOutput || 8192, 16000),
+        maxTokens: settings.maxTokens || Math.min(provider.config.models.find((m) => m.id === activeModel)?.maxOutput || 8192, 16000),
       });
 
       for await (const chunk of stream) {
@@ -176,7 +191,7 @@ export async function runQueryLoop(
 
           case "tool_executed":
             // Provider already ran the tool (e.g. anthropic-max via Claude CLI).
-            // Surface to the UI without going through OpenAgent's tool execution layer.
+            // Surface to the UI without going through mAI CLI's tool execution layer.
             if (chunk.toolCall) {
               callbacks.onToolStart(chunk.toolCall.name, chunk.toolCall.id);
               let parsedArgs: Record<string, unknown> = {};

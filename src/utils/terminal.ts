@@ -1,18 +1,19 @@
 import chalk from "chalk";
 
-export const BANNER = chalk.cyan(`
-   ____                   ___                    __
-  / __ \\____  ___  ____  /   | ____ ____  ____  / /_
- / / / / __ \\/ _ \\/ __ \\/  /| |/ __ \`/ _ \\/ __ \\/ __/
-/ /_/ / /_/ /  __/ / / / ___ / /_/ /  __/ / / / /_
-\\____/ .___/\\___/_/ /_/_/  |_\\__, /\\___/_/ /_/\\__/
-    /_/                     /____/
-`);
+export const BANNER = `
+${chalk.blue.bold("███╗   ███╗")}${chalk.red.bold("██████╗ ██╗")}${chalk.yellow.bold("     ██████╗██╗")}${chalk.green.bold("     ██╗")}
+${chalk.blue.bold("████╗ ████║")}${chalk.red.bold("██╔══██╗██║")}${chalk.yellow.bold("    ██╔════╝██║")}${chalk.green.bold("     ██║")}
+${chalk.blue.bold("██╔████╔██║")}${chalk.red.bold("███████║██║")}${chalk.yellow.bold("    ██║     ██║")}${chalk.green.bold("     ██║")}
+${chalk.blue.bold("██║╚██╔╝██║")}${chalk.red.bold("██╔══██║██║")}${chalk.yellow.bold("    ██║     ██║")}${chalk.green.bold("     ██║")}
+${chalk.blue.bold("██║ ╚═╝ ██║")}${chalk.red.bold("██║  ██║██║")}${chalk.yellow.bold("    ╚██████╗███████╗")}${chalk.green.bold("██║")}
+${chalk.blue.bold("╚═╝     ╚═╝")}${chalk.red.bold("╚═╝  ╚═╝╚═╝")}${chalk.yellow.bold("     ╚═════╝╚══════╝")}${chalk.green.bold("╚═╝")}
+  ${chalk.cyan.bold("mAI CLI")} - ${chalk.white("With mAI CLI, chat and code in your terminal !")}
+`;
 
-export const BANNER_COMPACT = chalk.cyan(`── OpenAgent ──`);
+export const BANNER_COMPACT = chalk.cyan.bold(`mAI CLI`) + chalk.dim(` - With mAI CLI, chat and code in your terminal !`);
 
 export function getBanner(width: number): string {
-  return width >= 60 ? BANNER : BANNER_COMPACT;
+  return width >= 65 ? BANNER : BANNER_COMPACT;
 }
 
 export function getTerminalSize(): { columns: number; rows: number } {

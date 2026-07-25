@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-INSTALL_DIR="/usr/local/lib/openagent"
-BIN_LINK="/usr/local/bin/openagent"
+INSTALL_DIR="/usr/local/lib/mai"
+BIN_LINK="/usr/local/bin/mai"
 
-echo "Installing OpenAgent..."
+echo "Installing mAI CLI..."
 
 if [ -d "$INSTALL_DIR" ]; then
   echo "Removing previous installation..."
@@ -24,7 +24,7 @@ npm install tsx 2>&1 | tail -1
 
 cat > "$INSTALL_DIR/bin/run.sh" << 'SCRIPT'
 #!/bin/bash
-exec npx --prefix /usr/local/lib/openagent tsx /usr/local/lib/openagent/src/entrypoints/cli.tsx "$@"
+exec npx --prefix /usr/local/lib/mai tsx /usr/local/lib/mai/src/entrypoints/cli.tsx "$@"
 SCRIPT
 chmod +x "$INSTALL_DIR/bin/run.sh"
 
@@ -32,5 +32,5 @@ rm -f "$BIN_LINK"
 ln -s "$INSTALL_DIR/bin/run.sh" "$BIN_LINK"
 
 echo ""
-echo "OpenAgent installed successfully!"
-echo "Run 'openagent' from any terminal to start."
+echo "mAI CLI installed successfully!"
+echo "Run 'mai' from any terminal to start."

@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/groq.json";
+
 const config: ProviderConfig = {
   id: "groq",
   name: "Groq",
@@ -16,13 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "GROQ_API_KEY",
   apiKeyUrl: "https://console.groq.com/keys",
-  models: [
-    { id: "llama-3.3-70b-versatile", name: "Llama 3.3 70B", contextWindow: 128000, maxOutput: 32768 },
-    { id: "meta-llama/llama-4-scout-17b-16e-instruct", name: "Llama 4 Scout 17B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "llama-3.1-8b-instant", name: "Llama 3.1 8B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "qwen/qwen3-32b", name: "Qwen 3 32B", contextWindow: 32768, maxOutput: 8192 },
-    { id: "deepseek-r1-distill-llama-70b", name: "DeepSeek R1 Distill 70B", contextWindow: 128000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "llama-3.3-70b-versatile",
   supportsStreaming: true,
   supportsToolUse: true,

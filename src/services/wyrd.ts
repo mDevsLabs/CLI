@@ -5,7 +5,7 @@ import type { Tool } from "../tools/types.js";
  * Opt-in tracing via the Wyrd execution debugger.
  *
  * Enable by setting `WYRD_ENABLED=1`. The wyrd module is loaded lazily so
- * OpenAgent does not require it as a runtime dependency unless tracing
+ * mAI CLI does not require it as a runtime dependency unless tracing
  * is requested. Traces are written to `./.wyrd/traces.duckdb` (override
  * with `WYRD_DIR`).
  */
@@ -44,6 +44,7 @@ export async function createWyrdSessionIfEnabled(opts: {
   if (!tracingRequested()) return NOOP;
   try {
     // Lazy import — wyrd is an optional, link-installed dependency.
+    // @ts-ignore
     const integ = await import("wyrd/integrations/openagent");
     const session = await integ.createWyrdSession({
       agent_id: opts.agent_id,

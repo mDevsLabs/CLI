@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { getConfigDir } from "./settings.js";
 
-export type PermissionMode = "standard" | "cautious" | "unrestricted";
+export type PermissionMode = "standard" | "cautious" | "turbo" | "plan";
 
 export interface PermissionRule {
   tool: string;
@@ -14,7 +14,7 @@ export interface PermissionState {
   mode: PermissionMode;
   globalRules: PermissionRule[];
   projectRules: PermissionRule[];
-  confirmedUnrestrictedDirs: string[];
+  confirmedTurboDirs: string[];
 }
 
 const PERMISSIONS_FILE = "permissions.json";
@@ -32,11 +32,17 @@ const MODE_META: Record<PermissionMode, { label: string; symbol: string; color: 
     color: "red",
     description: "Asks before every tool execution",
   },
-  unrestricted: {
-    label: "Unrestricted",
+  turbo: {
+    label: "Turbo",
     symbol: "*",
     color: "magenta",
     description: "No permission prompts — all tools auto-approved. Use with care.",
+  },
+  plan: {
+    label: "Plan",
+    symbol: "P",
+    color: "blue",
+    description: "Only plans and outlines actions, requires confirmation to execute.",
   },
 };
 
@@ -53,7 +59,7 @@ function getPermissionsPath(): string {
 }
 
 function getProjectPermissionsPath(): string {
-  return join(process.cwd(), ".openagent", "permissions.json");
+  return join(process.cwd(), ".mai", "permissions.json");
 }
 
 export function loadPermissions(): PermissionState {
@@ -63,7 +69,7 @@ export function loadPermissions(): PermissionState {
       mode: "standard",
       globalRules: [],
       projectRules: [],
-      confirmedUnrestrictedDirs: [],
+      confirmedTurboDirs: [],
     };
   }
 
@@ -74,7 +80,7 @@ export function loadPermissions(): PermissionState {
       mode: "standard",
       globalRules: [],
       projectRules: [],
-      confirmedUnrestrictedDirs: [],
+      confirmedTurboDirs: [],
     };
   }
 }
@@ -93,17 +99,17 @@ export function setMode(mode: PermissionMode): void {
   savePermissions(state);
 }
 
-export function isUnrestrictedConfirmedForDir(dir: string): boolean {
+export function isTurboConfirmedForDir(dir: string): boolean {
   const state = loadPermissions();
-  return state.confirmedUnrestrictedDirs.includes(dir);
+  return state.confirmedTurboDirs.includes(dir);
 }
 
-export function confirmUnrestrictedForDir(dir: string): void {
+export function confirmTurboForDir(dir: string): void {
   const state = loadPermissions();
-  if (!state.confirmedUnrestrictedDirs.includes(dir)) {
-    state.confirmedUnrestrictedDirs.push(dir);
+  if (!state.confirmedTurboDirs.includes(dir)) {
+    state.confirmedTurboDirs.push(dir);
   }
-  state.mode = "unrestricted";
+  state.mode = "turbo";
   savePermissions(state);
 }
 
@@ -132,7 +138,7 @@ export function removeRule(tool: string, scope: "global" | "project"): void {
 export function shouldPrompt(toolName: string): boolean {
   const state = loadPermissions();
 
-  if (state.mode === "unrestricted") return false;
+  if (state.mode === "turbo") return false;
   if (state.mode === "cautious") return true;
 
   const allRules = [...state.projectRules, ...state.globalRules];

@@ -132,7 +132,7 @@ export async function setupX(): Promise<string> {
         const v = url.searchParams.get("oauth_verifier");
         if (v) {
           res.writeHead(200, { "Content-Type": "text/html" });
-          res.end("<h2>OpenAgent authorized! You can close this tab.</h2>");
+          res.end("<h2>mAI CLI authorized! You can close this tab.</h2>");
           clearTimeout(timeout);
           server.close();
           resolve(v);

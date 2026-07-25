@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 $ErrorActionPreference = "Stop"
 
-$InstallRoot = Join-Path $env:USERPROFILE ".openagent"
+$InstallRoot = Join-Path $env:USERPROFILE ".mai"
 $InstallDir  = Join-Path $InstallRoot "app"
 $BinDir      = Join-Path $InstallRoot "bin"
-$BinShim     = Join-Path $BinDir "openagent.cmd"
+$BinShim     = Join-Path $BinDir "mai.cmd"
 
 function Write-Step($msg) { Write-Host "  $msg" -ForegroundColor Cyan }
 function Write-Ok($msg)   { Write-Host "  $msg" -ForegroundColor Green }
@@ -59,25 +59,25 @@ function Remove-FromUserPath($dir) {
   }
 }
 
-function Uninstall-OpenAgent {
-  Write-Step "Uninstalling OpenAgent..."
+function Uninstall-mAI CLI {
+  Write-Step "Uninstalling mAI CLI..."
   if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir }
   if (Test-Path $BinDir)     { Remove-Item -Recurse -Force $BinDir }
   Remove-FromUserPath $BinDir
   if ((Test-Path $InstallRoot) -and -not (Get-ChildItem -Force $InstallRoot)) {
     Remove-Item -Force $InstallRoot
   }
-  Write-Ok "OpenAgent removed."
+  Write-Ok "mAI CLI removed."
   Write-Host "  (Sessions and config under $InstallRoot were preserved if present.)"
 }
 
 Write-Host ""
-Write-Step "Installing OpenAgent..."
+Write-Step "Installing mAI CLI..."
 Write-Host ""
 
 if (Test-Path $InstallDir) {
   Write-Host ""
-  Write-Warn "OpenAgent is already installed at $InstallDir"
+  Write-Warn "mAI CLI is already installed at $InstallDir"
   Write-Host ""
   Write-Host "    [u] Update    — reinstall over existing"
   Write-Host "    [r] Remove    — uninstall"
@@ -86,7 +86,7 @@ if (Test-Path $InstallDir) {
   $choice = Read-Choice "  Choice [u/r/c]" @("u", "r", "c", "update", "remove", "cancel")
   switch -Regex ($choice) {
     "^(u|update)$" { Write-Step "Updating..."; Write-Host "" }
-    "^(r|remove)$" { Uninstall-OpenAgent; exit 0 }
+    "^(r|remove)$" { Uninstall-mAI CLI; exit 0 }
     "^(c|cancel)$" { Write-Host "  Cancelled."; exit 0 }
   }
 }
@@ -173,9 +173,9 @@ if ($pathParts -notcontains $BinDir) {
 }
 
 Write-Host ""
-Write-Ok "OpenAgent installed!"
+Write-Ok "mAI CLI installed!"
 Write-Host ""
-Write-Host "  Run: openagent"
+Write-Host "  Run: mai"
 Write-Host ""
-Write-Host "  If 'openagent' isn't found, open a new terminal so PATH refreshes."
+Write-Host "  If 'mai' isn't found, open a new terminal so PATH refreshes."
 Write-Host ""

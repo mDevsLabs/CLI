@@ -10,9 +10,16 @@ export interface OpenAgentSettings {
   apiKey: string;
   baseUrl?: string;
   responseMode: ResponseMode;
+  defaultPermissionMode?: "standard" | "cautious" | "turbo" | "plan" | "terminal";
   maxTokens?: number;
   setupComplete: boolean;
   mcpServers?: Record<string, McpServerConfig>;
+  customInstructionsType?: "text" | "file";
+  customInstructionsText?: string;
+  customInstructionsFilePath?: string;
+  updateChannel?: "stable" | "canary";
+  ignoredDirectories?: string[];
+  customProviders?: CustomProvider[];
   reddit?: {
     clientId: string;
     clientSecret: string;
@@ -33,7 +40,17 @@ export interface McpServerConfig {
   env?: Record<string, string>;
 }
 
-const CONFIG_DIR = join(homedir(), ".openagent");
+export interface CustomProvider {
+  id: string;
+  name: string;
+  sdk: "openai" | "anthropic" | "google";
+  baseUrl: string;
+  apiKey: string;
+  models: Array<{ id: string; name: string }>;
+  createdAt: string;
+}
+
+const CONFIG_DIR = join(homedir(), ".mai");
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 
 function ensureConfigDir() {
@@ -56,6 +73,7 @@ export function loadSettings(): OpenAgentSettings {
       model: "",
       apiKey: "",
       responseMode: "concise",
+      defaultPermissionMode: "standard",
       setupComplete: false,
     };
   }
@@ -69,6 +87,7 @@ export function loadSettings(): OpenAgentSettings {
       model: "",
       apiKey: "",
       responseMode: "concise",
+      defaultPermissionMode: "standard",
       setupComplete: false,
     };
   }
@@ -84,6 +103,49 @@ export function updateSettings(partial: Partial<OpenAgentSettings>): OpenAgentSe
   const updated = { ...current, ...partial };
   saveSettings(updated);
   return updated;
+}
+
+export function isSetupComplete(): boolean {
+  const s = loadSettings();
+  return s.setupComplete && !!s.provider && !!s.model;
+}
+
+export function getCustomProviders(): CustomProvider[] {
+  const s = loadSettings();
+  return s.customProviders || [];
+}
+
+export function addCustomProvider(provider: CustomProvider): void {
+  const s = loadSettings();
+  if (!s.customProviders) s.customProviders = [];
+  const existingIndex = s.customProviders.findIndex((p) => p.id === provider.id);
+  if (existingIndex >= 0) {
+    s.customProviders[existingIndex] = provider;
+  } else {
+    s.customProviders.push(provider);
+  }
+  saveSettings(s);
+}
+
+export function removeCustomProvider(id: string): void {
+  const s = loadSettings();
+  if (!s.customProviders) return;
+  s.customProviders = s.customProviders.filter((p) => p.id !== id);
+  saveSettings(s);
+}
+
+export function getCustomProvider(id: string): CustomProvider | undefined {
+  return getCustomProviders().find((p) => p.id === id);
+}
+
+export function addModelToCustomProvider(providerId: string, model: { id: string; name: string }): void {
+  const s = loadSettings();
+  if (!s.customProviders) return;
+  const p = s.customProviders.find((x) => x.id === providerId);
+  if (p) {
+    p.models.push(model);
+    saveSettings(s);
+  }
 }
 
 export function getSessionsDir(): string {

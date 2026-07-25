@@ -10,30 +10,67 @@ import { getBanner } from "../utils/terminal.js";
 import {
   loadPermissions,
   savePermissions,
-  isUnrestrictedConfirmedForDir,
-  confirmUnrestrictedForDir,
+  isTurboConfirmedForDir,
+  confirmTurboForDir,
 } from "../config/permissions.js";
 import { checkForUpdate, runUpgrade, getCurrentVersion } from "../utils/updateCheck.js";
 
 const program = new Command();
 
 program
-  .name("openagent")
+  .name("mai")
   .description("Open-source agentic coding CLI — multi-provider, token-efficient, extensible")
-  .version("0.1.64-20260516")
+  .version(getCurrentVersion())
   .option("--setup", "Run the setup wizard")
   .option("--provider <id>", "Override provider (openai, anthropic, gemini, etc.)")
   .option("--model <id>", "Override model")
   .option("--mode <mode>", "Response mode: concise or explanative")
   .option("--sessions", "List recent sessions")
-  .option("-u, --unrestricted", "Run in unrestricted mode (no permission prompts)")
+  .option("-u, --turbo", "Run in turbo mode (no permission prompts)")
   .option("-c, --cautious", "Run in cautious mode (prompt before every tool)")
   .option("-t, --think", "Enable thinking/reasoning mode")
-  .option("--upgrade", "Upgrade OpenAgent to the latest version")
+  .option("--update", "Update mAI CLI to the latest version")
+  .option("--upgrade", "Upgrade mAI CLI to the latest version")
   .option("--prompt <text>", "Headless one-shot mode: run a single prompt and exit. Used by Wyrd's Re-execute feature.")
   .action(async (options) => {
-    if (options.upgrade) {
-      await runUpgrade();
+    if (options.update || options.upgrade) {
+      const readline = await import("node:readline");
+      const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+      const settings = loadSettings();
+      const defaultChannel = settings.updateChannel || "stable";
+      const channel = await new Promise<"stable" | "canary">((resolve) => {
+        console.log(`\nUpdate channel (current default: ${defaultChannel}):`);
+        console.log("  1. Stable (main branch)");
+        console.log("  2. Canary (canary branch)");
+        rl.question(`Select channel [1/2] (press enter for ${defaultChannel}): `, (ans) => {
+          rl.close();
+          const trimmed = ans.trim();
+          if (trimmed === "2" || trimmed.toLowerCase() === "canary") resolve("canary");
+          else if (trimmed === "1" || trimmed.toLowerCase() === "stable") resolve("stable");
+          else resolve(defaultChannel as "stable" | "canary");
+        });
+      });
+
+      const oldVersion = getCurrentVersion();
+      const { getUpdateCommand } = await import("../utils/updateCheck.js");
+      const cmdStr = getUpdateCommand(channel);
+      console.log(`\nExecuting update command for ${channel} channel:`);
+      console.log(`> ${cmdStr}\n`);
+
+      const { execSync } = await import("node:child_process");
+      try {
+        execSync(cmdStr, { stdio: "inherit" });
+      } catch {
+        console.error("Update command encountered an error.");
+      }
+
+      const newVersion = getCurrentVersion();
+      console.log("");
+      if (newVersion === oldVersion) {
+        console.error(`⚠️  Update resulting in same version: v${oldVersion}. Already up to date or update failed.`);
+      } else {
+        console.log(`✅ Successfully updated from v${oldVersion} to v${newVersion}!`);
+      }
       return;
     }
 
@@ -54,7 +91,7 @@ program
       const { createSession } = await import("../session/history.js");
       const provider = getProvider(settings.provider);
       if (!provider) {
-        process.stderr.write(`error: provider "${settings.provider}" not configured. Run \`openagent --setup\` first.\n`);
+        process.stderr.write(`error: provider "${settings.provider}" not configured. Run \`mai --setup\` first.\n`);
         process.exit(1);
       }
       const sessionMeta = createSession(process.cwd(), settings.provider, settings.model);
@@ -68,7 +105,7 @@ program
         onToolEnd: (name: string, _id: string, _result: string, err?: string) => {
           process.stderr.write(`[tool:end] ${name}${err ? ` error=${err}` : ""}\n`);
         },
-        onToolPermission: async () => true, // headless: auto-allow. Caller scopes via --unrestricted policy.
+        onToolPermission: async () => true, // headless: auto-allow. Caller scopes via --turbo policy.
         onDone: (usage: { inputTokens: number; outputTokens: number }) => {
           process.stderr.write(
             `\n[done] ${usage.inputTokens}↓ ${usage.outputTokens}↑\n`,
@@ -97,31 +134,33 @@ program
           console.log(`  ${i + 1}. ${s.summary || "(no summary)"}`);
           console.log(`     ${date} — ${s.messageCount} messages — ${s.provider}/${s.model}`);
         });
-        console.log("\nRun: openagent --resume <number>");
+        console.log("\nRun: mai --resume <number>");
       }
       return;
     }
 
-    if (options.unrestricted) {
+    if (options.turbo) {
       const cwd = process.cwd();
-      if (!isUnrestrictedConfirmedForDir(cwd)) {
+      const state = loadPermissions();
+      if (!isTurboConfirmedForDir(cwd)) {
         const readline = await import("node:readline");
         const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
         const answer = await new Promise<string>((resolve) => {
-          console.log("\n⚠️  Unrestricted mode disables ALL permission prompts.");
+          console.log("\n⚠️  Turbo mode disables ALL permission prompts.");
           console.log("   The AI can execute any command, modify any file, and make network requests without asking.\n");
-          rl.question("   Enable unrestricted mode for this directory? (yes/no): ", resolve);
+          rl.question("   Enable turbo mode for this directory? (yes/no): ", resolve);
         });
         rl.close();
         if (answer.toLowerCase() !== "yes" && answer.toLowerCase() !== "y") {
           console.log("Cancelled. Starting in standard mode.");
         } else {
-          confirmUnrestrictedForDir(cwd);
-          console.log("Unrestricted mode enabled for this directory.\n");
+          confirmTurboForDir(cwd);
+          state.mode = "turbo";
+          savePermissions(state);
+          console.log("Turbo mode enabled for this directory.\n");
         }
       } else {
-        const state = loadPermissions();
-        state.mode = "unrestricted";
+        state.mode = "turbo";
         savePermissions(state);
       }
     }
@@ -143,7 +182,7 @@ program
     const newVersion = await checkForUpdate().catch(() => null);
     if (newVersion) {
       console.log(`\n  \x1b[33m⬆ Update available: v${newVersion}\x1b[0m (current: v${getCurrentVersion()})`);
-      console.log(`  Run \x1b[36mopenagent --upgrade\x1b[0m to update\n`);
+      console.log(`  Run \x1b[36mmai --upgrade\x1b[0m to update\n`);
     }
 
     const forceSetup = options.setup || false;
@@ -152,8 +191,8 @@ program
       const { unlinkSync, existsSync } = await import("node:fs");
       const { join } = await import("node:path");
       const { homedir } = await import("node:os");
-      const oauthPath = join(homedir(), ".openagent", ".claude-oauth.json");
-      const configPath = join(homedir(), ".openagent", "config.json");
+      const oauthPath = join(homedir(), ".mai", ".claude-oauth.json");
+      const configPath = join(homedir(), ".mai", "config.json");
       if (existsSync(oauthPath)) unlinkSync(oauthPath);
       if (existsSync(configPath)) unlinkSync(configPath);
     }

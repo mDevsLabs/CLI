@@ -12,7 +12,12 @@ import { openrouterProvider } from "./openrouter.js";
 import { bedrockProvider } from "./bedrock.js";
 import { alibabaProvider } from "./alibaba.js";
 import { anthropicMaxProvider } from "./anthropicMax.js";
+import { ollamaCloudProvider } from "./ollamaCloud.js";
+import { huggingfaceProvider } from "./huggingface.js";
+import { nvidiaProvider } from "./nvidia.js";
 import type { Provider, ProviderConfig } from "./types.js";
+import type { CustomProvider } from "../config/settings.js";
+import { getCustomProviders } from "../config/settings.js";
 
 export const providers: Map<string, Provider> = new Map([
   ["openrouter", openrouterProvider],
@@ -26,17 +31,86 @@ export const providers: Map<string, Provider> = new Map([
   ["deepseek", deepseekProvider],
   ["xai", xaiProvider],
   ["bedrock", bedrockProvider],
+  ["ollama-cloud", ollamaCloudProvider],
+  ["huggingface", huggingfaceProvider],
+  ["nvidia", nvidiaProvider],
   ["ollama", ollamaProvider],
   ["lmstudio", lmstudioProvider],
   ["mlx", mlxProvider],
 ]);
 
+// ─── Custom provider adapter ──────────────────────────────────────────────────
+
+/**
+ * Converts a stored CustomProvider config into a fully functional Provider
+ * object that delegates API calls to the matching SDK (OpenAI-compat / Anthropic / Google).
+ */
+function customProviderToProvider(cp: CustomProvider): Provider {
+  const config: ProviderConfig = {
+    id: cp.id,
+    name: cp.name,
+    description: `Custom provider — ${cp.sdk} SDK`,
+    category: "cloud",
+    apiKeyEnvVar: "",
+    apiKeyUrl: "",
+    models: cp.models.map((m) => ({
+      id: m.id,
+      name: m.name,
+      contextWindow: 128000,
+      maxOutput: 8192,
+    })),
+    defaultModel: cp.models[0]?.id ?? "",
+    supportsStreaming: true,
+    supportsToolUse: cp.sdk !== "google",
+    supportsVision: false,
+  };
+
+  // We borrow the SDK implementation from the matching built-in provider,
+  // but override config (id, name, baseUrl, apiKey) at request time.
+  let baseProvider: Provider;
+  if (cp.sdk === "anthropic") {
+    baseProvider = anthropicProvider;
+  } else if (cp.sdk === "google") {
+    baseProvider = geminiProvider;
+  } else {
+    // openai-compatible (default)
+    baseProvider = openaiProvider;
+  }
+
+  return {
+    config,
+    validateApiKey: async (key: string) => baseProvider.validateApiKey(key),
+    stream: (messages, tools, options) =>
+      baseProvider.stream(messages, tools, {
+        ...options,
+        baseUrl: options.baseUrl || cp.baseUrl,
+        apiKey: options.apiKey || cp.apiKey,
+      }),
+    complete: (messages, tools, options) =>
+      baseProvider.complete(messages, tools, {
+        ...options,
+        baseUrl: options.baseUrl || cp.baseUrl,
+        apiKey: options.apiKey || cp.apiKey,
+      }),
+  };
+}
+
+// ─── Provider registry ────────────────────────────────────────────────────────
+
 export function getProvider(id: string): Provider | undefined {
-  return providers.get(id);
+  // Check static providers first
+  if (providers.has(id)) return providers.get(id);
+  // Then check custom providers from config
+  const customs = getCustomProviders();
+  const custom = customs.find((c) => c.id === id);
+  if (custom) return customProviderToProvider(custom);
+  return undefined;
 }
 
 export function getAllProviders(): Provider[] {
-  return Array.from(providers.values());
+  const staticList = Array.from(providers.values());
+  const customList = getCustomProviders().map(customProviderToProvider);
+  return [...staticList, ...customList];
 }
 
 export function searchProviders(query: string): Provider[] {
@@ -81,3 +155,4 @@ export type {
   TokenUsage,
   ProviderToolCall,
 } from "./types.js";
+

@@ -30,7 +30,7 @@ import type { TokenUsage } from "../providers/types.js";
 
 export interface CommandResult {
   output: string;
-  action?: "clear" | "exit" | "resume" | "setup" | "switch-view" | "pick-provider" | "pick-model" | "setup-reddit" | "setup-x" | "compact" | "pick-mcp" | "pick-plugins" | "upload";
+  action?: "clear" | "exit" | "resume" | "setup" | "switch-view" | "pick-provider" | "pick-model" | "pick-model-selector" | "pick-provider-manager" | "setup-reddit" | "setup-x" | "compact" | "pick-mcp" | "pick-plugins" | "upload" | "queue-message" | "pick-settings" | "exit-update";
   data?: any;
 }
 
@@ -57,36 +57,42 @@ function cmd(name: string, aliases: string[], category: string, description: str
   commands.push({ name, aliases, category, description, handler });
 }
 
-cmd("help", ["h", "?", "commands"], "General", "Show all available commands", (args) => {
+cmd("help", ["h", "?", "doc", "documentation"], "General", "Open documentation & help in browser", (args) => {
   if (args) {
     const found = commands.find((c) => c.name === args || c.aliases.includes(args));
     if (found) {
       return { output: `/${found.name} — ${found.description}\n  Aliases: ${found.aliases.length ? found.aliases.map(a => `/${a}`).join(", ") : "none"}` };
     }
-    return { output: `Unknown command: /${args}. Type /help for all commands.` };
+    return { output: `Unknown command: /${args}. Type /help to open documentation.` };
   }
 
-  const categories = new Map<string, CommandDef[]>();
-  for (const c of commands) {
-    const list = categories.get(c.category) || [];
-    list.push(c);
-    categories.set(c.category, list);
+  const { existsSync, copyFileSync, mkdirSync } = require("node:fs");
+  const { join } = require("node:path");
+  const { homedir } = require("node:os");
+
+  const localAssetsPath = join(process.cwd(), "src", "assets", "help.html");
+  const maiDir = join(homedir(), ".mai");
+  const userHelpPath = join(maiDir, "help.html");
+
+  let pathToOpen = userHelpPath;
+  if (existsSync(localAssetsPath)) {
+    pathToOpen = localAssetsPath;
+    try {
+      if (!existsSync(maiDir)) mkdirSync(maiDir, { recursive: true });
+      copyFileSync(localAssetsPath, userHelpPath);
+    } catch {}
   }
 
-  let output = "OpenAgent Commands\n\n";
-  for (const [cat, cmds] of categories) {
-    output += `  ${cat}\n`;
-    for (const c of cmds) {
-      const aliasStr = c.aliases.length ? ` (${c.aliases.map(a => `/${a}`).join(", ")})` : "";
-      output += `    /${c.name.padEnd(20)} ${c.description}${aliasStr}\n`;
-    }
-    output += "\n";
+  try {
+    openUrl(pathToOpen);
+    return { output: `Opening documentation in browser: ${pathToOpen}` };
+  } catch (err: any) {
+    return { output: `Failed to open browser. Documentation path: ${pathToOpen}` };
   }
-  return { output };
 });
 
-cmd("exit", ["quit", "q"], "General", "Exit OpenAgent", () => {
-  return { output: "Goodbye.", action: "exit" };
+cmd("exit", ["quit", "q"], "General", "Exit mAI CLI", () => {
+  return { output: "Resume your conversation using the /resume command.", action: "exit" };
 });
 
 cmd("clear", ["cls", "reset"], "Conversation", "Clear conversation history", () => {
@@ -137,17 +143,7 @@ cmd("copy", ["cp"], "Conversation", "Copy last assistant response to clipboard",
   return { output: "Last response copied to clipboard." };
 });
 
-cmd("diff", ["changes"], "Git", "Show uncommitted changes", (_args, ctx) => {
-  return new Promise((res) => {
-    exec("git diff --stat", { cwd: ctx.cwd, maxBuffer: 1024 * 1024, ...SHELL_OPTS }, (err, stat) => {
-      if (err) return res({ output: "Not a git repository or git not available." });
-      exec("git diff", { cwd: ctx.cwd, maxBuffer: 1024 * 1024, ...SHELL_OPTS }, (_e, body) => {
-        const out = `${stat.trim()}\n---\n${body.trim()}`.trim();
-        res({ output: out || "No uncommitted changes." });
-      });
-    });
-  });
-});
+
 
 cmd("status", ["st", "git-status"], "Git", "Show git status", (_args, ctx) => {
   return new Promise((res) => {
@@ -281,7 +277,7 @@ cmd("permissions", ["perms", "perm", "allowed-tools"], "Permissions", "View and 
       const active = m.id === state.mode ? " (active)" : "";
       output += `  ${m.symbol} ${m.label.padEnd(15)} ${m.description}${active}\n`;
     }
-    output += "\nSwitch mode: openagent --unrestricted  or  openagent --cautious";
+    output += "\nSwitch mode: mai --turbo  or  mai --cautious";
     return { output };
   }
 
@@ -305,7 +301,7 @@ cmd("mode", [], "Permissions", "Show or change permission mode", (args) => {
     return { output: `Current mode: ${meta.label} [${meta.symbol}] — ${meta.description}` };
   }
 
-  const valid: PermissionMode[] = ["standard", "cautious", "unrestricted"];
+  const valid: PermissionMode[] = ["standard", "cautious", "plan", "turbo"];
   if (valid.includes(args as PermissionMode)) {
     const state = loadPermissions();
     state.mode = args as PermissionMode;
@@ -314,10 +310,10 @@ cmd("mode", [], "Permissions", "Show or change permission mode", (args) => {
     return { output: `Switched to ${meta.label} mode — ${meta.description}` };
   }
 
-  return { output: `Invalid mode. Options: standard, cautious, unrestricted` };
+  return { output: `Invalid mode. Options: standard, cautious, plan, turbo` };
 });
 
-cmd("provider", ["providers"], "Config", "Switch provider — interactive selector", (args) => {
+cmd("provider", ["providers"], "Config", "Manage providers — configure API keys, add custom providers", (args) => {
   if (args) {
     const results = searchProviders(args);
     if (results.length === 1) {
@@ -327,33 +323,23 @@ cmd("provider", ["providers"], "Config", "Switch provider — interactive select
       saveSettings(settings);
       return { output: `Switched to ${results[0].config.name} (${results[0].config.defaultModel})` };
     }
-    return { output: `No exact match for "${args}".`, action: "pick-provider" };
+    return { output: `No exact match for "${args}".`, action: "pick-provider-manager" };
   }
-  return { output: "", action: "pick-provider" };
+  return { output: "", action: "pick-provider-manager" };
 });
 
-cmd("model", ["m", "models"], "Config", "Switch model — interactive selector", (args) => {
-  if (args) {
-    const results = searchModels(args);
-    if (results.length >= 1) {
-      const match = results[0];
-      const settings = loadSettings();
-      settings.provider = match.provider.id;
-      settings.model = match.model.id;
-      saveSettings(settings);
-      return { output: `Switched to ${match.provider.name} / ${match.model.name}` };
-    }
-    return { output: `No model matching "${args}".`, action: "pick-model" };
-  }
-  return { output: "", action: "pick-model" };
+cmd("model", ["m", "models"], "Config", "Switch model for this session — grouped by provider", (args) => {
+  return { output: "", data: { initialSearch: args }, action: "pick-model-selector" };
 });
 
-cmd("config", ["settings", "cfg"], "Config", "Show current configuration", () => {
+cmd("settings", ["preferences"], "Config", "Interactive settings menu (model, provider, custom instructions, update channel)", () => {
+  return { output: "Opening settings...", action: "pick-settings" };
+});
+
+cmd("config", ["cfg"], "Config", "Show current configuration", () => {
   const settings = loadSettings();
-  const perms = loadPermissions();
-  const meta = getModeMeta(perms.mode);
   return {
-    output: `OpenAgent Configuration\n\n  Provider:     ${settings.provider}\n  Model:        ${settings.model}\n  Mode:         ${settings.responseMode}\n  Permissions:  ${meta.label} [${meta.symbol}]\n  Config dir:   ${getConfigDir()}\n\nEdit: ~/.openagent/config.json`,
+    output: `Provider:   ${settings.provider}\nModel:      ${settings.model}\nConfig dir: ${getConfigDir()}`,
   };
 });
 
@@ -389,7 +375,7 @@ cmd("response-mode", ["concise", "explanative", "style"], "Config", "Switch betw
 });
 
 cmd("setup", ["init", "configure"], "Config", "Re-run the setup wizard", () => {
-  return { output: "Run: openagent --setup", action: "setup" };
+  return { output: "Run: mai --setup", action: "setup" };
 });
 
 cmd("tools", ["t"], "Tools", "List all available tools", () => {
@@ -430,7 +416,7 @@ cmd("files", ["ls", "tree"], "Files", "List files in current directory", (args, 
     const entries = readdirSync(target, { withFileTypes: true });
     let output = `${target}\n\n`;
     for (const e of entries.slice(0, 100)) {
-      const prefix = e.isDirectory() ? "  📁 " : "  📄 ";
+      const prefix = e.isDirectory() ? "  [DIR] " : "  [FILE] ";
       output += `${prefix}${e.name}\n`;
     }
     if (entries.length > 100) output += `  ... and ${entries.length - 100} more\n`;
@@ -548,11 +534,9 @@ cmd("whoami", ["me", "account"], "Info", "Show current identity and account info
   return { output: `Provider: ${settings.provider}\nModel: ${settings.model}\nConfig: ${getConfigDir()}` };
 });
 
-cmd("version", ["v", "ver", "about"], "Info", "Show OpenAgent version and info", async () => {
+cmd("version", ["v", "ver", "about"], "Info", "Show mAI CLI version", async () => {
   const { getCurrentVersion } = await import("../utils/updateCheck.js");
-  const { loadSettings } = await import("../config/settings.js");
-  const settings = loadSettings();
-  return { output: `OpenAgent v${getCurrentVersion()}\n  Provider: ${settings.provider}\n  Model: ${settings.model}\n  github.com/ask-sol/openagent` };
+  return { output: getCurrentVersion() };
 });
 
 cmd("doctor", ["diagnose", "health"], "Info", "Check system health and dependencies", (_args, ctx) => {
@@ -574,7 +558,7 @@ cmd("doctor", ["diagnose", "health"], "Info", "Check system health and dependenc
     checks.push(await check("rg (ripgrep)", "rg --version"));
 
     const settings = loadSettings();
-    checks.push(`  ${settings.setupComplete ? "✓" : "✗"} OpenAgent configured: ${settings.setupComplete}`);
+    checks.push(`  ${settings.setupComplete ? "✓" : "✗"} mAI CLI configured: ${settings.setupComplete}`);
     checks.push(`  ✓ Provider: ${settings.provider}`);
     checks.push(`  ✓ Model: ${settings.model}`);
 
@@ -644,10 +628,6 @@ cmd("brief", ["verbose"], "UI", "Toggle between brief and verbose output", () =>
   settings.responseMode = next;
   saveSettings(settings);
   return { output: `Switched to ${next} mode` };
-});
-
-cmd("plan", [], "Workflow", "Enable plan mode — AI outlines before executing", () => {
-  return { output: "Plan mode enabled. The AI will outline its approach before making changes.\nSend a task to see the plan." };
 });
 
 cmd("undo", ["revert"], "Workflow", "Undo the last file change", (_args, ctx) => {
@@ -942,24 +922,32 @@ cmd("keybindings", ["keys", "shortcuts"], "UI", "Show keyboard shortcuts", () =>
   };
 });
 
-cmd("upgrade", ["update"], "General", "Check for updates and upgrade OpenAgent", async () => {
-  return { output: "Run 'openagent --upgrade' from your terminal to update.", action: "exit" };
+cmd("update", ["upgrade"], "General", "Update mAI CLI", async () => {
+  const { loadSettings } = await import("../config/settings.js");
+  const { getUpdateCommand } = await import("../utils/updateCheck.js");
+  const settings = loadSettings();
+  const channel = settings.updateChannel || "stable";
+  const cmdStr = getUpdateCommand(channel);
+  return {
+    output: `Update mAI CLI using the following command or by running \`mai --update\`:\n${cmdStr}`,
+    action: "exit-update",
+  };
 });
 
 cmd("changelog", ["release-notes", "whats-new"], "Info", "Show recent changes", () => {
-  return { output: "OpenAgent v0.1.25\n  12 providers including Anthropic Max plan support\n  Claude Code integration for Max/Pro subscribers\n  70+ slash commands\n  Local model support with Ollama auto-install\n  Web search, social media, MCP servers\n  Discord & WhatsApp bridges\n  Terminal mode (Ctrl+T)\n  Permission modes with visual theme\n  Real-time cost tracking\n  Auto-update via Homebrew" };
+  return { output: "mAI CLI v0.1.25\n  12 providers including Anthropic Max plan support\n  Claude Code integration for Max/Pro subscribers\n  70+ slash commands\n  Local model support with Ollama auto-install\n  Web search, social media, MCP servers\n  Discord & WhatsApp bridges\n  Terminal mode (Ctrl+T)\n  Permission modes with visual theme\n  Real-time cost tracking\n  Auto-update via Homebrew" };
 });
 
 cmd("feedback", ["report", "bug"], "Info", "Submit feedback or report a bug", () => {
-  return { output: "Report issues at: https://github.com/openagent-cli/openagent/issues\nOr describe the issue to the AI and ask it to help troubleshoot." };
+  return { output: "Report issues at: https://github.com/mDevsLabs/mAI-CLI/issues\nOr describe the issue to the AI and ask it to help troubleshoot." };
 });
 
-cmd("whatsapp", ["wa", "setup-whatsapp"], "Bridges", "Connect WhatsApp to OpenAgent", () => {
-  return { output: "", action: "setup-whatsapp" as any };
-});
-
-cmd("discord", ["setup-discord"], "Bridges", "Connect Discord bot to OpenAgent", () => {
+cmd("discord", ["setup-discord"], "Bridges", "Connect Discord bot to mAI CLI", () => {
   return { output: "", action: "setup-discord" as any };
+});
+
+cmd("whatsapp", ["wa", "setup-whatsapp"], "Bridges", "Connect WhatsApp to mAI CLI", () => {
+  return { output: "", action: "setup-whatsapp" as any };
 });
 
 cmd("autofix", ["fix-loop"], "Dev", "Run a command, read errors, fix them, repeat", (args, ctx) => {
@@ -1007,44 +995,6 @@ cmd("cost", ["price", "spending"], "Session", "Show estimated cost for this sess
   };
 });
 
-cmd("export", ["save-chat"], "Session", "Export conversation to markdown file", (args, ctx) => {
-  const filename = args || `openagent-${new Date().toISOString().slice(0, 10)}.md`;
-  const { loadSession } = require("../session/history.js");
-  const session = loadSession(ctx.sessionId);
-  if (!session || session.messages.length === 0) {
-    return { output: "No messages to export." };
-  }
-
-  let md = `# OpenAgent Session\n\nDate: ${new Date().toISOString()}\n\n---\n\n`;
-  for (const msg of session.messages) {
-    const content = typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content);
-    if (msg.role === "user") md += `## You\n\n${content}\n\n`;
-    else if (msg.role === "assistant") md += `## OpenAgent\n\n${content}\n\n`;
-    else if (msg.role === "tool") md += `> Tool: ${content.slice(0, 200)}\n\n`;
-  }
-
-  try {
-    const { writeFileSync } = require("node:fs");
-    const { resolve } = require("node:path");
-    const path = resolve(ctx.cwd, filename);
-    writeFileSync(path, md);
-    return { output: `Exported to ${path}` };
-  } catch (err: any) {
-    return { output: `Export failed: ${err.message}` };
-  }
-});
-
-cmd("clipboard", ["paste", "cb"], "Utility", "Paste clipboard contents as context", async () => {
-  try {
-    const clip = await import("clipboardy");
-    const content = (await clip.default.read()) || "";
-    if (!content.trim()) return { output: "Clipboard is empty." };
-    return { output: `Clipboard (${content.length} chars):\n${content.slice(0, 2000)}${content.length > 2000 ? "\n... truncated" : ""}` };
-  } catch {
-    return { output: "Could not read clipboard." };
-  }
-});
-
 cmd("image", ["screenshot", "img"], "Utility", "Read an image file (for vision-capable models)", (args) => {
   if (!args) return { output: "Usage: /image <path>\nSends the image to the AI for analysis (requires a vision-capable model like GPT-4o, Gemini, Claude)." };
   return { output: `Ask the AI: "Look at the image at ${args} and describe what you see."` };
@@ -1062,12 +1012,12 @@ cmd("scaffold", ["new", "create"], "Dev", "Scaffold a new project", (args) => {
 
 cmd("review", ["code-review", "cr"], "Git", "Review current changes or a PR", (args, ctx) => {
   if (args) {
-    return { output: `Ask the AI: "Review pull request ${args} and give feedback."` };
+    return { output: "Queuing PR review...", action: "queue-message", data: `Review pull request ${args} and give feedback.` };
   }
   return new Promise((res) => {
     exec("git diff --stat", { cwd: ctx.cwd, ...SHELL_OPTS }, (err, stdout) => {
       if (!stdout?.trim()) return res({ output: "No changes to review." });
-      res({ output: `Changes to review:\n${stdout.trim()}\n\nAsk the AI: "Review my uncommitted changes and give feedback."` });
+      res({ output: "Queuing code review of all uncommitted changes...", action: "queue-message", data: "Review my uncommitted changes and give feedback. Pay attention to bugs, anti-patterns, and readability." });
     });
   });
 });

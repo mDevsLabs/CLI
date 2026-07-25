@@ -4,7 +4,7 @@ import { homedir } from "node:os";
 import type { Plugin } from "../index.js";
 import type { Tool } from "../../tools/types.js";
 
-const SNAPSHOT_ROOT = join(homedir(), ".openagent", "snapshots");
+const SNAPSHOT_ROOT = join(homedir(), ".mai", "snapshots");
 
 function walk(dir: string, base: string, files: string[]) {
   const entries = readdirSync(dir, { withFileTypes: true });

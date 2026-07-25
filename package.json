@@ -1,16 +1,17 @@
 {
-  "name": "openagent",
-  "version": "0.1.64-20260516",
-  "description": "Open-source agentic coding CLI — multi-provider, token-efficient, extensible",
+  "name": "@mdevs/mai-cli",
+  "version": "0.1.0",
+  "description": "Avec mAI CLI, discutez et codez directement dans votre terminal !",
   "type": "module",
   "bin": {
-    "openagent": "./bin/openagent"
+    "mai": "./bin/mai"
   },
   "main": "./dist/cli.mjs",
   "scripts": {
     "dev": "bun run src/entrypoints/cli.tsx",
     "build": "bun run scripts/build.ts",
-    "start": "node dist/cli.mjs"
+    "start": "node dist/cli.mjs",
+    "lint": "bun run tsc --noEmit"
   },
   "engines": {
     "node": ">=20.0.0"

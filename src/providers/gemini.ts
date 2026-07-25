@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/gemini.json";
+
 const config: ProviderConfig = {
   id: "gemini",
   name: "Google Gemini",
@@ -16,13 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "GEMINI_API_KEY",
   apiKeyUrl: "https://aistudio.google.com/apikey",
-  models: [
-    { id: "gemini-3.1-pro", name: "Gemini 3.1 Pro", contextWindow: 2000000, maxOutput: 65536 },
-    { id: "gemini-3-flash", name: "Gemini 3 Flash", contextWindow: 1048576, maxOutput: 65536 },
-    { id: "gemini-3.1-flash-lite", name: "Gemini 3.1 Flash Lite", contextWindow: 1048576, maxOutput: 65536 },
-    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", contextWindow: 1048576, maxOutput: 65536 },
-    { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", contextWindow: 1048576, maxOutput: 65536 },
-  ],
+  models,
   defaultModel: "gemini-3-flash",
   supportsStreaming: true,
   supportsToolUse: true,

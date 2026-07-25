@@ -49,7 +49,26 @@ function saveCheckData(data: CheckData): void {
 }
 
 export function getCurrentVersion(): string {
-  return CURRENT_VERSION;
+  try {
+    const pkgPath = join(process.cwd(), "package.json");
+    if (existsSync(pkgPath)) {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+      if (pkg.version) return pkg.version;
+    }
+  } catch {}
+  return "0.1.0";
+}
+
+export function getUpdateCommand(channel: "stable" | "canary" = "stable"): string {
+  if (isWindows()) {
+    const script = channel === "canary" ? "install-canary.ps1" : "install-remote.ps1";
+    const branch = channel === "canary" ? "canary" : "main";
+    return `powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/${branch}/scripts/${script} | iex"`;
+  } else {
+    const script = channel === "canary" ? "install-canary.sh" : "install-remote.sh";
+    const branch = channel === "canary" ? "canary" : "main";
+    return `curl -fsSL https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/${branch}/scripts/${script} | bash`;
+  }
 }
 
 export async function checkForUpdate(): Promise<string | null> {
@@ -64,7 +83,7 @@ export async function checkForUpdate(): Promise<string | null> {
 
   try {
     const res = await fetch(
-      "https://api.github.com/repos/ask-sol/openagent/releases/latest",
+      "https://api.github.com/repos/mDevsLabs/mAI-CLI/releases/latest",
       { signal: AbortSignal.timeout(5000) }
     );
 
@@ -93,7 +112,7 @@ export async function runUpgrade(): Promise<void> {
   const { spawn } = await import("node:child_process");
   const { LiveProgress, BrewParser } = await import("./progressBar.js");
 
-  const progress = new LiveProgress("Upgrading OpenAgent");
+  const progress = new LiveProgress("Updating mAI CLI");
   progress.start();
 
   const shellCmd = isWindows() ? "powershell.exe" : "/bin/bash";
@@ -124,11 +143,11 @@ export async function runUpgrade(): Promise<void> {
     if (line) progress.update({ detail: line.slice(0, 80) });
   };
 
-  const manualPath = join(homedir(), ".openagent", "app");
+  const manualPath = join(homedir(), ".mai", "app");
   const manualCmd = isWindows()
     ? `cd '${manualPath}'; git pull; npm install`
-    : "cd ~/.openagent/app && git pull && npm install 2>&1";
-  const npmCmd = "npm install -g openagent@latest";
+    : "cd ~/.mai/app && git pull && npm install 2>&1";
+  const npmCmd = "npm install -g @mdevs/mai-cli@latest";
 
   const tryBrew = async () => {
     progress.update({ percent: 2, phase: "Refreshing tap", detail: "" });
@@ -191,7 +210,7 @@ export async function runUpgrade(): Promise<void> {
   for (const a of attempts) {
     try {
       await a.fn();
-      progress.finish(`OpenAgent upgraded successfully (${a.name}).`);
+      progress.finish(`mAI CLI updated successfully (${a.name}).`);
       return;
     } catch {
       // try next

@@ -12,8 +12,8 @@ const SCOPES = "org:create_api_key user:profile user:inference user:sessions:cla
 
 function callbackPage(title: string, message: string, success: boolean): string {
   const color = success ? "#22c55e" : "#ef4444";
-  const icon = success ? "✓" : "✗";
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>OpenAgent</title>
+  const icon = success ? "OK" : "X";
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>mAI CLI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#fff}
@@ -27,7 +27,7 @@ p{color:#888;line-height:1.6}
 <div class="icon" style="color:${color}">${icon}</div>
 <h1>${title}</h1>
 <p>${message}</p>
-<p class="brand">OpenAgent</p>
+<p class="brand">mAI CLI</p>
 </div></body></html>`;
 }
 
@@ -154,7 +154,7 @@ export async function startOAuthLogin(): Promise<{ success: boolean; error?: str
         }
 
         res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(callbackPage("Connected", "OpenAgent is connected to Claude. You can close this tab.", true));
+        res.end(callbackPage("Connected", "mAI CLI is connected to Claude. You can close this tab.", true));
 
         try {
           const tokenRes = await fetch(TOKEN_URL, {

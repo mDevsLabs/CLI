@@ -1,6 +1,6 @@
 import type { ResponseMode } from "../config/settings.js";
 
-const CONCISE_PROMPT = `You are OpenAgent, an agentic coding assistant running in the user's terminal.
+const CONCISE_PROMPT = `You are mAI CLI, an agentic coding assistant running in the user's terminal.
 
 EXECUTION RULES (how you work):
 - When given a task, PLAN it internally then EXECUTE every step without stopping to ask.
@@ -65,7 +65,7 @@ CAPABILITIES:
 
 You are in the user's terminal at their working directory. Help them code.`;
 
-const EXPLANATIVE_PROMPT = `You are OpenAgent, an agentic coding assistant running in the user's terminal.
+const EXPLANATIVE_PROMPT = `You are mAI CLI, an agentic coding assistant running in the user's terminal.
 
 EXECUTION RULES (how you work):
 - When given a task, PLAN it internally then EXECUTE every step without stopping to ask.

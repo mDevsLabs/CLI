@@ -64,7 +64,7 @@ export class LiveProgress {
     }
     this.state.percent = 100;
     this.clear();
-    const icon = ok ? `${C_GREEN}✓${C_RESET}` : `${C_YELLOW}✗${C_RESET}`;
+    const icon = ok ? `${C_GREEN}[OK]${C_RESET}` : `${C_YELLOW}[FAIL]${C_RESET}`;
     const bar = renderBar(100, this.width);
     process.stdout.write(`  ${bar} ${C_BOLD}100%${C_RESET}\n`);
     process.stdout.write(`  ${icon} ${message}\n\n`);
@@ -152,7 +152,7 @@ export class BrewParser {
         const innerPct = parseFloat(pct[1]);
         const span = this.current.endPct - this.current.startPct;
         this.lastPercent = this.current.startPct + (innerPct / 100) * span;
-      } else if (line.includes("🍺") || /\bPoured from/i.test(line)) {
+      } else if (/\bPoured from/i.test(line)) {
         this.lastPercent = 100;
         this.current = BREW_PHASES.summary;
       } else if (line.length < 120 && !line.startsWith("#") && !line.startsWith("curl:")) {

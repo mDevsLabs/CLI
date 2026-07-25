@@ -1,8 +1,8 @@
 #Requires -Version 5.1
 $ErrorActionPreference = "Stop"
 
-$Repo        = "https://github.com/ask-sol/openagent.git"
-$InstallRoot = Join-Path $env:USERPROFILE ".openagent"
+$Repo        = "https://github.com/mDevsLabs/mAI-CLI.git"
+$InstallRoot = Join-Path $env:USERPROFILE ".mai"
 $InstallDir  = Join-Path $InstallRoot "app"
 
 function Write-Step($msg) { Write-Host "  $msg" -ForegroundColor Cyan }
@@ -33,7 +33,7 @@ function Invoke-Native {
 }
 
 Write-Host ""
-Write-Step "Installing OpenAgent..."
+Write-Step "Installing mAI CLI..."
 Write-Host ""
 
 if (-not (Test-Cmd "git")) {
@@ -59,8 +59,8 @@ if (-not (Test-Cmd "git")) {
   exit 1
 }
 
-$TmpDir  = Join-Path $env:TEMP ("openagent-install-" + [System.Guid]::NewGuid().ToString("N").Substring(0, 8))
-$RepoDir = Join-Path $TmpDir "openagent"
+$TmpDir  = Join-Path $env:TEMP ("mai-install-" + [System.Guid]::NewGuid().ToString("N").Substring(0, 8))
+$RepoDir = Join-Path $TmpDir "mai"
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 
 try {

@@ -84,18 +84,16 @@ function buildWriteOutput(filePath: string, content: string, existed: boolean): 
   return out.join("\n");
 }
 
+import models from "./aiModels/anthropicMax.json";
+
 const config: ProviderConfig = {
   id: "anthropic-max",
-  name: "Anthropic (Max Plan)",
+  name: "Anthropic Claude Max",
   description: "Use your Claude Max/Pro subscription — requires Claude Code installed",
   category: "cloud",
   apiKeyEnvVar: "",
   apiKeyUrl: "",
-  models: [
-    { id: "claude-opus-4-7", name: "Claude Opus 4.7", contextWindow: 1000000, maxOutput: 32000 },
-    { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6", contextWindow: 200000, maxOutput: 16000 },
-    { id: "claude-haiku-4-5", name: "Claude Haiku 4.5", contextWindow: 200000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "claude-sonnet-4-6",
   supportsStreaming: true,
   supportsToolUse: false,
@@ -223,7 +221,7 @@ async function* streamRequest(
       if (!sawAssistantOutput) {
         const trimmed = stderrBuf.trim();
         const reason = spawnError
-          ? `Failed to launch 'claude': ${spawnError.message}`
+          ? `Failed to launch 'claude': ${(spawnError as Error).message}`
           : exitCode !== 0
             ? `'claude' exited with code ${exitCode}.`
             : "No output from 'claude'.";
@@ -262,7 +260,7 @@ async function* streamRequest(
             const id = block.id || `call_${toolCount}_${Date.now()}`;
             const filePath = input.file_path || input.path || "";
 
-            // Normalize Claude CLI tool names to OpenAgent's canonical names
+            // Normalize Claude CLI tool names to mAI CLI's canonical names
             const nameMap: Record<string, string> = {
               Edit: "FileEdit",
               Write: "FileWrite",

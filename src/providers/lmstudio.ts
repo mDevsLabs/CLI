@@ -11,6 +11,8 @@ import type {
 
 const DEFAULT_BASE = "http://localhost:1234/v1";
 
+import models from "./aiModels/lmstudio.json";
+
 const config: ProviderConfig = {
   id: "lmstudio",
   name: "LM Studio (Local)",
@@ -18,15 +20,7 @@ const config: ProviderConfig = {
   category: "local",
   apiKeyEnvVar: "LMSTUDIO_HOST",
   apiKeyUrl: "https://lmstudio.ai/download",
-  models: [
-    { id: "google/gemma-4-e2b", name: "Gemma 4 E2B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "google/gemma-4-e4b", name: "Gemma 4 E4B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "google/gemma-4-26b-a4b", name: "Gemma 4 26B MoE", contextWindow: 128000, maxOutput: 8192 },
-    { id: "google/gemma-4-31b", name: "Gemma 4 31B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "qwen/qwen3.5-9b", name: "Qwen 3.5 9B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "qwen/qwen3.5-35b-a3b", name: "Qwen 3.5 35B MoE", contextWindow: 128000, maxOutput: 8192 },
-    { id: "openai/gpt-oss-20b", name: "GPT-OSS 20B", contextWindow: 128000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "google/gemma-4-e4b",
   supportsStreaming: true,
   supportsToolUse: true,

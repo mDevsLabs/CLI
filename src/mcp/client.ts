@@ -58,8 +58,8 @@ function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
 
 export function loadMcpConfig(): Record<string, McpServerConfig> {
   const configPaths = [
-    join(homedir(), ".openagent", "mcp_servers.json"),
-    join(process.cwd(), ".openagent", "mcp_servers.json"),
+    join(homedir(), ".mai", "mcp_servers.json"),
+    join(process.cwd(), ".mai", "mcp_servers.json"),
   ];
 
   let allConfigs: Record<string, McpServerConfig> = {};

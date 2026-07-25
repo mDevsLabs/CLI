@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/deepseek.json";
+
 const config: ProviderConfig = {
   id: "deepseek",
   name: "DeepSeek",
@@ -16,10 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "DEEPSEEK_API_KEY",
   apiKeyUrl: "https://platform.deepseek.com/api_keys",
-  models: [
-    { id: "deepseek-chat", name: "DeepSeek V3.2", contextWindow: 128000, maxOutput: 8192 },
-    { id: "deepseek-reasoner", name: "DeepSeek R1", contextWindow: 128000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "deepseek-chat",
   supportsStreaming: true,
   supportsToolUse: true,

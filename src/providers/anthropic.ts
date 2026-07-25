@@ -10,6 +10,8 @@ import type {
   ProviderContentBlock,
 } from "./types.js";
 
+import models from "./aiModels/anthropic.json";
+
 const config: ProviderConfig = {
   id: "anthropic",
   name: "Anthropic",
@@ -17,11 +19,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "ANTHROPIC_API_KEY",
   apiKeyUrl: "https://console.anthropic.com/settings/keys",
-  models: [
-    { id: "claude-opus-4-7", name: "Claude Opus 4.7", contextWindow: 1000000, maxOutput: 32000 },
-    { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6", contextWindow: 200000, maxOutput: 16000 },
-    { id: "claude-haiku-4-5", name: "Claude Haiku 4.5", contextWindow: 200000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "claude-sonnet-4-6",
   supportsStreaming: true,
   supportsToolUse: true,

@@ -75,7 +75,7 @@ export function PluginStore({ onClose }: PluginStoreProps) {
         <Text dimColor>Category: {CATEGORY_LABEL[selected.category]}</Text>
         <Text dimColor>Adds tools:</Text>
         {selected.tools.map((t) => (
-          <Text key={t.name} dimColor>  • <Text color="cyan">{t.name}</Text> — {t.description.slice(0, 80)}</Text>
+          <Text key={t.name} dimColor>  • <Text color="cyan">{t.name}</Text> — {t.description ? t.description.slice(0, 80) : "No description"}</Text>
         ))}
         <Text> </Text>
         <SelectInput
@@ -92,7 +92,7 @@ export function PluginStore({ onClose }: PluginStoreProps) {
             }
             if (item.value === "on") {
               enablePlugin(selected.id);
-              setStatusMsg(`Enabled ${selected.name}. Restart OpenAgent to register its tools.`);
+              setStatusMsg(`Enabled ${selected.name}. Restart mAI CLI to register its tools.`);
             } else {
               disablePlugin(selected.id);
               setStatusMsg(`Disabled ${selected.name}.`);

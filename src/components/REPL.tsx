@@ -21,19 +21,22 @@ import {
   getTerminalSize,
   onResize,
   formatTokens,
-  wrapText,
 } from "../utils/terminal.js";
 import { ProviderPicker } from "./ProviderPicker.js";
 import { ModelPicker } from "./ModelPicker.js";
+import { ModelSelector } from "./ModelSelector.js";
+import { ProviderManager } from "./ProviderManager.js";
+import { PermissionPrompt, type PermissionDecision } from "./PermissionPrompt.js";
 import { RedditSetup } from "./RedditSetup.js";
 import { XSetup } from "./XSetup.js";
-import { WhatsAppSetup } from "./WhatsAppSetup.js";
 import { DiscordSetup } from "./DiscordSetup.js";
+import { WhatsAppSetup } from "./WhatsAppSetup.js";
 import { detectProject, formatProjectInfo } from "../utils/projectDetect.js";
 import { DiffView } from "./DiffView.js";
 import { McpStore } from "./McpStore.js";
 import { PluginStore } from "./PluginStore.js";
 import { UploadView } from "./UploadView.js";
+import { SettingsMenu } from "./SettingsMenu.js";
 import { subscribeTodos, clearTodos, type TodoItem } from "../tools/TodoWriteTool/index.js";
 import { setUploadListener } from "../tools/UploadTool/index.js";
 import { filterStreamText, shortPath } from "../utils/streamFilter.js";
@@ -67,9 +70,30 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
   const [error, setError] = useState("");
   const [thinking, setThinking] = useState(initialThinking);
   const [settings, setSettings] = useState(initialSettings);
-  const [pickerView, setPickerView] = useState<"none" | "provider" | "model" | "reddit" | "x" | "whatsapp" | "discord" | "mcp" | "plugins" | "upload">("none");
+  const [pickerView, setPickerView] = useState<"none" | "provider" | "model" | "model-selector" | "provider-manager" | "settings" | "reddit" | "x" | "whatsapp" | "discord" | "mcp" | "plugins" | "upload">("none");
+  const [pickerData, setPickerData] = useState<any>(null);
+  const [sessionProvider, setSessionProvider] = useState<string | null>(null);
+  const [sessionModel, setSessionModel] = useState<string | null>(null);
+  const [initialBanner] = useState(() => initialSettings.defaultPermissionMode !== "terminal");
+  
   const [permissionPrompt, setPermissionPrompt] = useState<{ name: string; desc: string } | null>(null);
   const permissionResolveRef = useRef<((allowed: boolean) => void) | null>(null);
+
+  // Initialize modes from settings if not overridden
+  const [terminalMode, setTerminalMode] = useState(() => initialSettings.defaultPermissionMode === "terminal");
+  
+  useEffect(() => {
+    if (initialSettings.defaultPermissionMode && initialSettings.defaultPermissionMode !== "terminal") {
+      import("../config/permissions.js").then((m) => {
+        const current = m.loadPermissions();
+        // Only apply if the current mode is the default "standard" (i.e. not overridden by CLI flags like --turbo)
+        if (current.mode === "standard" && initialSettings.defaultPermissionMode !== "standard") {
+          current.mode = initialSettings.defaultPermissionMode as any;
+          m.savePermissions(current);
+        }
+      });
+    }
+  }, [initialSettings.defaultPermissionMode]);
 
   const messagesRef = useRef<ProviderMessage[]>([]);
   const streamingTextRef = useRef("");
@@ -79,7 +103,8 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
   const todoFadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [queuedMessages, setQueuedMessages] = useState<string[]>([]);
   const [expandedView, setExpandedView] = useState(false);
-  const [terminalMode, setTerminalMode] = useState(false);
+  const [autocompleteIndex, setAutocompleteIndex] = useState(0);
+  const [autocompleteItems, setAutocompleteItems] = useState<{ label: string, value: string, desc?: string }[]>([]);
   const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
   const [interruptPrompt, setInterruptPrompt] = useState(false);
   const startTimeRef = useRef(0);
@@ -113,6 +138,33 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     return () => setUploadListener(null);
   }, []);
 
+  useEffect(() => {
+    if (terminalMode || isProcessing) {
+      setAutocompleteItems([]);
+      return;
+    }
+    if (input.startsWith("/")) {
+      const cmds = getAllCommands();
+      const q = input.slice(1).toLowerCase();
+      const matches = cmds.filter(c => c.name.startsWith(q) || c.aliases?.some(a => a.startsWith(q)));
+      setAutocompleteItems(matches.map(c => ({ label: `/${c.name}`, value: `/${c.name}`, desc: c.description })));
+      setAutocompleteIndex(0);
+    } else {
+      const words = input.split(/\s+/);
+      const lastWord = words[words.length - 1];
+      if (lastWord && lastWord.startsWith("@")) {
+        const q = lastWord.slice(1);
+        import("../utils/fileAutocomplete.js").then(({ getProjectFiles }) => {
+          const files = getProjectFiles(process.cwd(), q);
+          setAutocompleteItems(files.map(f => ({ label: `@${f}`, value: `@${f}` })));
+          setAutocompleteIndex(0);
+        });
+      } else {
+        setAutocompleteItems([]);
+      }
+    }
+  }, [input, terminalMode, isProcessing]);
+
   useInput((ch, key) => {
     if (key.ctrl && ch === "b") {
       setExpandedView((prev) => !prev);
@@ -120,19 +172,66 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     }
 
     if (key.ctrl && ch === "t") {
-      setTerminalMode((prev) => !prev);
+      if (terminalMode) {
+        setTerminalMode(false);
+        const state = loadPermissions();
+        state.mode = "standard";
+        savePermissions(state);
+        setPermModeKey((k: number) => k + 1);
+        setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: standard` }]);
+      } else {
+        const state = loadPermissions();
+        if (state.mode === "standard") {
+          state.mode = "plan";
+          savePermissions(state);
+          setPermModeKey((k: number) => k + 1);
+          setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: plan` }]);
+        } else if (state.mode === "plan") {
+          state.mode = "turbo";
+          savePermissions(state);
+          setPermModeKey((k: number) => k + 1);
+          setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: turbo` }]);
+        } else {
+          setTerminalMode(true);
+        }
+      }
       return;
     }
 
     if (key.shift && key.tab) {
       const state = loadPermissions();
-      const modes: Array<"standard" | "cautious" | "unrestricted"> = ["standard", "cautious", "unrestricted"];
+      const modes: Array<"standard" | "cautious" | "turbo" | "plan"> = ["standard", "cautious", "turbo", "plan"];
       const idx = modes.indexOf(state.mode);
       state.mode = modes[(idx + 1) % modes.length];
       savePermissions(state);
       setPermModeKey((k: number) => k + 1);
       setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: ${state.mode}` }]);
       return;
+    }
+
+    if (autocompleteItems.length > 0) {
+      if (key.upArrow) {
+        setAutocompleteIndex((i) => (i > 0 ? i - 1 : autocompleteItems.length - 1));
+        return;
+      }
+      if (key.downArrow) {
+        setAutocompleteIndex((i) => (i < autocompleteItems.length - 1 ? i + 1 : 0));
+        return;
+      }
+      if (key.tab || key.rightArrow) {
+        const sel = autocompleteItems[autocompleteIndex];
+        if (sel) {
+          if (input.startsWith("/")) {
+            setInput(sel.value + " ");
+          } else {
+            const words = input.split(/\s+/);
+            words[words.length - 1] = sel.value;
+            setInput(words.join(" ") + " ");
+          }
+          setAutocompleteItems([]);
+        }
+        return;
+      }
     }
 
     if (key.ctrl && ch === "c") {
@@ -151,6 +250,13 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     }
 
     if (key.escape) {
+      if (autocompleteItems.length > 0 || input.startsWith("/") || input.startsWith("@")) {
+        setAutocompleteItems([]);
+        if (input.startsWith("/") || input.startsWith("@")) {
+          setInput("");
+        }
+        return;
+      }
       if (permissionPrompt && permissionResolveRef.current) {
         const resolve = permissionResolveRef.current;
         permissionResolveRef.current = null;
@@ -179,7 +285,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       }
     }
 
-    if ((key.upArrow || key.downArrow) && !isProcessing && !permissionPrompt && !terminalMode) {
+    if ((key.upArrow || key.downArrow) && !isProcessing && !permissionPrompt && !terminalMode && autocompleteItems.length === 0) {
       const hist = inputHistoryRef.current;
       if (hist.length === 0) return;
       if (key.upArrow) {
@@ -216,7 +322,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
 
     if (permissionPrompt && permissionResolveRef.current) {
       const c = ch.toLowerCase();
-      if (c === "y" || key.return) {
+      if (c === "y") {
         const resolve = permissionResolveRef.current;
         permissionResolveRef.current = null;
         setPermissionPrompt(null);
@@ -228,6 +334,10 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
         resolve(false);
       } else if (c === "a") {
         addRule({ tool: permissionPrompt.name, behavior: "allow" }, "global");
+        setDisplayMessages((prev) => [
+          ...prev,
+          { role: "system", content: `Always approved: ${permissionPrompt.name}` },
+        ]);
         const resolve = permissionResolveRef.current;
         permissionResolveRef.current = null;
         setPermissionPrompt(null);
@@ -261,6 +371,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     async (value: string) => {
       const trimmed = value.trim();
       if (!trimmed) return;
+      setInput("");
       const hist = inputHistoryRef.current;
       if (hist[hist.length - 1] !== trimmed) {
         hist.push(trimmed);
@@ -328,7 +439,19 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
         const result = await executeCommand(trimmed, cmdCtx);
 
         if (result.action === "exit") {
+          console.log(result.output || "Resume your conversation using the /resume command.");
           exit();
+          return;
+        }
+
+        if (result.action === "exit-update") {
+          console.log(result.output);
+          exit();
+          return;
+        }
+
+        if (result.action === "pick-settings") {
+          setPickerView("settings");
           return;
         }
 
@@ -367,6 +490,25 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
 
         if (result.action === "pick-model") {
           setPickerView("model");
+          return;
+        }
+
+        if (result.action === "pick-model-selector") {
+          setPickerData(result.data);
+          setPickerView("model-selector");
+          return;
+        }
+
+        if (result.action === "pick-provider-manager") {
+          setPickerView("provider-manager");
+          return;
+        }
+
+        if (result.action === "queue-message") {
+          if (result.output) {
+            setDisplayMessages((prev) => [...prev, { role: "system", content: result.output }]);
+          }
+          setQueuedMessages((prev) => [...prev, result.data]);
           return;
         }
 
@@ -450,9 +592,12 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       messageCountRef.current++;
       appendMessage(sessionId, userMessage);
 
-      const provider = getProvider(settings.provider);
+      // Session overrides take priority over saved settings
+      const activeProviderId = sessionProvider || settings.provider;
+      const activeModelId = sessionModel || settings.model;
+      const provider = getProvider(activeProviderId);
       if (!provider) {
-        setError(`Provider "${settings.provider}" not found`);
+        setError(`Provider "${activeProviderId}" not found`);
         return;
       }
 
@@ -486,7 +631,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           setActiveTool("");
           setPermissionPrompt({ name, desc });
           return new Promise<boolean>((resolve) => {
-            permissionResolveRef.current = resolve;
+            permissionResolveRef.current = (allowed: boolean) => resolve(allowed);
           });
         },
         onToolEnd: (name, _id, result, err, args) => {
@@ -599,7 +744,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       };
 
       try {
-        const result = await runQueryLoop(provider, messagesRef.current, sessionId, callbacks, thinking, abortController.signal);
+        const result = await runQueryLoop(provider, messagesRef.current, sessionId, callbacks, thinking, abortController.signal, activeModelId);
         messagesRef.current = result.messages;
         messageCountRef.current = result.messages.length;
 
@@ -643,6 +788,18 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     [settings, sessionId, exit, thinking, tokenUsage, terminalMode]
   );
 
+  const modelDisplay = useMemo(() => {
+    const p = sessionProvider || settings.provider;
+    const m = sessionModel || settings.model;
+    const provider = getProvider(p);
+    if (provider) {
+      const model = provider.config.models.find((mod) => mod.id === m);
+      if (model) return model.name;
+    }
+    const parts = m.split("/");
+    return parts[parts.length - 1];
+  }, [settings.provider, settings.model, sessionProvider, sessionModel]);
+
   const renderMessage = (msg: MessageDisplay, idx: number) => {
     const width = Math.max(termSize.columns - 4, 40);
 
@@ -652,7 +809,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           <Box key={idx} flexDirection="column" marginBottom={1}>
             <Text color="blue" bold>{"❯"} You</Text>
             <Box marginLeft={2}>
-              <Text>{wrapText(msg.content, width - 2)}</Text>
+              <Text>{msg.content}</Text>
             </Box>
           </Box>
         );
@@ -660,9 +817,9 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       case "assistant":
         return (
           <Box key={idx} flexDirection="column" marginBottom={1}>
-            <Text color="green" bold>{"⏺"} OpenAgent — <Text color="gray">{modelDisplay}</Text></Text>
+            <Text color="green" bold>{"⏺"} mAI CLI — <Text color="gray">{modelDisplay}</Text></Text>
             <Box marginLeft={2}>
-              <Text>{renderMarkdown(wrapText(msg.content, width - 2))}</Text>
+              <Text>{renderMarkdown(msg.content)}</Text>
             </Box>
           </Box>
         );
@@ -687,7 +844,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
             </Text>
             {msg.content && msg.content.trim() !== "" && (
               <Box marginLeft={4} flexDirection="column">
-                <Text dimColor>{wrapText(msg.content, width - 6)}</Text>
+                <Text dimColor>{msg.content}</Text>
               </Box>
             )}
           </Box>
@@ -696,21 +853,11 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       case "system":
         return (
           <Box key={idx} marginBottom={1} marginLeft={2}>
-            <Text color="gray">{wrapText(msg.content, width - 2)}</Text>
+            <Text color="gray">{msg.content}</Text>
           </Box>
         );
     }
   };
-
-  const modelDisplay = useMemo(() => {
-    const provider = getProvider(settings.provider);
-    if (provider) {
-      const model = provider.config.models.find((m) => m.id === settings.model);
-      if (model) return model.name;
-    }
-    const parts = settings.model.split("/");
-    return parts[parts.length - 1];
-  }, [settings.provider, settings.model]);
 
   const handlePickerComplete = (providerId: string, modelId: string) => {
     const updated = loadSettings();
@@ -726,143 +873,54 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     setPickerView("none");
   };
 
-  if (pickerView === "provider") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <ProviderPicker onComplete={handlePickerComplete} onCancel={handlePickerCancel} />
-      </Box>
-    );
-  }
 
-  if (pickerView === "model") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <ModelPicker onComplete={handlePickerComplete} onCancel={handlePickerCancel} />
-      </Box>
-    );
-  }
-
-  if (pickerView === "reddit") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <RedditSetup
-          onComplete={(msg) => {
-            setPickerView("none");
-            setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
-          }}
-          onCancel={handlePickerCancel}
-        />
-      </Box>
-    );
-  }
-
-  if (pickerView === "x") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <XSetup
-          onComplete={(msg) => {
-            setPickerView("none");
-            setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
-          }}
-          onCancel={handlePickerCancel}
-        />
-      </Box>
-    );
-  }
-
-  if (pickerView === "whatsapp") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <WhatsAppSetup
-          onComplete={(msg) => {
-            setPickerView("none");
-            setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
-          }}
-          onCancel={handlePickerCancel}
-        />
-      </Box>
-    );
-  }
-
-  if (pickerView === "discord") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <DiscordSetup
-          onComplete={(msg) => {
-            setPickerView("none");
-            setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
-          }}
-          onCancel={handlePickerCancel}
-        />
-      </Box>
-    );
-  }
-
-  if (pickerView === "mcp") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <McpStore onClose={handlePickerCancel} />
-      </Box>
-    );
-  }
-
-  if (pickerView === "plugins") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <PluginStore onClose={handlePickerCancel} />
-      </Box>
-    );
-  }
-
-  if (pickerView === "upload") {
-    return (
-      <Box flexDirection="column" width={termSize.columns}>
-        <UploadView onClose={handlePickerCancel} />
-      </Box>
-    );
-  }
 
   return (
     <Box flexDirection="column" width={termSize.columns}>
-      {displayMessages.length === 0 && (() => {
-        const project = detectProject(process.cwd());
-        return (
-          <Box flexDirection="column" marginBottom={1}>
-            <Text>{getBanner(termSize.columns)}</Text>
-            <Text dimColor>v{getCurrentVersion()} • {modelDisplay} • {settings.responseMode}
-              {thinking ? " • thinking" : ""}</Text>
-            <Text color="gray">
-              {permMode.mode === "unrestricted"
-                ? "\x1b[31m⚠ unrestricted\x1b[0m"
-                : permMode.label} • /help for commands • Ctrl+T terminal
-            </Text>
-            {project && (
-              <Text color="cyan" dimColor>
-                {formatProjectInfo(project)}
-              </Text>
-            )}
-            <Text> </Text>
-          </Box>
-        );
-      })()}
-
-      <Static items={displayMessages.map((m, i) => ({ ...m, _key: i }))}>
-        {(msg: MessageDisplay & { _key: number }) => renderMessage(msg, msg._key)}
+      <Static items={[
+        ...(initialBanner ? [{ type: "banner", _key: "banner" }] : []),
+        ...displayMessages.map((m, i) => ({ ...m, _key: `msg-${i}` }))
+      ]}>
+        {(msg: any) => {
+          if (msg.type === "banner") {
+            const project = detectProject(process.cwd());
+            return (
+              <Box key="banner" flexDirection="column" marginBottom={1}>
+                <Text>{getBanner(termSize.columns)}</Text>
+                <Text dimColor>v{getCurrentVersion()} • mAI CLI</Text>
+                <Text color="gray">
+                  {permMode.mode === "turbo"
+                    ? "\x1b[31m⚡ turbo\x1b[0m"
+                    : permMode.label} • /help for commands
+                </Text>
+                {project ? (
+                  <Text color="cyan" dimColor>
+                    {formatProjectInfo(project)}
+                  </Text>
+                ) : (
+                  <Text color="gray" dimColor>No project context detected.</Text>
+                )}
+                <Text> </Text>
+              </Box>
+            );
+          }
+          return renderMessage(msg, msg._key);
+        }}
       </Static>
 
       {isProcessing && !streamingText && !activeTool && !permissionPrompt && (
         <Box marginBottom={1}>
           <Text bold>● </Text>
-          <Text color="green" bold>OpenAgent</Text>
+          <Text color="green" bold>mAI CLI</Text>
           <Text color="gray"> — {modelDisplay}</Text>
         </Box>
       )}
 
       {streamingText && (
         <Box flexDirection="column" marginBottom={1}>
-          <Text color="green" bold>{"⏺"} OpenAgent — <Text color="gray">{modelDisplay}</Text></Text>
+          <Text color="green" bold>{"⏺"} mAI CLI — <Text color="gray">{modelDisplay}</Text></Text>
           <Box marginLeft={2}>
-            <Text>{renderMarkdown(wrapText(streamingText, Math.max(termSize.columns - 6, 40)))}</Text>
+            <Text>{renderMarkdown(streamingText)}</Text>
           </Box>
         </Box>
       )}
@@ -881,26 +939,26 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
         </Box>
       )}
 
-      {commandHint && !isProcessing && (
-        <Box marginLeft={2} marginBottom={0}>
-          <Text dimColor>{commandHint}</Text>
-        </Box>
-      )}
-
       {permissionPrompt && (
-        <Box borderStyle="single" borderColor="yellow" paddingLeft={1} paddingRight={1} width={termSize.columns} flexDirection="column">
-          <Box>
-            <Text color="yellow" bold>? </Text>
-            <Text bold>{permissionPrompt.name}</Text>
-            <Text> — {permissionPrompt.desc}</Text>
-          </Box>
-          <Box>
-            <Text dimColor>  Allow? </Text>
-            <Text color="green" bold> y</Text><Text dimColor>es </Text>
-            <Text color="red" bold> n</Text><Text dimColor>o </Text>
-            <Text color="cyan" bold> a</Text><Text dimColor>lways</Text>
-          </Box>
-        </Box>
+        <PermissionPrompt
+          toolName={permissionPrompt.name}
+          description={permissionPrompt.desc}
+          onDecide={(decision: PermissionDecision) => {
+            const resolve = permissionResolveRef.current;
+            permissionResolveRef.current = null;
+            setPermissionPrompt(null);
+            if (decision === "always-allow") {
+              addRule({ tool: permissionPrompt.name, behavior: "allow" }, "global");
+              setDisplayMessages((prev) => [
+                ...prev,
+                { role: "system", content: `✓ Always approved: ${permissionPrompt.name}` },
+              ]);
+              resolve?.(true);
+            } else {
+              resolve?.(decision === "allow");
+            }
+          }}
+        />
       )}
 
       {todoItems.length > 0 && (
@@ -947,14 +1005,27 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       )}
 
       {!permissionPrompt && (
-        <Box borderStyle="single" borderColor={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "gray"} paddingLeft={1} width={termSize.columns}>
+        <Box borderStyle="single" borderColor={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "gray"} paddingLeft={1} width={termSize.columns - 1}>
           <Box flexGrow={1}>
             <Text color={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "cyan"} bold>{terminalMode ? "$" : "❯"} </Text>
             <TextInput
+              focus={pickerView === "none"}
               value={input}
               onChange={setInput}
               onSubmit={(value) => {
                 if (interruptPrompt) setInterruptPrompt(false);
+                
+                if (autocompleteItems.length > 0) {
+                  const sel = autocompleteItems[autocompleteIndex];
+                  if (sel) {
+                    const words = value.split(/\s+/);
+                    words[words.length - 1] = sel.value;
+                    setInput(words.join(" ") + " ");
+                    setAutocompleteItems([]);
+                    return;
+                  }
+                }
+
                 if (isProcessing && value.trim()) {
                   setQueuedMessages((prev) => [...prev, value.trim()]);
                   setInput("");
@@ -964,24 +1035,158 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
               }}
               placeholder={
                 terminalMode
-                  ? "Run a command… (Ctrl+T to switch back)"
+                  ? `Run a command… (Ctrl+T for ${
+                      terminalMode
+                        ? "standard"
+                        : permMode.mode === "standard"
+                          ? "plan"
+                          : permMode.mode === "plan"
+                            ? "turbo"
+                            : "terminal"
+                    })`
                   : isProcessing
                     ? "Queue another message…"
                     : interruptPrompt
-                      ? "Tell OpenAgent what to do instead…"
-                      : "Message OpenAgent… (Ctrl+T for terminal)"
+                      ? "Tell mAI CLI what to do instead…"
+                      : `Message mAI CLI… (Ctrl+T for ${
+                          terminalMode
+                            ? "standard"
+                            : permMode.mode === "standard"
+                              ? "plan"
+                              : permMode.mode === "plan"
+                                ? "turbo"
+                                : "terminal"
+                        })`
               }
             />
           </Box>
         </Box>
       )}
 
+      {!permissionPrompt && pickerView !== "none" && (
+        <Box flexDirection="column" borderStyle="round" borderColor="cyan" marginLeft={2} paddingX={1} width={termSize.columns - 4}>
+          {pickerView === "settings" && (
+            <SettingsMenu
+              onClose={() => {
+                setPickerView("none");
+                setSettings(loadSettings());
+              }}
+            />
+          )}
+          {pickerView === "model-selector" && (
+            <ModelSelector
+              initialSearch={pickerData?.initialSearch}
+              onComplete={(providerId, modelId) => {
+                setSessionProvider(providerId);
+                setSessionModel(modelId);
+                setPickerView("none");
+                const provider = getProvider(providerId);
+                const modelName = provider?.config.models.find((m) => m.id === modelId)?.name || modelId;
+                setDisplayMessages((prev) => [
+                  ...prev,
+                  { role: "system", content: `Model switched to ${provider?.config.name || providerId} / ${modelName} (session only)` },
+                ]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "provider-manager" && (
+            <ProviderManager
+              onComplete={(providerId, modelId) => {
+                setPickerView("none");
+                setSettings(loadSettings());
+                setDisplayMessages((prev) => [
+                  ...prev,
+                  { role: "system", content: `Default provider set to ${providerId} / ${modelId}` },
+                ]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "provider" && (
+            <ProviderPicker onComplete={handlePickerComplete} onCancel={handlePickerCancel} />
+          )}
+          {pickerView === "model" && (
+            <ModelPicker onComplete={handlePickerComplete} onCancel={handlePickerCancel} />
+          )}
+          {pickerView === "reddit" && (
+            <RedditSetup
+              onComplete={(msg) => {
+                setPickerView("none");
+                setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "x" && (
+            <XSetup
+              onComplete={(msg) => {
+                setPickerView("none");
+                setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "whatsapp" && (
+            <WhatsAppSetup
+              onComplete={(msg) => {
+                setPickerView("none");
+                setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "discord" && (
+            <DiscordSetup
+              onComplete={(msg) => {
+                setPickerView("none");
+                setDisplayMessages((prev) => [...prev, { role: "system", content: msg }]);
+              }}
+              onCancel={handlePickerCancel}
+            />
+          )}
+          {pickerView === "mcp" && (
+            <McpStore onClose={handlePickerCancel} />
+          )}
+          {pickerView === "plugins" && (
+            <PluginStore onClose={handlePickerCancel} />
+          )}
+          {pickerView === "upload" && (
+            <UploadView onClose={handlePickerCancel} />
+          )}
+        </Box>
+      )}
+
+      {autocompleteItems.length > 0 && pickerView === "none" && (() => {
+        const maxVisible = 10;
+        let startIdx = Math.max(0, autocompleteIndex - Math.floor(maxVisible / 2));
+        if (startIdx + maxVisible > autocompleteItems.length) {
+          startIdx = Math.max(0, autocompleteItems.length - maxVisible);
+        }
+        const visibleItems = autocompleteItems.slice(startIdx, startIdx + maxVisible);
+        
+        return (
+          <Box flexDirection="column" borderStyle="round" borderColor="gray" marginLeft={2} paddingX={1}>
+            {startIdx > 0 && <Text dimColor>↑ {startIdx} more</Text>}
+            {visibleItems.map((item, idx) => {
+              const actualIdx = startIdx + idx;
+              return (
+                <Text key={item.value + actualIdx} color={actualIdx === autocompleteIndex ? "black" : "white"} backgroundColor={actualIdx === autocompleteIndex ? "cyan" : undefined}>
+                  {item.label} {item.desc ? <Text dimColor>— {item.desc}</Text> : null}
+                </Text>
+              );
+            })}
+            {startIdx + maxVisible < autocompleteItems.length && <Text dimColor>↓ {autocompleteItems.length - (startIdx + maxVisible)} more</Text>}
+          </Box>
+        );
+      })()}
+
       <Box paddingLeft={1} marginTop={1} justifyContent="space-between" width={termSize.columns - 2}>
         <Box>
           {terminalMode ? (
             <Text color="magenta" bold>Terminal Mode</Text>
-          ) : permMode.mode === "unrestricted" ? (
-            <Text color="red" bold>⚠ Unrestricted [{permMode.symbol}]</Text>
+          ) : permMode.mode === "turbo" ? (
+            <Text color="magenta" bold>Turbo [{permMode.symbol}]</Text>
           ) : permMode.mode === "cautious" ? (
             <Text color="yellow">{permMode.label} <Text dimColor>[{permMode.symbol}]</Text></Text>
           ) : (

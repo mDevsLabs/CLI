@@ -37,7 +37,7 @@ export const BUILTIN_PLUGINS: Plugin[] = [
   depAuditPlugin,
 ];
 
-const CONFIG_DIR = join(homedir(), ".openagent");
+const CONFIG_DIR = join(homedir(), ".mai");
 const CONFIG_PATH = join(CONFIG_DIR, "plugins.json");
 
 interface PluginConfig {

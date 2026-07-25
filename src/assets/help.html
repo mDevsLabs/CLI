@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mAI CLI — Documentation complète & Guide des Commandes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-glass: rgba(255, 255, 255, 0.9);
+      --accent-cyan: #0891b2;
+      --accent-blue: #2563eb;
+      --accent-purple: #7c3aed;
+      --accent-emerald: #059669;
+      --accent-pink: #db2777;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --border-highlight: rgba(8, 145, 178, 0.35);
+      --code-bg: rgba(241, 245, 249, 0.9);
+      --shadow-glow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(8, 145, 178, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(124, 58, 237, 0.05) 0%, transparent 45%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    code, pre, .cmd-badge, .kbd-key, .alias-tag {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 32px;
+    }
+
+    .nav-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #000000, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 540px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 18px 12px 44px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.18);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .shortcut-hint {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .hero {
+      max-width: 1380px;
+      margin: 36px auto 28px;
+      padding: 0 32px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 70%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 760px;
+      margin: 0 auto 20px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+    }
+
+    .main-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 36px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 12px;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item a:hover, .nav-item a.active {
+      color: var(--text-main);
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-highlight);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cmd-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+
+    .alias-tag {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .example-box {
+      background: var(--code-bg);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 9px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .example-code {
+      font-size: 0.84rem;
+      color: #a5f3fc;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .copy-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    .features-panel {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(26, 36, 56, 0.7));
+      border: 1px solid var(--border-highlight);
+      border-radius: 16px;
+      padding: 26px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .feature-item {
+      background: rgba(8, 12, 20, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .feature-item h4 {
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+
+    .kbd-key {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: #333;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent-cyan);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-box">
+
+        <span class="logo-text">mAI CLI Docs</span>
+      </a>
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Rechercher parmi les 70+ commandes..." autofocus />
+        <span class="shortcut-hint">/</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>Documentation Officielle mAI CLI</h1>
+    <p>Guide exhaustif de toutes les commandes slash, raccourcis et modes de fonctionnement de mAI CLI.</p>
+    <div class="hero-stats">
+      <div class="stat-badge">12+ Providers & Modèles Locaux</div>
+      <div class="stat-badge">Modes de Permission (Ctrl+T)</div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="sidebar-title">Catégories</div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#modes" class="active">Modes & Navigation</a></li>
+        <li class="nav-item"><a href="#general">Général & Infos</a></li>
+        <li class="nav-item"><a href="#config">Config & Réglages</a></li>
+        <li class="nav-item"><a href="#dev">Développement & Code</a></li>
+        <li class="nav-item"><a href="#git">Git & Versioning</a></li>
+        <li class="nav-item"><a href="#tools">Extensions & MCP</a></li>
+        <li class="nav-item"><a href="#bridges">Social & Passerelles</a></li>
+        <li class="nav-item"><a href="#files">Fichiers & Shell</a></li>
+        <li class="nav-item"><a href="#session">Sessions & Mémoire</a></li>
+        <li class="nav-item"><a href="#utility">UI, Utilities & Outils</a></li>
+      </ul>
+    </aside>
+
+    <main class="content-area">
+
+      <section id="modes" class="category-section">
+        <div class="features-panel">
+          <h2 class="section-title" style="border:none; padding-bottom:0;">Modes de Permission & Navigation (<span class="kbd-key">Ctrl+T</span>)</h2>
+          <p style="color: var(--text-muted); margin-bottom: 16px;">
+            Basculez à tout moment entre les modes de permission avec la touche <span class="kbd-key">Ctrl+T</span>. Le placeholder de la boîte de texte affiche le mode suivant.
+          </p>
+          <div class="features-grid">
+            <div class="feature-item">
+              <h4>Standard</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Demande confirmation avant toute écriture de fichier ou exécution de commande shell.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Plan (P)</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">L'IA décrit les étapes et plans d'action structurés avant d'exécuter.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Turbo (*)</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Mode autonome sans demande de confirmation. Exécution à haute vitesse.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Terminal</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Bascule la boîte de saisie en invite de commande directe shell sans passer par l'IA.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="general" class="category-section">
+        <h2 class="section-title">Général & Infos</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="help doc documentation aide h ?">
+            <div class="card-header">
+              <span class="cmd-name">/help</span>
+              <span class="alias-tag">/h, /?, /doc</span>
+            </div>
+            <p class="card-desc">Ouvre cette page de documentation complète et interactive dans votre navigateur web par défaut.</p>
+            <div class="example-box">
+              <span class="example-code">/help</span>
+              <button class="copy-btn" onclick="copyText('/help')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="exit quit fermer quitter q">
+            <div class="card-header">
+              <span class="cmd-name">/exit</span>
+              <span class="alias-tag">/quit, /q</span>
+            </div>
+            <p class="card-desc">Quitte l'application mAI CLI proprement et indique la commande de reprise de session `/resume`.</p>
+            <div class="example-box">
+              <span class="example-code">/exit</span>
+              <button class="copy-btn" onclick="copyText('/exit')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="version mai --version v ver about">
+            <div class="card-header">
+              <span class="cmd-name">/version</span>
+              <span class="alias-tag">/v, /ver, /about</span>
+            </div>
+            <p class="card-desc">Affiche la version exacte du package mAI CLI issue de package.json.</p>
+            <div class="example-box">
+              <span class="example-code">/version</span>
+              <button class="copy-btn" onclick="copyText('/version')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="update upgrade mise a jour maj mai --update">
+            <div class="card-header">
+              <span class="cmd-name">/update</span>
+              <span class="alias-tag">/upgrade</span>
+            </div>
+            <p class="card-desc">Quitte le CLI et fournit la commande de mise à jour exacte pour votre OS et canal (`Stable` ou `Canary`).</p>
+            <div class="example-box">
+              <span class="example-code">/update</span>
+              <button class="copy-btn" onclick="copyText('/update')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="doctor diagnose health diagnostique sante">
+            <div class="card-header">
+              <span class="cmd-name">/doctor</span>
+              <span class="alias-tag">/diagnose, /health</span>
+            </div>
+            <p class="card-desc">Vérifie l'état de santé du système, les dépendances (git, node, winget/brew) et la connectivité réseau.</p>
+            <div class="example-box">
+              <span class="example-code">/doctor</span>
+              <button class="copy-btn" onclick="copyText('/doctor')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="stats info statistiques session">
+            <div class="card-header">
+              <span class="cmd-name">/stats</span>
+              <span class="alias-tag">/info</span>
+            </div>
+            <p class="card-desc">Affiche les statistiques d'utilisation de la session en cours (messages, jetons, durée).</p>
+            <div class="example-box">
+              <span class="example-code">/stats</span>
+              <button class="copy-btn" onclick="copyText('/stats')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="changelog release-notes whats-new nouveautes">
+            <div class="card-header">
+              <span class="cmd-name">/changelog</span>
+              <span class="alias-tag">/release-notes</span>
+            </div>
+            <p class="card-desc">Affiche le journal des modifications et les nouveautés de la version installée.</p>
+            <div class="example-box">
+              <span class="example-code">/changelog</span>
+              <button class="copy-btn" onclick="copyText('/changelog')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="feedback report bug signaler retour">
+            <div class="card-header">
+              <span class="cmd-name">/feedback</span>
+              <span class="alias-tag">/report, /bug</span>
+            </div>
+            <p class="card-desc">Fournit le lien vers le dépôt GitHub pour signaler un problème ou soumettre une suggestion.</p>
+            <div class="example-box">
+              <span class="example-code">/feedback</span>
+              <button class="copy-btn" onclick="copyText('/feedback')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="whoami me account identite utilisateur">
+            <div class="card-header">
+              <span class="cmd-name">/whoami</span>
+              <span class="alias-tag">/me, /account</span>
+            </div>
+            <p class="card-desc">Affiche l'utilisateur système actuel, l'OS et le répertoire personnel.</p>
+            <div class="example-box">
+              <span class="example-code">/whoami</span>
+              <button class="copy-btn" onclick="copyText('/whoami')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="config" class="category-section">
+        <h2 class="section-title">Config & Réglages</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="settings preferences reglages instructions menu dossiers ignores @">
+            <div class="card-header">
+              <span class="cmd-name">/settings</span>
+              <span class="alias-tag">/preferences</span>
+            </div>
+            <p class="card-desc">Ouvre le menu interactif complet (choix provider, modèle, instructions système, dossiers ignorés par @, canal màj).</p>
+            <div class="example-box">
+              <span class="example-code">/settings</span>
+              <button class="copy-btn" onclick="copyText('/settings')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="config cfg configuration actuel dossier">
+            <div class="card-header">
+              <span class="cmd-name">/config</span>
+              <span class="alias-tag">/cfg</span>
+            </div>
+            <p class="card-desc">Affiche de façon synthétique le provider, le modèle actuel et le dossier de stockage `~/.mai`.</p>
+            <div class="example-box">
+              <span class="example-code">/config</span>
+              <button class="copy-btn" onclick="copyText('/config')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="provider providers fournisseur ia claude openai gemini">
+            <div class="card-header">
+              <span class="cmd-name">/provider</span>
+              <span class="alias-tag">/providers</span>
+            </div>
+            <p class="card-desc">Ouvre l'amorce de sélection pour basculer de fournisseur d'IA (Anthropic Max, OpenAI, Gemini, Grok, Ollama...)</p>
+            <div class="example-box">
+              <span class="example-code">/provider</span>
+              <button class="copy-btn" onclick="copyText('/provider')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="model models m modele custom">
+            <div class="card-header">
+              <span class="cmd-name">/model</span>
+              <span class="alias-tag">/m, /models</span>
+            </div>
+            <p class="card-desc">Sélectionne le modèle d'IA pour le provider actif ou permet d'ajouter un modèle personnalisé.</p>
+            <div class="example-box">
+              <span class="example-code">/model</span>
+              <button class="copy-btn" onclick="copyText('/model')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="max-tokens tokens-limit maxtokens limite jetons">
+            <div class="card-header">
+              <span class="cmd-name">/max-tokens</span>
+              <span class="alias-tag">/tokens-limit</span>
+            </div>
+            <p class="card-desc">Définit le nombre maximal de jetons générés par réponse par le modèle d'IA.</p>
+            <div class="example-box">
+              <span class="example-code">/max-tokens 4096</span>
+              <button class="copy-btn" onclick="copyText('/max-tokens 4096')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="response-mode concise explanative style rep">
+            <div class="card-header">
+              <span class="cmd-name">/response-mode</span>
+              <span class="alias-tag">/concise, /style</span>
+            </div>
+            <p class="card-desc">Alterne le style de réponse de l'IA entre court/concis et détaillé/explicatif.</p>
+            <div class="example-box">
+              <span class="example-code">/response-mode concise</span>
+              <button class="copy-btn" onclick="copyText('/response-mode concise')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="setup init configure reinitialiser assistant">
+            <div class="card-header">
+              <span class="cmd-name">/setup</span>
+              <span class="alias-tag">/init, /configure</span>
+            </div>
+            <p class="card-desc">Relance l'assistant de configuration initiale de premier démarrage.</p>
+            <div class="example-box">
+              <span class="example-code">/setup</span>
+              <button class="copy-btn" onclick="copyText('/setup')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="env dotenv variables environnement secrets">
+            <div class="card-header">
+              <span class="cmd-name">/env</span>
+              <span class="alias-tag">/dotenv</span>
+            </div>
+            <p class="card-desc">Affiche les variables d'environnement configurées (avec masquage automatique des jetons secrets).</p>
+            <div class="example-box">
+              <span class="example-code">/env</span>
+              <button class="copy-btn" onclick="copyText('/env')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="alias racourci commande personnalisee">
+            <div class="card-header">
+              <span class="cmd-name">/alias</span>
+              <span class="alias-tag">créer raccourci</span>
+            </div>
+            <p class="card-desc">Crée un alias personnalisé pour raccourcir n'importe quelle commande.</p>
+            <div class="example-box">
+              <span class="example-code">/alias gs status</span>
+              <button class="copy-btn" onclick="copyText('/alias gs status')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="permissions perms perm allowed-tools regles">
+            <div class="card-header">
+              <span class="cmd-name">/permissions</span>
+              <span class="alias-tag">/perms, /perm</span>
+            </div>
+            <p class="card-desc">Affiche et gère les règles d'autorisation d'outils accordées pour ce répertoire.</p>
+            <div class="example-box">
+              <span class="example-code">/permissions</span>
+              <button class="copy-btn" onclick="copyText('/permissions')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="mode standard plan turbo terminal permission">
+            <div class="card-header">
+              <span class="cmd-name">/mode</span>
+              <span class="alias-tag">changement mode</span>
+            </div>
+            <p class="card-desc">Affiche ou définit le mode de permission actif (`standard`, `plan`, `turbo`, `terminal`).</p>
+            <div class="example-box">
+              <span class="example-code">/mode turbo</span>
+              <button class="copy-btn" onclick="copyText('/mode turbo')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dev" class="category-section">
+        <h2 class="section-title">Développement & Code</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="test npm test pytest bun test suite">
+            <div class="card-header">
+              <span class="cmd-name">/test</span>
+              <span class="alias-tag">lancement tests</span>
+            </div>
+            <p class="card-desc">Exécute la commande de test automatique détectée pour votre projet.</p>
+            <div class="example-box">
+              <span class="example-code">/test</span>
+              <button class="copy-btn" onclick="copyText('/test')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="lint linter eslint ruff biome style">
+            <div class="card-header">
+              <span class="cmd-name">/lint</span>
+              <span class="alias-tag">vérification lint</span>
+            </div>
+            <p class="card-desc">Exécute le linter pour analyser la qualité et les erreurs de style du projet.</p>
+            <div class="example-box">
+              <span class="example-code">/lint</span>
+              <button class="copy-btn" onclick="copyText('/lint')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="build compilation tsc vite webpack">
+            <div class="card-header">
+              <span class="cmd-name">/build</span>
+              <span class="alias-tag">compilation</span>
+            </div>
+            <p class="card-desc">Lance la commande de build du projet pour compiler les fichiers source.</p>
+            <div class="example-box">
+              <span class="example-code">/build</span>
+              <button class="copy-btn" onclick="copyText('/build')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="dev serve start serveur dev local">
+            <div class="card-header">
+              <span class="cmd-name">/dev</span>
+              <span class="alias-tag">/serve, /start</span>
+            </div>
+            <p class="card-desc">Lance le serveur de développement local du projet.</p>
+            <div class="example-box">
+              <span class="example-code">/dev</span>
+              <button class="copy-btn" onclick="copyText('/dev')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="autofix fix-loop corriger erreurs boucle auto">
+            <div class="card-header">
+              <span class="cmd-name">/autofix</span>
+              <span class="alias-tag">/fix-loop</span>
+            </div>
+            <p class="card-desc">Exécute une commande, capture l'erreur, la transmet à l'IA pour correction et répète jusqu'à réussite.</p>
+            <div class="example-box">
+              <span class="example-code">/autofix npm test</span>
+              <button class="copy-btn" onclick="copyText('/autofix npm test')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="project detect info type projet">
+            <div class="card-header">
+              <span class="cmd-name">/project</span>
+              <span class="alias-tag">/detect</span>
+            </div>
+            <p class="card-desc">Détecte automatiquement le type de projet (Node, React, Python, Rust, Go...) et ses scripts associées.</p>
+            <div class="example-box">
+              <span class="example-code">/project</span>
+              <button class="copy-btn" onclick="copyText('/project')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="explain comprendre explication fonctionnement">
+            <div class="card-header">
+              <span class="cmd-name">/explain</span>
+              <span class="alias-tag">explications</span>
+            </div>
+            <p class="card-desc">Demande à l'IA d'expliquer le fonctionnement d'un fichier ou d'un bloc de code.</p>
+            <div class="example-box">
+              <span class="example-code">/explain src/query.ts</span>
+              <button class="copy-btn" onclick="copyText('/explain src/query.ts')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="refactor refactoriser ameliorer proprete">
+            <div class="card-header">
+              <span class="cmd-name">/refactor</span>
+              <span class="alias-tag">refactorisation</span>
+            </div>
+            <p class="card-desc">Demande à l'IA de refactoriser un fichier pour améliorer la lisibilité et les performances.</p>
+            <div class="example-box">
+              <span class="example-code">/refactor src/utils.ts</span>
+              <button class="copy-btn" onclick="copyText('/refactor src/utils.ts')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="security audit-security vulnerabilites secrets owasp">
+            <div class="card-header">
+              <span class="cmd-name">/security</span>
+              <span class="alias-tag">/audit-security</span>
+            </div>
+            <p class="card-desc">Effectue un examen de sécurité sur vos modifications non commitées à la recherche de failles et clés exposées.</p>
+            <div class="example-box">
+              <span class="example-code">/security</span>
+              <button class="copy-btn" onclick="copyText('/security')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="perf performance optimisation lenteur">
+            <div class="card-header">
+              <span class="cmd-name">/perf</span>
+              <span class="alias-tag">/performance</span>
+            </div>
+            <p class="card-desc">Analyse un fichier pour détecter les goulets d'étranglement et opportunités d'optimisation.</p>
+            <div class="example-box">
+              <span class="example-code">/perf src/index.ts</span>
+              <button class="copy-btn" onclick="copyText('/perf src/index.ts')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="benchmark bench perf mesurer temps">
+            <div class="card-header">
+              <span class="cmd-name">/benchmark</span>
+              <span class="alias-tag">/bench</span>
+            </div>
+            <p class="card-desc">Mesure le temps d'exécution exact d'une commande shell en millisecondes.</p>
+            <div class="example-box">
+              <span class="example-code">/benchmark npm run build</span>
+              <button class="copy-btn" onclick="copyText('/benchmark npm run build')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="deps dependencies outdated packages dependances">
+            <div class="card-header">
+              <span class="cmd-name">/deps</span>
+              <span class="alias-tag">/outdated</span>
+            </div>
+            <p class="card-desc">Inspecte les dépendances installées et vérifie la présence de paquets obsolètes.</p>
+            <div class="example-box">
+              <span class="example-code">/deps</span>
+              <button class="copy-btn" onclick="copyText('/deps')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="scaffold new create nouveau projet">
+            <div class="card-header">
+              <span class="cmd-name">/scaffold</span>
+              <span class="alias-tag">/new, /create</span>
+            </div>
+            <p class="card-desc">Génère la structure de base d'un nouveau projet (React, Next, Express, FastAPI, Rust, Go).</p>
+            <div class="example-box">
+              <span class="example-code">/scaffold next</span>
+              <button class="copy-btn" onclick="copyText('/scaffold next')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="snippet snip morceaux extrait code">
+            <div class="card-header">
+              <span class="cmd-name">/snippet</span>
+              <span class="alias-tag">/snip</span>
+            </div>
+            <p class="card-desc">Enregistre ou affiche vos extraits de code réutilisables.</p>
+            <div class="example-box">
+              <span class="example-code">/snippet</span>
+              <button class="copy-btn" onclick="copyText('/snippet')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="watch surveiller fichiers modifications auto">
+            <div class="card-header">
+              <span class="cmd-name">/watch</span>
+              <span class="alias-tag">surveillance</span>
+            </div>
+            <p class="card-desc">Surveille les changements de fichiers dans un répertoire et alerte l'IA à chaque modification.</p>
+            <div class="example-box">
+              <span class="example-code">/watch src/</span>
+              <button class="copy-btn" onclick="copyText('/watch src/')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="git" class="category-section">
+        <h2 class="section-title">Git & Versioning</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="diff changes modifications git diff">
+            <div class="card-header">
+              <span class="cmd-name">/diff</span>
+              <span class="alias-tag">/changes</span>
+            </div>
+            <p class="card-desc">Affiche les différences de code colorisées par rapport au dernier commit.</p>
+            <div class="example-box">
+              <span class="example-code">/diff</span>
+              <button class="copy-btn" onclick="copyText('/diff')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="status st git-status etat git">
+            <div class="card-header">
+              <span class="cmd-name">/status</span>
+              <span class="alias-tag">/st</span>
+            </div>
+            <p class="card-desc">Affiche l'état Git des fichiers modifiés, indexés ou non suivis.</p>
+            <div class="example-box">
+              <span class="example-code">/status</span>
+              <button class="copy-btn" onclick="copyText('/status')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="branch br branches git branch">
+            <div class="card-header">
+              <span class="cmd-name">/branch</span>
+              <span class="alias-tag">/br</span>
+            </div>
+            <p class="card-desc">Affiche la branche Git actuelle ou bascule vers une nouvelle branche.</p>
+            <div class="example-box">
+              <span class="example-code">/branch feature/auth</span>
+              <button class="copy-btn" onclick="copyText('/branch feature/auth')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="log gl historique commits git log">
+            <div class="card-header">
+              <span class="cmd-name">/log</span>
+              <span class="alias-tag">/gl</span>
+            </div>
+            <p class="card-desc">Affiche l'historique des derniers commits Git du projet.</p>
+            <div class="example-box">
+              <span class="example-code">/log</span>
+              <button class="copy-btn" onclick="copyText('/log')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="stash mise de cote git stash">
+            <div class="card-header">
+              <span class="cmd-name">/stash</span>
+              <span class="alias-tag">remiser</span>
+            </div>
+            <p class="card-desc">Met de côté les modifications non commitées ou restaure le dernier stash.</p>
+            <div class="example-box">
+              <span class="example-code">/stash</span>
+              <button class="copy-btn" onclick="copyText('/stash')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="commit ci message commit git">
+            <div class="card-header">
+              <span class="cmd-name">/commit</span>
+              <span class="alias-tag">/ci</span>
+            </div>
+            <p class="card-desc">Effectue un commit Git (génère automatiquement un message pertinent si omis).</p>
+            <div class="example-box">
+              <span class="example-code">/commit "feat: add settings menu"</span>
+              <button class="copy-btn" onclick="copyText('/commit &quot;feat: add settings menu&quot;')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="smartcommit sc ai-commit commit intelligent">
+            <div class="card-header">
+              <span class="cmd-name">/smartcommit</span>
+              <span class="alias-tag">/sc, /ai-commit</span>
+            </div>
+            <p class="card-desc">Demande à l'IA d'analyser le diff des fichiers et d'effectuer un commit avec un message conventionnel.</p>
+            <div class="example-box">
+              <span class="example-code">/smartcommit</span>
+              <button class="copy-btn" onclick="copyText('/smartcommit')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="push pousser git push remote">
+            <div class="card-header">
+              <span class="cmd-name">/push</span>
+              <span class="alias-tag">pousser branche</span>
+            </div>
+            <p class="card-desc">Pousse la branche locale actuelle vers le dépôt distant.</p>
+            <div class="example-box">
+              <span class="example-code">/push</span>
+              <button class="copy-btn" onclick="copyText('/push')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="pull tirer git pull remote">
+            <div class="card-header">
+              <span class="cmd-name">/pull</span>
+              <span class="alias-tag">récupérer</span>
+            </div>
+            <p class="card-desc">Récupère les derniers commits depuis le dépôt distant.</p>
+            <div class="example-box">
+              <span class="example-code">/pull</span>
+              <button class="copy-btn" onclick="copyText('/pull')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="pr pull request github gh pr">
+            <div class="card-header">
+              <span class="cmd-name">/pr</span>
+              <span class="alias-tag">pull request</span>
+            </div>
+            <p class="card-desc">Crée une Pull Request via le CLI (nécessite la CLI `gh` GitHub de configurée).</p>
+            <div class="example-box">
+              <span class="example-code">/pr</span>
+              <button class="copy-btn" onclick="copyText('/pr')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="review code-review cr revue modifs">
+            <div class="card-header">
+              <span class="cmd-name">/review</span>
+              <span class="alias-tag">/code-review, /cr</span>
+            </div>
+            <p class="card-desc">Exécute une analyse complète de revue de code sur vos changements non commités.</p>
+            <div class="example-box">
+              <span class="example-code">/review</span>
+              <button class="copy-btn" onclick="copyText('/review')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tools" class="category-section">
+        <h2 class="section-title">Extensions & MCP</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="tools t outils disponibles">
+            <div class="card-header">
+              <span class="cmd-name">/tools</span>
+              <span class="alias-tag">/t</span>
+            </div>
+            <p class="card-desc">Lise l'ensemble des outils système et fonctions que l'IA peut appeler.</p>
+            <div class="example-box">
+              <span class="example-code">/tools</span>
+              <button class="copy-btn" onclick="copyText('/tools')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="mcp mcp-store serveurs store catalog">
+            <div class="card-header">
+              <span class="cmd-name">/mcp</span>
+              <span class="alias-tag">/mcp-store</span>
+            </div>
+            <p class="card-desc">Ouvre l'interface de gestion MCP (Catalogue 1-click, serveurs connectés, ajout personnalisé).</p>
+            <div class="example-box">
+              <span class="example-code">/mcp</span>
+              <button class="copy-btn" onclick="copyText('/mcp')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="mcp-status mcps statut serveurs connectes">
+            <div class="card-header">
+              <span class="cmd-name">/mcp-status</span>
+              <span class="alias-tag">/mcps</span>
+            </div>
+            <p class="card-desc">Affiche la liste et l'état des connexions des serveurs MCP actifs.</p>
+            <div class="example-box">
+              <span class="example-code">/mcp-status</span>
+              <button class="copy-btn" onclick="copyText('/mcp-status')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="plugins plugin magasin extensions">
+            <div class="card-header">
+              <span class="cmd-name">/plugins</span>
+              <span class="alias-tag">/plugin</span>
+            </div>
+            <p class="card-desc">Active ou désactive les plugins intégrés (Auto Format, Linter, Coverage, Snapshot...).</p>
+            <div class="example-box">
+              <span class="example-code">/plugins</span>
+              <button class="copy-btn" onclick="copyText('/plugins')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="bridges" class="category-section">
+        <h2 class="section-title">Social & Passerelles</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="discord setup-discord bot bridge salon">
+            <div class="card-header">
+              <span class="cmd-name">/discord</span>
+              <span class="alias-tag">/setup-discord</span>
+            </div>
+            <p class="card-desc">Assistant pas-à-pas pour lier un Bot Discord à mAI CLI et exécuter des commandes à distance (`!agent`).</p>
+            <div class="example-box">
+              <span class="example-code">/discord</span>
+              <button class="copy-btn" onclick="copyText('/discord')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="whatsapp wa setup-whatsapp webhook bridge">
+            <div class="card-header">
+              <span class="cmd-name">/whatsapp</span>
+              <span class="alias-tag">/wa, /setup-whatsapp</span>
+            </div>
+            <p class="card-desc">Assistant de configuration du serveur Webhook HTTP pour piloter le CLI via WhatsApp.</p>
+            <div class="example-box">
+              <span class="example-code">/whatsapp</span>
+              <button class="copy-btn" onclick="copyText('/whatsapp')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="setup-reddit connect-reddit compte reddit">
+            <div class="card-header">
+              <span class="cmd-name">/setup-reddit</span>
+              <span class="alias-tag">/connect-reddit</span>
+            </div>
+            <p class="card-desc">Configure les identifiants de votre compte Reddit pour permettre les publications automatiques.</p>
+            <div class="example-box">
+              <span class="example-code">/setup-reddit</span>
+              <button class="copy-btn" onclick="copyText('/setup-reddit')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="reddit post reddit subreddit r/">
+            <div class="card-header">
+              <span class="cmd-name">/reddit</span>
+              <span class="alias-tag">poster reddit</span>
+            </div>
+            <p class="card-desc">Demande à l'IA d'interagir ou de publier un post sur un subreddit donné.</p>
+            <div class="example-box">
+              <span class="example-code">/reddit r/programming</span>
+              <button class="copy-btn" onclick="copyText('/reddit r/programming')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="setup-x connect-x setup-twitter connect-twitter x twitter">
+            <div class="card-header">
+              <span class="cmd-name">/setup-x</span>
+              <span class="alias-tag">/setup-twitter</span>
+            </div>
+            <p class="card-desc">Configure vos clés et jetons d'accès API pour poster sur X (anciennement Twitter).</p>
+            <div class="example-box">
+              <span class="example-code">/setup-x</span>
+              <button class="copy-btn" onclick="copyText('/setup-x')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="tweet x post poster tweet twitter">
+            <div class="card-header">
+              <span class="cmd-name">/tweet</span>
+              <span class="alias-tag">/x, /post</span>
+            </div>
+            <p class="card-desc">Demande à l'IA de publier directement un tweet / post sur votre compte X.</p>
+            <div class="example-box">
+              <span class="example-code">/tweet "Release v0.1.0 available!"</span>
+              <button class="copy-btn" onclick="copyText('/tweet &quot;Release v0.1.0 available!&quot;')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="files" class="category-section">
+        <h2 class="section-title">Fichiers & Shell</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="files ls tree lister fichiers">
+            <div class="card-header">
+              <span class="cmd-name">/files</span>
+              <span class="alias-tag">/ls, /tree</span>
+            </div>
+            <p class="card-desc">Affiche la liste ou l'arborescence des fichiers du répertoire courant.</p>
+            <div class="example-box">
+              <span class="example-code">/files</span>
+              <button class="copy-btn" onclick="copyText('/files')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="pwd cwd where repertoire travail chemin">
+            <div class="card-header">
+              <span class="cmd-name">/pwd</span>
+              <span class="alias-tag">/cwd, /where</span>
+            </div>
+            <p class="card-desc">Affiche le dossier de travail courant (Current Working Directory).</p>
+            <div class="example-box">
+              <span class="example-code">/pwd</span>
+              <button class="copy-btn" onclick="copyText('/pwd')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="find search chercher fichier nom">
+            <div class="card-header">
+              <span class="cmd-name">/find</span>
+              <span class="alias-tag">/search</span>
+            </div>
+            <p class="card-desc">Recherche rapide de fichiers par nom ou motif glob dans le projet.</p>
+            <div class="example-box">
+              <span class="example-code">/find *.ts</span>
+              <button class="copy-btn" onclick="copyText('/find *.ts')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="grep rg search-content chercher texte contenu">
+            <div class="card-header">
+              <span class="cmd-name">/grep</span>
+              <span class="alias-tag">/rg</span>
+            </div>
+            <p class="card-desc">Recherche une chaîne de caractères ou motif dans le contenu de tous les fichiers.</p>
+            <div class="example-box">
+              <span class="example-code">/grep import</span>
+              <button class="copy-btn" onclick="copyText('/grep import')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="cat read show lire afficher fichier">
+            <div class="card-header">
+              <span class="cmd-name">/cat</span>
+              <span class="alias-tag">/read, /show</span>
+            </div>
+            <p class="card-desc">Affiche rapidement le contenu d'un fichier dans la console.</p>
+            <div class="example-box">
+              <span class="example-code">/cat package.json</span>
+              <button class="copy-btn" onclick="copyText('/cat package.json')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="size wc compter lignes fichiers">
+            <div class="card-header">
+              <span class="cmd-name">/size</span>
+              <span class="alias-tag">/wc</span>
+            </div>
+            <p class="card-desc">Calcule le nombre total de lignes de code pour les fichiers correspondant à un motif.</p>
+            <div class="example-box">
+              <span class="example-code">/size *.ts</span>
+              <button class="copy-btn" onclick="copyText('/size *.ts')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="upload share send qr code reseau local">
+            <div class="card-header">
+              <span class="cmd-name">/upload</span>
+              <span class="alias-tag">/share, /send</span>
+            </div>
+            <p class="card-desc">Partage un fichier sur le réseau local via un QR Code à scanner sur votre téléphone.</p>
+            <div class="example-box">
+              <span class="example-code">/upload build.zip</span>
+              <button class="copy-btn" onclick="copyText('/upload build.zip')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="run exec shell ! commande shell">
+            <div class="card-header">
+              <span class="cmd-name">/run</span>
+              <span class="alias-tag">/exec, /!</span>
+            </div>
+            <p class="card-desc">Exécute directement une commande shell sans passer par le modèle d'IA.</p>
+            <div class="example-box">
+              <span class="example-code">/run git status</span>
+              <button class="copy-btn" onclick="copyText('/run git status')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="npm yarn pnpm bun gestionnaire paquets">
+            <div class="card-header">
+              <span class="cmd-name">/npm</span>
+              <span class="alias-tag">/yarn, /bun</span>
+            </div>
+            <p class="card-desc">Lance une commande avec le gestionnaire de paquets de votre projet.</p>
+            <div class="example-box">
+              <span class="example-code">/npm install</span>
+              <button class="copy-btn" onclick="copyText('/npm install')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="session" class="category-section">
+        <h2 class="section-title">Sessions & Mémoire</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="clear cls reset effacer vider historique">
+            <div class="card-header">
+              <span class="cmd-name">/clear</span>
+              <span class="alias-tag">/cls, /reset</span>
+            </div>
+            <p class="card-desc">Efface le terminal et réinitialise l'historique de la conversation en cours.</p>
+            <div class="example-box">
+              <span class="example-code">/clear</span>
+              <button class="copy-btn" onclick="copyText('/clear')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="compact summarize compacter resumer jetons">
+            <div class="card-header">
+              <span class="cmd-name">/compact</span>
+              <span class="alias-tag">/summarize</span>
+            </div>
+            <p class="card-desc">Compresser la conversation actuelle en conservant un résumé pour libérer de la fenêtre de contexte.</p>
+            <div class="example-box">
+              <span class="example-code">/compact</span>
+              <button class="copy-btn" onclick="copyText('/compact')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="resume r sessions reprendre historique">
+            <div class="card-header">
+              <span class="cmd-name">/resume</span>
+              <span class="alias-tag">/r, /sessions</span>
+            </div>
+            <p class="card-desc">Affiche la liste des sessions précédentes et vous permet d'en reprendre une instantanément.</p>
+            <div class="example-box">
+              <span class="example-code">/resume</span>
+              <button class="copy-btn" onclick="copyText('/resume')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="context ctx contexte session context.session">
+            <div class="card-header">
+              <span class="cmd-name">/context</span>
+              <span class="alias-tag">/ctx</span>
+            </div>
+            <p class="card-desc">Affiche le contenu du fichier CONTEXT.session rattaché à ce dossier.</p>
+            <div class="example-box">
+              <span class="example-code">/context</span>
+              <button class="copy-btn" onclick="copyText('/context')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="tokens usage cout jetons consommations">
+            <div class="card-header">
+              <span class="cmd-name">/tokens</span>
+              <span class="alias-tag">/usage</span>
+            </div>
+            <p class="card-desc">Affiche le nombre de jetons d'entrée et de sortie consommés lors de cette session.</p>
+            <div class="example-box">
+              <span class="example-code">/tokens</span>
+              <button class="copy-btn" onclick="copyText('/tokens')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="cost price spending prix tarif montant dollars">
+            <div class="card-header">
+              <span class="cmd-name">/cost</span>
+              <span class="alias-tag">/price, /spending</span>
+            </div>
+            <p class="card-desc">Calcule et affiche l'estimation du coût réel en dollars de votre session selon les tarifs officiels.</p>
+            <div class="example-box">
+              <span class="example-code">/cost</span>
+              <button class="copy-btn" onclick="copyText('/cost')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="copy cp copier reponse presse-papier">
+            <div class="card-header">
+              <span class="cmd-name">/copy</span>
+              <span class="alias-tag">/cp</span>
+            </div>
+            <p class="card-desc">Copie la dernière réponse de l'assistant IA directement dans votre presse-papier.</p>
+            <div class="example-box">
+              <span class="example-code">/copy</span>
+              <button class="copy-btn" onclick="copyText('/copy')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="export save save-chat exporter markdown">
+            <div class="card-header">
+              <span class="cmd-name">/export</span>
+              <span class="alias-tag">/save, /save-chat</span>
+            </div>
+            <p class="card-desc">Exporte la discussion complète sous forme de fichier Markdown (`.md`).</p>
+            <div class="example-box">
+              <span class="example-code">/export session-notes.md</span>
+              <button class="copy-btn" onclick="copyText('/export session-notes.md')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="rename renommer nom session">
+            <div class="card-header">
+              <span class="cmd-name">/rename</span>
+              <span class="alias-tag">renommer session</span>
+            </div>
+            <p class="card-desc">Renomme la session actuelle pour la retrouver plus facilement dans la liste `/resume`.</p>
+            <div class="example-box">
+              <span class="example-code">/rename "Fix auth bug"</span>
+              <button class="copy-btn" onclick="copyText('/rename &quot;Fix auth bug&quot;')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="tag etiquette categorie session">
+            <div class="card-header">
+              <span class="cmd-name">/tag</span>
+              <span class="alias-tag">étiqueter</span>
+            </div>
+            <p class="card-desc">Associe un tag/libellé à la session en cours.</p>
+            <div class="example-box">
+              <span class="example-code">/tag refactoring</span>
+              <button class="copy-btn" onclick="copyText('/tag refactoring')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="memory mem remember memoire contexte persistant">
+            <div class="card-header">
+              <span class="cmd-name">/memory</span>
+              <span class="alias-tag">/mem, /remember</span>
+            </div>
+            <p class="card-desc">Consulte ou édite la mémoire persistante enregistrée par l'IA au fil de vos échanges.</p>
+            <div class="example-box">
+              <span class="example-code">/memory</span>
+              <button class="copy-btn" onclick="copyText('/memory')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="undo revert annuler changement fichier">
+            <div class="card-header">
+              <span class="cmd-name">/undo</span>
+              <span class="alias-tag">/revert</span>
+            </div>
+            <p class="card-desc">Annule les dernières modifications de fichiers apportées par l'IA (`git checkout -- .`).</p>
+            <div class="example-box">
+              <span class="example-code">/undo</span>
+              <button class="copy-btn" onclick="copyText('/undo')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="rewind remonter commit anterieur restaurer">
+            <div class="card-header">
+              <span class="cmd-name">/rewind</span>
+              <span class="alias-tag">restauration commit</span>
+            </div>
+            <p class="card-desc">Réinitialise le répertoire de travail vers un commit antérieur spécifié.</p>
+            <div class="example-box">
+              <span class="example-code">/rewind HEAD~1</span>
+              <button class="copy-btn" onclick="copyText('/rewind HEAD~1')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="todo todos task taches liste a faire">
+            <div class="card-header">
+              <span class="cmd-name">/todo</span>
+              <span class="alias-tag">/todos, /task</span>
+            </div>
+            <p class="card-desc">Affiche ou ajoute une tâche à la liste interactive de la session.</p>
+            <div class="example-box">
+              <span class="example-code">/todo "Ajouter les tests unitaires"</span>
+              <button class="copy-btn" onclick="copyText('/todo &quot;Ajouter les tests unitaires&quot;')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="utility" class="category-section">
+        <h2 class="section-title">UI, Utilities & Outils</h2>
+        <div class="cards-grid">
+          <div class="card" data-keywords="theme color theme couleur terminal">
+            <div class="card-header">
+              <span class="cmd-name">/theme</span>
+              <span class="alias-tag">/color</span>
+            </div>
+            <p class="card-desc">Bascule de thème de couleur dans le terminal (`default`, `ocean`, `forest`, `sunset`, `midnight`, `hacker`).</p>
+            <div class="example-box">
+              <span class="example-code">/theme ocean</span>
+              <button class="copy-btn" onclick="copyText('/theme ocean')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="vim raccourcis vi editeur">
+            <div class="card-header">
+              <span class="cmd-name">/vim</span>
+              <span class="alias-tag">mode vim</span>
+            </div>
+            <p class="card-desc">Active ou désactive la prise en charge des raccourcis clavier Vim.</p>
+            <div class="example-box">
+              <span class="example-code">/vim</span>
+              <button class="copy-btn" onclick="copyText('/vim')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="brief verbose reponses courtes">
+            <div class="card-header">
+              <span class="cmd-name">/brief</span>
+              <span class="alias-tag">/verbose</span>
+            </div>
+            <p class="card-desc">Bascule rapidement le mode de réponse entre concis et verbeux.</p>
+            <div class="example-box">
+              <span class="example-code">/brief</span>
+              <button class="copy-btn" onclick="copyText('/brief')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="keybindings keys shortcuts raccourcis clavier">
+            <div class="card-header">
+              <span class="cmd-name">/keybindings</span>
+              <span class="alias-tag">/keys, /shortcuts</span>
+            </div>
+            <p class="card-desc">Affiche le résumé des raccourcis clavier essentiels de l'application.</p>
+            <div class="example-box">
+              <span class="example-code">/keybindings</span>
+              <button class="copy-btn" onclick="copyText('/keybindings')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="clipboard paste pbpaste cb coller presse-papier">
+            <div class="card-header">
+              <span class="cmd-name">/clipboard</span>
+              <span class="alias-tag">/paste, /cb</span>
+            </div>
+            <p class="card-desc">Colle le contenu de votre presse-papier système en tant que contexte pour l'IA.</p>
+            <div class="example-box">
+              <span class="example-code">/clipboard</span>
+              <button class="copy-btn" onclick="copyText('/clipboard')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="image screenshot img image analyse vision">
+            <div class="card-header">
+              <span class="cmd-name">/image</span>
+              <span class="alias-tag">/screenshot, /img</span>
+            </div>
+            <p class="card-desc">Envoie un fichier image à l'IA pour analyse visuelle (modèles compatibles Vision).</p>
+            <div class="example-box">
+              <span class="example-code">/image screenshot.png</span>
+              <button class="copy-btn" onclick="copyText('/image screenshot.png')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="time date now heure date actuel">
+            <div class="card-header">
+              <span class="cmd-name">/time</span>
+              <span class="alias-tag">/date, /now</span>
+            </div>
+            <p class="card-desc">Affiche la date et l'heure système actuelles.</p>
+            <div class="example-box">
+              <span class="example-code">/time</span>
+              <button class="copy-btn" onclick="copyText('/time')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="calc math calculatrice calcul">
+            <div class="card-header">
+              <span class="cmd-name">/calc</span>
+              <span class="alias-tag">/math</span>
+            </div>
+            <p class="card-desc">Calcule instantanément le résultat d'une expression mathématique.</p>
+            <div class="example-box">
+              <span class="example-code">/calc (1024 * 8) / 100</span>
+              <button class="copy-btn" onclick="copyText('/calc (1024 * 8) / 100')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="json format-json formater json pretty">
+            <div class="card-header">
+              <span class="cmd-name">/json</span>
+              <span class="alias-tag">/format-json</span>
+            </div>
+            <p class="card-desc">Formate et sublime une chaîne JSON brute.</p>
+            <div class="example-box">
+              <span class="example-code">/json {"ok":true}</span>
+              <button class="copy-btn" onclick="copyText('/json {&quot;ok&quot;:true}')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="encode base64 encodage">
+            <div class="card-header">
+              <span class="cmd-name">/encode</span>
+              <span class="alias-tag">encodage Base64</span>
+            </div>
+            <p class="card-desc">Encode une chaîne de texte au format Base64.</p>
+            <div class="example-box">
+              <span class="example-code">/encode hello world</span>
+              <button class="copy-btn" onclick="copyText('/encode hello world')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="decode base64 decodage">
+            <div class="card-header">
+              <span class="cmd-name">/decode</span>
+              <span class="alias-tag">décodage Base64</span>
+            </div>
+            <p class="card-desc">Décode une chaîne encodée au format Base64.</p>
+            <div class="example-box">
+              <span class="example-code">/decode aGVsbG8=</span>
+              <button class="copy-btn" onclick="copyText('/decode aGVsbG8=')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="uuid generer id unique v4">
+            <div class="card-header">
+              <span class="cmd-name">/uuid</span>
+              <span class="alias-tag">génération UUID</span>
+            </div>
+            <p class="card-desc">Génère un identifiant unique universel (UUID v4) aléatoire.</p>
+            <div class="example-box">
+              <span class="example-code">/uuid</span>
+              <button class="copy-btn" onclick="copyText('/uuid')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="hash sha256 empreinte">
+            <div class="card-header">
+              <span class="cmd-name">/hash</span>
+              <span class="alias-tag">hachage SHA-256</span>
+            </div>
+            <p class="card-desc">Génère l'empreinte de hachage SHA-256 d'un texte.</p>
+            <div class="example-box">
+              <span class="example-code">/hash mysecret</span>
+              <button class="copy-btn" onclick="copyText('/hash mysecret')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="ip adresse ip reseau local">
+            <div class="card-header">
+              <span class="cmd-name">/ip</span>
+              <span class="alias-tag">adresse IP</span>
+            </div>
+            <p class="card-desc">Affiche vos adresses IP réseau locales IPv4 actuelles.</p>
+            <div class="example-box">
+              <span class="example-code">/ip</span>
+              <button class="copy-btn" onclick="copyText('/ip')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="port ports verifier port libre occupation">
+            <div class="card-header">
+              <span class="cmd-name">/port</span>
+              <span class="alias-tag">/ports</span>
+            </div>
+            <p class="card-desc">Vérifie si un port réseau spécifié est actuellement utilisé par un processus.</p>
+            <div class="example-box">
+              <span class="example-code">/port 3000</span>
+              <button class="copy-btn" onclick="copyText('/port 3000')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="processes ps top processus actifs mem cpu">
+            <div class="card-header">
+              <span class="cmd-name">/processes</span>
+              <span class="alias-tag">/ps, /top</span>
+            </div>
+            <p class="card-desc">Affiche la liste des processus système les plus gourmands en mémoire et CPU.</p>
+            <div class="example-box">
+              <span class="example-code">/processes</span>
+              <button class="copy-btn" onclick="copyText('/processes')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="disk df espace disque stockage">
+            <div class="card-header">
+              <span class="cmd-name">/disk</span>
+              <span class="alias-tag">/df</span>
+            </div>
+            <p class="card-desc">Affiche l'utilisation de l'espace disque disponible sur le système.</p>
+            <div class="example-box">
+              <span class="example-code">/disk</span>
+              <button class="copy-btn" onclick="copyText('/disk')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="translate traduire code langage conversion">
+            <div class="card-header">
+              <span class="cmd-name">/translate</span>
+              <span class="alias-tag">traduction code</span>
+            </div>
+            <p class="card-desc">Demande à l'IA de traduire un fichier de code vers un autre langage de programmation.</p>
+            <div class="example-box">
+              <span class="example-code">/translate utils.py to typescript</span>
+              <button class="copy-btn" onclick="copyText('/translate utils.py to typescript')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="regex expression reguliere generer expliquer">
+            <div class="card-header">
+              <span class="cmd-name">/regex</span>
+              <span class="alias-tag">expression régulière</span>
+            </div>
+            <p class="card-desc">Génère ou explique une expression régulière selon votre besoin.</p>
+            <div class="example-box">
+              <span class="example-code">/regex valider adresse email</span>
+              <button class="copy-btn" onclick="copyText('/regex valider adresse email')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="sql requete generer expliquer base de donnees">
+            <div class="card-header">
+              <span class="cmd-name">/sql</span>
+              <span class="alias-tag">génération SQL</span>
+            </div>
+            <p class="card-desc">Demande à l'IA de rédiger une requête SQL complexe à partir d'une description.</p>
+            <div class="example-box">
+              <span class="example-code">/sql utilisateurs actifs ce mois</span>
+              <button class="copy-btn" onclick="copyText('/sql utilisateurs actifs ce mois')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="diagram draw schema mermaid ascii dessin">
+            <div class="card-header">
+              <span class="cmd-name">/diagram</span>
+              <span class="alias-tag">/draw</span>
+            </div>
+            <p class="card-desc">Génère un schéma ou diagramme textuel (Mermaid / ASCII) d'architecture ou de flux.</p>
+            <div class="example-box">
+              <span class="example-code">/diagram flux d'authentification</span>
+              <button class="copy-btn" onclick="copyText('/diagram flux d\'authentification')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="weather meteo temps ville temperature">
+            <div class="card-header">
+              <span class="cmd-name">/weather</span>
+              <span class="alias-tag">météo</span>
+            </div>
+            <p class="card-desc">Consulte la météo en direct pour une ville spécifiée.</p>
+            <div class="example-box">
+              <span class="example-code">/weather Paris</span>
+              <button class="copy-btn" onclick="copyText('/weather Paris')"></button>
+            </div>
+          </div>
+
+          <div class="card" data-keywords="debug diag network diagnostic reseau ping provider">
+            <div class="card-header">
+              <span class="cmd-name">/debug</span>
+              <span class="alias-tag">/diag, /network</span>
+            </div>
+            <p class="card-desc">Test complet de la connectivité réseau avec le provider d'IA et affichage du contexte de débogage.</p>
+            <div class="example-box">
+              <span class="example-code">/debug</span>
+              <button class="copy-btn" onclick="copyText('/debug')"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toast" class="toast">Copié dans le presse-papier !</div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card');
+    const sections = document.querySelectorAll('.category-section');
+
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const keywords = card.getAttribute('data-keywords') || '';
+        if (text.includes(term) || keywords.includes(term)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      sections.forEach(section => {
+        const visibleCards = section.querySelectorAll('.card[style="display: flex;"]');
+        if (term !== '' && visibleCards.length === 0 && section.id !== 'modes') {
+          section.style.display = 'none';
+        } else {
+          section.style.display = 'block';
+        }
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    // TOC Active State Scroll Tracking
+    const navLinks = document.querySelectorAll('.nav-item a');
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === entry.target.id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+</body>
+</html>

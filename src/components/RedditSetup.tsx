@@ -77,7 +77,7 @@ export function RedditSetup({ onComplete, onCancel }: RedditSetupProps) {
         <Text> </Text>
         <Text>1. Go to: <Text color="cyan">https://www.reddit.com/prefs/apps</Text></Text>
         <Text>2. Click "create another app..."</Text>
-        <Text>3. Name: OpenAgent, Type: script</Text>
+        <Text>3. Name: mAI CLI, Type: script</Text>
         <Text>4. Redirect URI: http://localhost:8910/callback</Text>
         <Text>5. Click "create app"</Text>
         <Text> </Text>

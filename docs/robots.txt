@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ask-sol.github.io/openagent/sitemap.xml

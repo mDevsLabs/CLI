@@ -139,7 +139,7 @@ export const CATALOG: CatalogEntry[] = [
   },
 ];
 
-const CONFIG_DIR = join(homedir(), ".openagent");
+const CONFIG_DIR = join(homedir(), ".mai");
 const CONFIG_PATH = join(CONFIG_DIR, "mcp_servers.json");
 
 function readConfig(): { mcpServers: Record<string, McpServerConfig> } {

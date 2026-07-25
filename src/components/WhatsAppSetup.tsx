@@ -46,7 +46,7 @@ export function WhatsAppSetup({ onComplete, onCancel }: WhatsAppSetupProps) {
       `  Webhook endpoint: http://localhost:8920/webhook\n` +
       `  Verify token: ${verifyToken}\n` +
       `  Send messages to /send endpoint or configure Meta webhook.\n` +
-      `  Bridge starts automatically on next openagent launch.`
+      `  Bridge starts automatically on next mai launch.`
     );
   };
 
@@ -56,7 +56,7 @@ export function WhatsAppSetup({ onComplete, onCancel }: WhatsAppSetupProps) {
         <Text bold color="cyan">WhatsApp Bridge Setup</Text>
         <Text> </Text>
         <Text>This sets up a webhook server so you can send messages</Text>
-        <Text>to OpenAgent via WhatsApp.</Text>
+        <Text>to mAI CLI via WhatsApp.</Text>
         <Text> </Text>
         <Text bold>Option A: Meta WhatsApp Business API</Text>
         <Text>  1. Go to developers.facebook.com, create an app</Text>

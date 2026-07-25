@@ -42,6 +42,8 @@ type Step =
   | "local-confirm"
   | "local-custom"
   | "pulling"
+  | "cloud-custom-id"
+  | "cloud-custom-name"
   | "installing-runtime";
 
 type LocalRuntime = "ollama" | "lmstudio" | "mlx";
@@ -173,6 +175,8 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
   const [selectedLocalModel, setSelectedLocalModel] = useState<LocalModelInfo | null>(null);
   const [apiKey, setApiKey] = useState("");
   const [customHost, setCustomHost] = useState("");
+  const [customModelId, setCustomModelId] = useState("");
+  const [customModelName, setCustomModelName] = useState("");
   const [error, setError] = useState("");
   const [pullProgress, setPullProgress] = useState("");
   const [pullPercent, setPullPercent] = useState<number | null>(null);
@@ -219,6 +223,14 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
       case "local-confirm":
       case "local-custom":
         setStep("local-model");
+        return;
+      case "cloud-custom-id":
+        setStep("cloud-model");
+        setCustomModelId("");
+        return;
+      case "cloud-custom-name":
+        setStep("cloud-custom-id");
+        setCustomModelName("");
         return;
     }
   });
@@ -397,7 +409,7 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
     return (
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">Which local runtime?</Text>
-        <Text dimColor>OpenAgent will auto-install whichever you pick.</Text>
+        <Text dimColor>mAI CLI will auto-install whichever you pick.</Text>
         <Text> </Text>
         <SelectInput
           items={items as any}
@@ -445,11 +457,18 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
         <Text bold color="cyan">{provider.config.name} — pick a model:</Text>
         <Text> </Text>
         <SelectInput
-          items={provider.config.models.map(m => ({
-            label: `${m.name}  ${Math.round(m.contextWindow / 1000)}k ctx${m.id === provider.config.defaultModel ? "  ← recommended" : ""}`,
-            value: m.id,
-          }))}
+          items={[
+            ...provider.config.models.map(m => ({
+              label: `${m.name}  ${Math.round(m.contextWindow / 1000)}k ctx${m.id === provider.config.defaultModel ? "  ← recommended" : ""}`,
+              value: m.id,
+            })),
+            { label: "Add custom model...", value: "__custom__" }
+          ]}
           onSelect={(item) => {
+            if (item.value === "__custom__") {
+              setStep("cloud-custom-id");
+              return;
+            }
             setSelectedModel(item.value);
             if (selectedProvider === settings.provider) {
               const updated = loadSettings();
@@ -473,6 +492,46 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
           }}
           initialIndex={Math.max(provider.config.models.findIndex(m => m.id === provider.config.defaultModel), 0)}
         />
+      </Box>
+    );
+  }
+
+  if (step === "cloud-custom-id") {
+    return (
+      <Box flexDirection="column" paddingLeft={2}>
+        <Text bold color="cyan">Custom Model ID:</Text>
+        <Text dimColor>e.g., ft:gpt-4o-mini-2024-07-18:org::abc</Text>
+        <Text> </Text>
+        <Box><Text color="cyan">{"❯ "}</Text><TextInput value={customModelId} onChange={(val) => { setCustomModelId(val); setError(""); }} onSubmit={() => {
+          if (!customModelId.trim()) { setError("ID cannot be empty."); return; }
+          setStep("cloud-custom-name");
+        }} /></Box>
+        {error && <Text color="red">{error}</Text>}
+      </Box>
+    );
+  }
+
+  if (step === "cloud-custom-name") {
+    return (
+      <Box flexDirection="column" paddingLeft={2}>
+        <Text bold color="cyan">Custom Model Display Name:</Text>
+        <Text dimColor>e.g., My Fine-tuned Model</Text>
+        <Text> </Text>
+        <Box><Text color="cyan">{"❯ "}</Text><TextInput value={customModelName} onChange={setCustomModelName} onSubmit={() => {
+          const id = customModelId.trim();
+          if (!id) return;
+          const name = customModelName.trim() || id;
+          setSelectedModel(id);
+          
+          if (selectedProvider === settings.provider) {
+            const updated = loadSettings();
+            updated.model = id;
+            saveSettings(updated);
+            onComplete(selectedProvider, id);
+          } else {
+            setStep("cloud-key");
+          }
+        }} /></Box>
       </Box>
     );
   }
@@ -590,7 +649,7 @@ export function ModelPicker({ onComplete, onCancel }: ModelPickerProps) {
               setStep("pulling");
               openUrl(rt.installUrlWindows || rt.installUrl);
               setTimeout(() => {
-                setPullProgress(`Once ${rt.label} is installed, restart OpenAgent.`);
+                setPullProgress(`Once ${rt.label} is installed, restart mAI CLI.`);
                 setTimeout(() => setStep("local-model"), 4000);
               }, 1500);
               return;

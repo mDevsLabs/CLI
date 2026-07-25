@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/alibaba.json";
+
 const config: ProviderConfig = {
   id: "alibaba",
   name: "Alibaba Cloud (Qwen)",
@@ -16,16 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "DASHSCOPE_API_KEY",
   apiKeyUrl: "https://dashscope.console.aliyun.com/apiKey",
-  models: [
-    { id: "qwen-max", name: "Qwen Max", contextWindow: 131072, maxOutput: 16384 },
-    { id: "qwen-plus", name: "Qwen Plus", contextWindow: 131072, maxOutput: 16384 },
-    { id: "qwen-turbo", name: "Qwen Turbo", contextWindow: 131072, maxOutput: 8192 },
-    { id: "qwen3-235b-a22b", name: "Qwen 3 235B", contextWindow: 131072, maxOutput: 16384 },
-    { id: "qwen3-32b", name: "Qwen 3 32B", contextWindow: 131072, maxOutput: 16384 },
-    { id: "qwen3-8b", name: "Qwen 3 8B", contextWindow: 131072, maxOutput: 8192 },
-    { id: "qwen2.5-coder-32b-instruct", name: "Qwen 2.5 Coder 32B", contextWindow: 131072, maxOutput: 8192 },
-    { id: "qwq-32b", name: "QwQ 32B (reasoning)", contextWindow: 131072, maxOutput: 16384 },
-  ],
+  models,
   defaultModel: "qwen-plus",
   supportsStreaming: true,
   supportsToolUse: true,

@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-INSTALL_DIR="$HOME/.openagent/app"
+INSTALL_DIR="$HOME/.mai/app"
 BIN_DIR="$HOME/.local/bin"
-BIN_LINK="$BIN_DIR/openagent"
+BIN_LINK="$BIN_DIR/mai"
 
 echo ""
-echo "  Installing OpenAgent..."
+echo "  Installing mAI CLI..."
 echo ""
 
 if ! command -v node &>/dev/null; then
@@ -73,9 +73,9 @@ if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
 fi
 
 echo ""
-echo "  OpenAgent installed!"
+echo "  mAI CLI installed!"
 echo ""
-echo "  Run: openagent"
+echo "  Run: mai"
 echo ""
 
 if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then

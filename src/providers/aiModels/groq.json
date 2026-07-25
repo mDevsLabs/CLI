@@ -1,0 +1,17 @@
+[
+  { "id": "openai/gpt-oss-120b", "name": "GPT-OSS 120B", "contextWindow": 131072, "maxOutput": 65536 },
+  { "id": "openai/gpt-oss-20b", "name": "GPT-OSS 20B", "contextWindow": 131072, "maxOutput": 65536 },
+  { "id": "openai/gpt-oss-safeguard-20b", "name": "GPT-OSS Safeguard 20B", "contextWindow": 131072, "maxOutput": 65536 },
+  { "id": "llama-3.3-70b-versatile", "name": "Llama 3.3 70B Versatile", "contextWindow": 131072, "maxOutput": 32768 },
+  { "id": "llama-3.1-8b-instant", "name": "Llama 3.1 8B Instant", "contextWindow": 131072, "maxOutput": 131072 },
+  { "id": "qwen/qwen3.6-27b", "name": "Qwen3.6 27B", "contextWindow": 131072, "maxOutput": 16384 },
+  { "id": "minimaxai/minimax-m2.7", "name": "MiniMax M2.7", "contextWindow": 196608, "maxOutput": 131072 },
+  { "id": "groq/compound", "name": "Groq Compound", "contextWindow": 131072, "maxOutput": 8192 },
+  { "id": "groq/compound-mini", "name": "Groq Compound Mini", "contextWindow": 131072, "maxOutput": 8192 },
+  { "id": "meta-llama/llama-prompt-guard-2-86m", "name": "Llama Prompt Guard 2 86M", "contextWindow": 512, "maxOutput": 512 },
+  { "id": "meta-llama/llama-prompt-guard-2-22m", "name": "Llama Prompt Guard 2 22M", "contextWindow": 512, "maxOutput": 512 },
+  { "id": "whisper-large-v3", "name": "Whisper Large v3", "contextWindow": 448, "maxOutput": 448 },
+  { "id": "whisper-large-v3-turbo", "name": "Whisper Large v3 Turbo", "contextWindow": 448, "maxOutput": 448 },
+  { "id": "canopylabs/orpheus-v1-english", "name": "Orpheus V1 English (TTS)", "contextWindow": 4000, "maxOutput": 50000 },
+  { "id": "canopylabs/orpheus-arabic-saudi", "name": "Orpheus Arabic Saudi (TTS)", "contextWindow": 4000, "maxOutput": 50000 }
+]

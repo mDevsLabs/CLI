@@ -159,13 +159,13 @@ export type InstallMethod = "brew" | "npm-global" | "manual" | "unknown";
 export function detectInstallMethod(): InstallMethod {
   const exe = process.argv[1] || "";
   const lower = exe.toLowerCase();
-  if (lower.includes("/cellar/openagent/") || lower.includes("homebrew")) return "brew";
+  if (lower.includes("/cellar/mai/") || lower.includes("homebrew")) return "brew";
   if (lower.includes("/node_modules/") || lower.includes("\\node_modules\\")) return "npm-global";
-  const manualPath = join(homedir(), ".openagent", "app");
+  const manualPath = join(homedir(), ".mai", "app");
   if (lower.includes(manualPath.toLowerCase())) return "manual";
   return "unknown";
 }
 
 export function homeConfigDir(): string {
-  return join(homedir(), ".openagent");
+  return join(homedir(), ".mai");
 }

@@ -13,7 +13,7 @@ export async function setupReddit(): Promise<string> {
   console.log("  1. Go to: https://www.reddit.com/prefs/apps");
   console.log("  2. Scroll down, click 'create another app...'");
   console.log("  3. Fill in:");
-  console.log("     - Name: OpenAgent");
+  console.log("     - Name: mAI CLI");
   console.log("     - Type: select 'web app'");
   console.log(`     - Redirect URI: ${REDIRECT_URI}`);
   console.log("  4. Click 'create app'\n");
@@ -59,7 +59,7 @@ export async function setupReddit(): Promise<string> {
 
         if (authCode) {
           res.writeHead(200, { "Content-Type": "text/html" });
-          res.end("<h2>OpenAgent authorized! You can close this tab.</h2>");
+          res.end("<h2>mAI CLI authorized! You can close this tab.</h2>");
           clearTimeout(timeout);
           server.close();
           resolve(authCode);
@@ -84,7 +84,7 @@ export async function setupReddit(): Promise<string> {
     headers: {
       Authorization: `Basic ${auth}`,
       "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": "OpenAgent/0.1.0",
+      "User-Agent": "mAI-CLI/0.1.0",
     },
     body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`,
   });

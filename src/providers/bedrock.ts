@@ -10,6 +10,8 @@ import type {
 } from "./types.js";
 import { createHmac, createHash } from "node:crypto";
 
+import models from "./aiModels/bedrock.json";
+
 const config: ProviderConfig = {
   id: "bedrock",
   name: "AWS Bedrock",
@@ -17,14 +19,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "AWS_ACCESS_KEY_ID",
   apiKeyUrl: "https://console.aws.amazon.com/iam/",
-  models: [
-    { id: "anthropic.claude-sonnet-4-20250514-v1:0", name: "Claude Sonnet 4", contextWindow: 200000, maxOutput: 16000 },
-    { id: "anthropic.claude-3-5-haiku-20241022-v1:0", name: "Claude 3.5 Haiku", contextWindow: 200000, maxOutput: 8192 },
-    { id: "meta.llama3-3-70b-instruct-v1:0", name: "Llama 3.3 70B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "mistral.mistral-large-2411-v1:0", name: "Mistral Large", contextWindow: 128000, maxOutput: 8192 },
-    { id: "amazon.nova-pro-v1:0", name: "Amazon Nova Pro", contextWindow: 300000, maxOutput: 5120 },
-    { id: "amazon.nova-lite-v1:0", name: "Amazon Nova Lite", contextWindow: 300000, maxOutput: 5120 },
-  ],
+  models,
   defaultModel: "anthropic.claude-sonnet-4-20250514-v1:0",
   supportsStreaming: true,
   supportsToolUse: true,

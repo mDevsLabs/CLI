@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/openrouter.json";
+
 const config: ProviderConfig = {
   id: "openrouter",
   name: "OpenRouter",
@@ -16,23 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "OPENROUTER_API_KEY",
   apiKeyUrl: "https://openrouter.ai/keys",
-  models: [
-    { id: "openai/gpt-5.4", name: "GPT-5.4", contextWindow: 1048576, maxOutput: 32768 },
-    { id: "openai/gpt-5.4-mini", name: "GPT-5.4 Mini", contextWindow: 400000, maxOutput: 32768 },
-    { id: "openai/gpt-4.1-mini", name: "GPT-4.1 Mini", contextWindow: 1048576, maxOutput: 32768 },
-    { id: "anthropic/claude-opus-4-6", name: "Claude Opus 4.6", contextWindow: 1000000, maxOutput: 32000 },
-    { id: "anthropic/claude-sonnet-4-6", name: "Claude Sonnet 4.6", contextWindow: 200000, maxOutput: 16000 },
-    { id: "google/gemini-3.1-pro-preview", name: "Gemini 3.1 Pro", contextWindow: 1048576, maxOutput: 65536 },
-    { id: "google/gemini-3-flash-preview", name: "Gemini 3 Flash", contextWindow: 1048576, maxOutput: 65536 },
-    { id: "meta-llama/llama-4-scout-17b-16e-instruct", name: "Llama 4 Scout 17B", contextWindow: 128000, maxOutput: 8192 },
-    { id: "mistralai/mistral-small-latest", name: "Mistral Small 4", contextWindow: 128000, maxOutput: 8192 },
-    { id: "deepseek/deepseek-chat", name: "DeepSeek V3.2", contextWindow: 128000, maxOutput: 8192 },
-    { id: "deepseek/deepseek-reasoner", name: "DeepSeek R1", contextWindow: 128000, maxOutput: 8192 },
-    { id: "x-ai/grok-4.20-non-reasoning", name: "Grok 4.20", contextWindow: 2000000, maxOutput: 16384 },
-    { id: "qwen/qwen3-32b", name: "Qwen 3 32B", contextWindow: 131072, maxOutput: 8192 },
-    { id: "xiaomi/mimo-v2-pro", name: "MiMo V2 Pro", contextWindow: 1000000, maxOutput: 16384 },
-    { id: "moonshot/kimi-k2", name: "Kimi K2", contextWindow: 131072, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "openai/gpt-5.4-mini",
   supportsStreaming: true,
   supportsToolUse: true,
@@ -61,8 +47,8 @@ async function* streamRequest(
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${options.apiKey}`,
-      "HTTP-Referer": "https://github.com/openagent-cli/openagent",
-      "X-Title": "OpenAgent",
+      "HTTP-Referer": "https://github.com/mDevsLabs/mAI-CLI",
+      "X-Title": "mAI CLI",
     },
     body: JSON.stringify(body),
   });
@@ -182,8 +168,8 @@ async function completeRequest(
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${options.apiKey}`,
-      "HTTP-Referer": "https://github.com/openagent-cli/openagent",
-      "X-Title": "OpenAgent",
+      "HTTP-Referer": "https://github.com/mDevsLabs/mAI-CLI",
+      "X-Title": "mAI CLI",
     },
     body: JSON.stringify(body),
   });

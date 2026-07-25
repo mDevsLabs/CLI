@@ -153,7 +153,7 @@ export async function startShareSession(filePath: string): Promise<ShareSession>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>${escape(fileName)} · OpenAgent</title>
+<title>${escape(fileName)} · mAI CLI</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -201,7 +201,7 @@ body{
 </head>
 <body>
 <div class="card">
-  <div class="brand"><span class="brand-dot"></span>OpenAgent</div>
+  <div class="brand"><span class="brand-dot"></span>mAI CLI</div>
   <div class="file">
     <div class="file-name">${escape(fileName)}</div>
     <div class="file-size">${sizeStr}</div>
@@ -210,7 +210,7 @@ body{
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Download
   </a>
-  <a class="btn btn-secondary" href="https://github.com/ask-sol/openagent" target="_blank" rel="noopener noreferrer">
+  <a class="btn btn-secondary" href="https://github.com/mDevsLabs/mAI-CLI" target="_blank" rel="noopener noreferrer">
     <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.6 22.3 24 17.8 24 12.5 24 5.9 18.6.5 12 .5z"/></svg>
     View on GitHub
   </a>

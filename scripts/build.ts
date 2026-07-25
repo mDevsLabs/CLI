@@ -9,6 +9,7 @@ const result = await build({
   sourcemap: "external",
   external: [
     "@modelcontextprotocol/sdk",
+    "react-devtools-core",
   ],
   naming: {
     entry: "cli.mjs",

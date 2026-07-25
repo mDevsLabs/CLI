@@ -8,7 +8,7 @@ async function getRedditAccessToken(clientId: string, clientSecret: string, refr
     headers: {
       Authorization: `Basic ${auth}`,
       "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": "OpenAgent/0.1.0",
+      "User-Agent": "mAI-CLI/0.1.0",
     },
     body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
   });
@@ -95,7 +95,7 @@ export const redditPostTool: Tool = {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "OpenAgent/0.1.0",
+          "User-Agent": "mAI-CLI/0.1.0",
         },
         body: formData.toString(),
       });

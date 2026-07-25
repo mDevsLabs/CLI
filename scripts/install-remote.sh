@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-REPO="https://github.com/ask-sol/openagent.git"
+REPO="https://github.com/mDevsLabs/mAI-CLI.git"
 TMP_DIR=$(mktemp -d)
 
 echo ""
-echo "  Installing OpenAgent..."
+echo "  Installing mAI CLI..."
 echo ""
 
 if ! command -v git &>/dev/null; then
@@ -20,8 +20,8 @@ if ! command -v git &>/dev/null; then
   fi
 fi
 
-git clone --depth 1 "$REPO" "$TMP_DIR/openagent" 2>/dev/null
+git clone --depth 1 "$REPO" "$TMP_DIR/mai" 2>/dev/null
 
-bash "$TMP_DIR/openagent/scripts/install-user.sh"
+bash "$TMP_DIR/mai/scripts/install-user.sh"
 
 rm -rf "$TMP_DIR"

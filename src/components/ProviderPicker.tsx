@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Box, Text, useInput } from "ink";
 import TextInput from "ink-text-input";
-import SelectInput from "ink-select-input";
-import { getAllProviders, searchProviders, getProvider } from "../providers/index.js";
+import { getAllProviders, getProvider } from "../providers/index.js";
 import { loadSettings, saveSettings } from "../config/settings.js";
 import type { Provider } from "../providers/types.js";
+import { PaginatedSelect, type PaginatedItem } from "./PaginatedSelect.js";
 
 type Step = "provider" | "key" | "model" | "done";
 
@@ -38,7 +38,7 @@ export function ProviderPicker({ onComplete, onCancel }: ProviderPickerProps) {
     }
   });
 
-  const handleProviderSelect = (item: { value: string }) => {
+  const handleProviderSelect = (item: PaginatedItem<string>) => {
     const provider = getProvider(item.value);
     if (!provider) return;
     setSelectedProvider(provider);
@@ -63,7 +63,7 @@ export function ProviderPicker({ onComplete, onCancel }: ProviderPickerProps) {
     setStep("model");
   };
 
-  const handleModelSelect = (item: { value: string }) => {
+  const handleModelSelect = (item: PaginatedItem<string>) => {
     if (!selectedProvider) return;
 
     const updated = loadSettings();
@@ -78,16 +78,25 @@ export function ProviderPicker({ onComplete, onCancel }: ProviderPickerProps) {
 
   if (step === "provider") {
     const providers = getAllProviders();
+    const items: PaginatedItem<string>[] = providers.map((p) => ({
+      label: p.config.name,
+      value: p.config.id,
+      description: p.config.description,
+      isCurrent: p.config.id === settings.provider,
+    }));
+
+    const initialIdx = items.findIndex((it) => it.isCurrent);
+
     return (
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">Select provider:</Text>
         <Text> </Text>
-        <SelectInput
-          items={providers.map((p) => ({
-            label: `${p.config.name} — ${p.config.description}${p.config.id === settings.provider ? "  (current)" : ""}`,
-            value: p.config.id,
-          }))}
+        <PaginatedSelect
+          items={items}
+          pageSize={5}
+          initialIndex={initialIdx >= 0 ? initialIdx : 0}
           onSelect={handleProviderSelect}
+          onCancel={onCancel}
         />
         <Text> </Text>
         <Text dimColor>Press Esc or type /cancel to go back</Text>
@@ -111,19 +120,25 @@ export function ProviderPicker({ onComplete, onCancel }: ProviderPickerProps) {
   }
 
   if (step === "model" && selectedProvider) {
+    const items: PaginatedItem<string>[] = selectedProvider.config.models.map((m) => ({
+      label: m.name,
+      value: m.id,
+      description: `${Math.round(m.contextWindow / 1000)}k ctx`,
+      isRecommended: m.id === selectedProvider.config.defaultModel,
+    }));
+
+    const initialIdx = items.findIndex((it) => it.isRecommended);
+
     return (
       <Box flexDirection="column" paddingLeft={2}>
         <Text bold color="cyan">Select model for {selectedProvider.config.name}:</Text>
         <Text> </Text>
-        <SelectInput
-          items={selectedProvider.config.models.map((m) => ({
-            label: `${m.name} — ${Math.round(m.contextWindow / 1000)}k context, ${Math.round(m.maxOutput / 1000)}k output${m.id === selectedProvider.config.defaultModel ? "  (recommended)" : ""}`,
-            value: m.id,
-          }))}
+        <PaginatedSelect
+          items={items}
+          pageSize={5}
+          initialIndex={initialIdx >= 0 ? initialIdx : 0}
           onSelect={handleModelSelect}
-          initialIndex={selectedProvider.config.models.findIndex(
-            (m) => m.id === selectedProvider.config.defaultModel
-          )}
+          onCancel={() => setStep("provider")}
         />
       </Box>
     );

@@ -9,6 +9,8 @@ import type {
   ProviderToolCall,
 } from "./types.js";
 
+import models from "./aiModels/mistral.json";
+
 const config: ProviderConfig = {
   id: "mistral",
   name: "Mistral AI",
@@ -16,11 +18,7 @@ const config: ProviderConfig = {
   category: "cloud",
   apiKeyEnvVar: "MISTRAL_API_KEY",
   apiKeyUrl: "https://console.mistral.ai/api-keys",
-  models: [
-    { id: "mistral-large-latest", name: "Mistral Large 3", contextWindow: 256000, maxOutput: 8192 },
-    { id: "mistral-small-latest", name: "Mistral Small 4", contextWindow: 128000, maxOutput: 8192 },
-    { id: "codestral-latest", name: "Codestral", contextWindow: 256000, maxOutput: 8192 },
-  ],
+  models,
   defaultModel: "mistral-small-latest",
   supportsStreaming: true,
   supportsToolUse: true,
