@@ -30,7 +30,7 @@ import type { TokenUsage } from "../providers/types.js";
 
 export interface CommandResult {
   output: string;
-  action?: "clear" | "exit" | "resume" | "setup" | "switch-view" | "pick-provider" | "pick-model" | "pick-model-selector" | "pick-provider-manager" | "setup-reddit" | "setup-x" | "compact" | "pick-mcp" | "pick-plugins" | "upload" | "queue-message" | "pick-settings" | "exit-update";
+  action?: "clear" | "exit" | "resume" | "setup" | "switch-view" | "pick-provider" | "pick-model" | "pick-model-selector" | "pick-provider-manager" | "setup-reddit" | "setup-x" | "compact" | "pick-mcp" | "pick-plugins" | "upload" | "queue-message" | "pick-settings" | "exit-update" | "auth-login" | "auth-usage";
   data?: any;
 }
 
@@ -103,6 +103,20 @@ cmd("compact", ["summarize"], "Conversation", "Compress conversation — keeps s
   return { output: "", action: "compact" };
 });
 
+cmd("login", ["signin"], "Account", "Se connecter ou s'inscrire pour sauvegarder sa progression", () => {
+  return { output: "", action: "auth-login" };
+});
+
+cmd("logout", ["signout"], "Account", "Se déconnecter", () => {
+  const { logout } = require("../services/authStore.js");
+  logout();
+  return { output: "Déconnexion réussie. 🔒", action: "clear" };
+});
+
+cmd("usage", ["quota", "forfait"], "Account", "Voir l'utilisation des tokens et le forfait actuel (mAI uniquement)", (_args, ctx) => {
+  return { output: "", action: "auth-usage" };
+});
+
 cmd("resume", ["r", "sessions"], "Session", "Resume a previous conversation", (args, ctx) => {
   if (args) {
     const idx = parseInt(args) - 1;
@@ -132,7 +146,7 @@ cmd("context", ["ctx"], "Session", "Show CONTEXT.session contents for this direc
   return { output: `CONTEXT.session:\n\n${content}` };
 });
 
-cmd("tokens", ["cost", "usage"], "Session", "Show token usage for this session", (_args, ctx) => {
+cmd("tokens", ["cost"], "Session", "Show token usage for this session", (_args, ctx) => {
   const total = ctx.tokenUsage.inputTokens + ctx.tokenUsage.outputTokens;
   return {
     output: `Token Usage\n  Input:  ${formatTokens(ctx.tokenUsage.inputTokens)}\n  Output: ${formatTokens(ctx.tokenUsage.outputTokens)}\n  Cache:  ${formatTokens(ctx.tokenUsage.cacheReadTokens || 0)}\n  Total:  ${formatTokens(total)}`,
@@ -1067,6 +1081,7 @@ cmd("diagram", ["draw"], "Utility", "Generate a text diagram", (args) => {
   if (!args) return { output: "Usage: /diagram <description>\nExample: /diagram architecture of a microservices app" };
   return { output: `Ask the AI: "Create an ASCII/Mermaid diagram of: ${args}"` };
 });
+
 
 export function getCommand(input: string): { command: CommandDef; args: string } | null {
   if (!input.startsWith("/")) return null;

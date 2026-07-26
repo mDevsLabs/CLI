@@ -119,17 +119,21 @@ export function ProviderManager({ onComplete, onCancel }: ProviderManagerProps) 
     if (!provider) { setStep("main"); return null; }
 
     const isCustom = customProviders.some((c) => c.id === selectedProviderId);
+    const needsApiKey = provider.config.apiKeyEnvVar !== "" || provider.config.apiKeyUrl !== "" || isCustom;
+    
     const items: PaginatedItem<string>[] = [
       { label: "Set as default provider", value: "set-default" },
-      { label: `Change API key${isCustom ? " / URL" : ""}`, value: "edit-key" },
+      ...(needsApiKey ? [{ label: `Change API key${isCustom ? " / URL" : ""}`, value: "edit-key" }] : []),
       { label: "Add model", value: "add-model" },
       ...(isCustom ? [{ label: "Remove this provider", value: "remove" }] : []),
       { label: "← Back", value: "back" },
     ];
 
-    const currentKey = settings.apiKey && settings.provider === selectedProviderId
-      ? "••••••••" + settings.apiKey.slice(-4)
-      : "Not set";
+    const currentKey = needsApiKey
+      ? (settings.apiKey && settings.provider === selectedProviderId
+          ? "••••••••" + settings.apiKey.slice(-4)
+          : "Not set")
+      : "Not required";
 
     const handleConfigSelect = (item: PaginatedItem<string>) => {
       if (item.value === "back") { setStep("main"); return; }

@@ -37,6 +37,9 @@ import { McpStore } from "./McpStore.js";
 import { PluginStore } from "./PluginStore.js";
 import { UploadView } from "./UploadView.js";
 import { SettingsMenu } from "./SettingsMenu.js";
+import { AuthView } from "./AuthView.js";
+import { UsageView } from "./UsageView.js";
+import { loadAuthState } from "../services/authStore.js";
 import { subscribeTodos, clearTodos, type TodoItem } from "../tools/TodoWriteTool/index.js";
 import { setUploadListener } from "../tools/UploadTool/index.js";
 import { filterStreamText, shortPath } from "../utils/streamFilter.js";
@@ -70,8 +73,9 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
   const [error, setError] = useState("");
   const [thinking, setThinking] = useState(initialThinking);
   const [settings, setSettings] = useState(initialSettings);
-  const [pickerView, setPickerView] = useState<"none" | "provider" | "model" | "model-selector" | "provider-manager" | "settings" | "reddit" | "x" | "whatsapp" | "discord" | "mcp" | "plugins" | "upload">("none");
+  const [pickerView, setPickerView] = useState<string>("none");
   const [pickerData, setPickerData] = useState<any>(null);
+  const [authState, setAuthState] = useState(() => loadAuthState());
   const [sessionProvider, setSessionProvider] = useState<string | null>(null);
   const [sessionModel, setSessionModel] = useState<string | null>(null);
   const [initialBanner] = useState(() => initialSettings.defaultPermissionMode !== "terminal");
@@ -146,7 +150,16 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
     if (input.startsWith("/")) {
       const cmds = getAllCommands();
       const q = input.slice(1).toLowerCase();
-      const matches = cmds.filter(c => c.name.startsWith(q) || c.aliases?.some(a => a.startsWith(q)));
+      let matches = cmds.filter(c => c.name.startsWith(q) || c.aliases?.some(a => a.startsWith(q)));
+      
+      const state = loadAuthState();
+      matches = matches.filter(c => {
+        if (c.name === "login" && state.email) return false;
+        if (c.name === "logout" && !state.email) return false;
+        if (c.name === "usage" && settings.provider !== "mai") return false;
+        return true;
+      });
+
       setAutocompleteItems(matches.map(c => ({ label: `/${c.name}`, value: `/${c.name}`, desc: c.description })));
       setAutocompleteIndex(0);
     } else {
@@ -450,6 +463,16 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           return;
         }
 
+        if (result.action === "auth-login") {
+          setPickerView("auth-login");
+          return;
+        }
+
+        if (result.action === "auth-usage") {
+          setPickerView("auth-usage");
+          return;
+        }
+
         if (result.action === "pick-settings") {
           setPickerView("settings");
           return;
@@ -461,7 +484,11 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           setStreamingText("");
           setTokenUsage({ inputTokens: 0, outputTokens: 0 });
           messageCountRef.current = 0;
+          setAuthState(loadAuthState());
           clearTodos();
+          if (result.output) {
+            setDisplayMessages([{ role: "system", content: result.output }]);
+          }
           return;
         }
 
@@ -887,7 +914,6 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
             return (
               <Box key="banner" flexDirection="column" marginBottom={1}>
                 <Text>{getBanner(termSize.columns)}</Text>
-                <Text dimColor>v{getCurrentVersion()} • mAI CLI</Text>
                 <Text color="gray">
                   {permMode.mode === "turbo"
                     ? "\x1b[31m⚡ turbo\x1b[0m"
@@ -1005,8 +1031,18 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
       )}
 
       {!permissionPrompt && (
-        <Box borderStyle="single" borderColor={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "gray"} paddingLeft={1} width={termSize.columns - 1}>
-          <Box flexGrow={1}>
+        <Box flexDirection="column" marginTop={1}>
+          <Box marginLeft={1} marginBottom={0}>
+            {authState.email ? (
+              <Text dimColor>
+                {authState.email} - <Text bold color={authState.tier === "Free" ? "white" : authState.tier === "Plus" ? "blue" : authState.tier === "Pro" ? "yellow" : "magenta"}>🌟 {authState.tier} 🌟</Text> - Logout with /logout
+              </Text>
+            ) : (
+              <Text dimColor>Login with /login</Text>
+            )}
+          </Box>
+          <Box borderStyle="single" borderColor={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "gray"} paddingLeft={1} width={termSize.columns - 1}>
+            <Box flexGrow={1}>
             <Text color={terminalMode ? "magenta" : interruptPrompt ? "yellow" : "cyan"} bold>{terminalMode ? "$" : "❯"} </Text>
             <TextInput
               focus={pickerView === "none"}
@@ -1061,6 +1097,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
             />
           </Box>
         </Box>
+        </Box>
       )}
 
       {!permissionPrompt && pickerView !== "none" && (
@@ -1070,6 +1107,26 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
               onClose={() => {
                 setPickerView("none");
                 setSettings(loadSettings());
+              }}
+            />
+          )}
+          {pickerView === "auth-login" && (
+            <AuthView
+              onDone={() => {
+                setPickerView("none");
+                setAuthState(loadAuthState());
+                setDisplayMessages((prev) => [
+                  ...prev,
+                  { role: "system", content: "Statut d'authentification mis à jour. ✅" },
+                ]);
+              }}
+            />
+          )}
+          {pickerView === "auth-usage" && (
+            <UsageView
+              onDone={() => {
+                setPickerView("none");
+                setAuthState(loadAuthState());
               }}
             />
           )}

@@ -4,6 +4,11 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ---
 
+## [Version 0.2.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.2.0) - 2026-07-26
+
+### Introducing mAI Provider
+- **Discorver mAI** : Prenez nos modèles avec 2M tokens confondus offerts chaque semaine !
+
 ## [Version 0.1.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.1.0) - 2026-07-25
 
 ### Rebranding & Installation

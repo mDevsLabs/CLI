@@ -62,11 +62,11 @@ export function getCurrentVersion(): string {
 export function getUpdateCommand(channel: "stable" | "canary" = "stable"): string {
   if (isWindows()) {
     const script = channel === "canary" ? "install-canary.ps1" : "install-remote.ps1";
-    const branch = channel === "canary" ? "canary" : "main";
+    const branch = "main"; // Fallback to main branch since canary doesn't exist on remote
     return `powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/${branch}/scripts/${script} | iex"`;
   } else {
     const script = channel === "canary" ? "install-canary.sh" : "install-remote.sh";
-    const branch = channel === "canary" ? "canary" : "main";
+    const branch = "main"; // Fallback to main branch
     return `curl -fsSL https://raw.githubusercontent.com/mDevsLabs/mAI-CLI/${branch}/scripts/${script} | bash`;
   }
 }

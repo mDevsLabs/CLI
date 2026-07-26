@@ -8,6 +8,8 @@ import { getProjectFiles } from "../utils/fileAutocomplete.js";
 import { AI_LANGUAGES, getLanguageLabel } from "../utils/systemPrompt.js";
 import { PaginatedSelect } from "./PaginatedSelect.js";
 import { ModelSelector } from "./ModelSelector.js";
+import { AccountMenu } from "./AccountMenu.js";
+import { loadAuthState, type AuthState } from "../services/authStore.js";
 
 interface SettingsMenuProps {
   onClose: () => void;
@@ -15,6 +17,7 @@ interface SettingsMenuProps {
 
 type Step =
   | "main"
+  | "account"
   | "provider"
   | "instructions-type"
   | "instructions-text"
@@ -26,6 +29,7 @@ type Step =
 
 export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
   const [settings, setSettingsState] = useState<OpenAgentSettings>(() => loadSettings());
+  const [authState, setAuthState] = useState<AuthState>(() => loadAuthState());
   const [step, setStep] = useState<Step>("main");
   const [customText, setCustomText] = useState<string>(settings.customInstructionsText || "");
   const [filePath, setFilePath] = useState<string>(settings.customInstructionsFilePath || "");
@@ -42,6 +46,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
   });
 
   const mainItems = [
+    ...(authState.email ? [{
+      label: `👤 Mon Compte (${authState.email})`,
+      value: "account",
+    }] : []),
     {
       label: `Default Provider & Model: ${settings.provider || "Not set"} / ${settings.model || "Not set"}`,
       value: "provider",
@@ -84,7 +92,9 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
   ];
 
   const handleMainSelect = (item: { value: string }) => {
-    if (item.value === "provider") {
+    if (item.value === "account") {
+      setStep("account" as any);
+    } else if (item.value === "provider") {
       setStep("provider");
     } else if (item.value === "custom-providers") {
       // Signal to REPL to open ProviderManager
@@ -216,6 +226,14 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
 
       {step === "main" && (
         <SelectInput items={mainItems} onSelect={handleMainSelect} />
+      )}
+
+      {step === "account" && (
+        <AccountMenu 
+          authState={authState} 
+          onBack={() => setStep("main")} 
+          onUpdate={setAuthState} 
+        />
       )}
 
       {step === "provider" && (

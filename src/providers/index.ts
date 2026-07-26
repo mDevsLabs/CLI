@@ -20,8 +20,10 @@ import { fireworksProvider } from "./fireworks.js";
 import type { Provider, ProviderConfig } from "./types.js";
 import type { CustomProvider } from "../config/settings.js";
 import { getCustomProviders } from "../config/settings.js";
+import { maiProvider } from "./mai.js";
 
 export const providers: Map<string, Provider> = new Map([
+  ["mai", maiProvider],
   ["openrouter", openrouterProvider],
   ["openai", openaiProvider],
   ["anthropic", anthropicProvider],
