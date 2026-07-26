@@ -214,7 +214,7 @@ try {
   program.parse();
 } catch (err: any) {
   if (err && (err.code === "commander.version" || err.code === "commander.helpDisplayed" || err.code === "commander.executeSubCommandAsync")) {
-    process.exitCode = err.exitCode || 0;
+    process.exit(err.exitCode || 0);
   } else {
     throw err;
   }

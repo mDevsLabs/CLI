@@ -4,6 +4,11 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ---
 
+## [Version 0.3.1](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.3.1) - 2026-07-26
+
+### Bugs
+- **Install** : Nous avons corrigé un bug qui vous empêchaient d'installer le CLI
+
 ## [Version 0.3.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.3.0) - 2026-07-26
 
 ### Introducing mAI Provider 2.0

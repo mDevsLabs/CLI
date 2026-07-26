@@ -33,11 +33,11 @@ function Invoke-Native {
 }
 
 Write-Host ""
-Write-Step "🔧 Installing mAI CLI (remote)..."
+Write-Step "Installing mAI CLI (remote)..."
 Write-Host ""
 
 if (-not (Test-Cmd "git")) {
-  Write-Warn "⚠️ Git not found."
+  Write-Warn "Git not found."
   if (Test-Cmd "winget") {
     Write-Step "Installing Git via winget..."
     $code = Invoke-Native -Quiet { winget install -e --id Git.Git --silent --accept-source-agreements --accept-package-agreements }
@@ -64,7 +64,7 @@ $RepoDir = Join-Path $TmpDir "mai"
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 
 try {
-  Write-Step "📥 Cloning repository..."
+  Write-Step "Cloning repository..."
   $code = Invoke-Native -Quiet { git clone --depth 1 --quiet $Repo $RepoDir }
   if ($code -ne 0) {
     Write-Err "git clone failed (exit $code)."
@@ -82,6 +82,6 @@ try {
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } finally {
   Write-Host ""
-  Write-Ok "✅ Installation complete!"
+  Write-Ok "Installation complete!"
   Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $TmpDir
 }
