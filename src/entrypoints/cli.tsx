@@ -146,7 +146,8 @@ program
         const readline = await import("node:readline");
         const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
         const answer = await new Promise<string>((resolve) => {
-          console.log("\n⚠️  Turbo mode disables ALL permission prompts.");
+          console.log("\n⚠️  Turbo mode grants FULL autonomy.");
+          console.log("   All tools and shell commands are auto-approved; deny rules are ignored.");
           console.log("   The AI can execute any command, modify any file, and make network requests without asking.\n");
           rl.question("   Enable turbo mode for this directory? (yes/no): ", resolve);
         });

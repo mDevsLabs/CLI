@@ -4,7 +4,20 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ---
 
-## [Version 0.3.1](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.3.1) - 2026-07-26
+## [0.4.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.4.0) - 2026-07-26
+
+### Modes de permission
+- **Plan (P)** : vrai mode lecture seule — seuls FileRead, Glob, Grep, WebSearch, WebFetch et TodoWrite sont exposés. Prompt système dédié (architecture + plan d'action).
+- **Turbo (*)** : autonomie totale — tous les outils et commandes auto-approuvés, règles `deny` ignorées.
+- **Prompts système** par mode (Standard, Plan, Turbo, Cautious).
+- **UI** : footer coloré par mode, messages de bascule avec description, placeholders Ctrl+T via `getNextCtrlTModeLabel`.
+- **Settings / help** : descriptions alignées sur le comportement réel.
+
+### mAI Provider 2.1
+- **Reset** : Maintenant, nous pouvons vous mettre une réinitialisation de vos limites quand nous le voulons !
+- **Performance** : Nous avons améliorer les performances de l'API
+
+## [Version 0.3.1](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.3.0) - 2026-07-26
 
 ### Bugs
 - **Install** : Nous avons corrigé un bug qui vous empêchaient d'installer le CLI

@@ -7,7 +7,7 @@ import {
   readdirSync,
   statSync,
 } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { getSessionsDir, getContextSessionPath } from "../config/settings.js";
 import type { ProviderMessage } from "../providers/types.js";
@@ -64,11 +64,33 @@ export function appendMessage(sessionId: string, message: ProviderMessage): void
       const meta: SessionMeta = JSON.parse(readFileSync(metaPath, "utf-8"));
       meta.lastActiveAt = Date.now();
       meta.messageCount++;
-      if (message.role === "user" && typeof message.content === "string" && !meta.summary) {
-        meta.summary = message.content.slice(0, 100);
+      if (message.role === "user" && !meta.summary) {
+        if (typeof message.content === "string") {
+          meta.summary = message.content.slice(0, 100);
+        } else if (Array.isArray(message.content)) {
+          const textPart = message.content.find((part: any) => typeof part === "string" || part?.text);
+          const str = typeof textPart === "string" ? textPart : textPart?.text || "";
+          if (str) meta.summary = str.slice(0, 100);
+        }
       }
       writeFileSync(metaPath, JSON.stringify(meta, null, 2));
     } catch {}
+  }
+}
+
+export function renameSession(sessionId: string, newSummary: string): boolean {
+  const dir = join(getSessionsDir(), sessionId);
+  const metaPath = join(dir, "meta.json");
+
+  if (!existsSync(metaPath)) return false;
+
+  try {
+    const meta: SessionMeta = JSON.parse(readFileSync(metaPath, "utf-8"));
+    meta.summary = newSummary.trim();
+    writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -95,6 +117,7 @@ export function listSessions(cwd?: string): SessionMeta[] {
 
   const entries = readdirSync(sessionsDir, { withFileTypes: true });
   const sessions: SessionMeta[] = [];
+  const normalizedTargetCwd = cwd ? resolve(cwd).toLowerCase() : "";
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
@@ -103,7 +126,8 @@ export function listSessions(cwd?: string): SessionMeta[] {
 
     try {
       const meta: SessionMeta = JSON.parse(readFileSync(metaPath, "utf-8"));
-      if (!cwd || meta.cwd === cwd) {
+      const normalizedMetaCwd = meta.cwd ? resolve(meta.cwd).toLowerCase() : "";
+      if (!cwd || normalizedMetaCwd === normalizedTargetCwd) {
         sessions.push(meta);
       }
     } catch {}

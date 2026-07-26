@@ -4,7 +4,13 @@ import type { Tool, ToolContext } from "./tools/types.js";
 import { createWyrdSessionIfEnabled } from "./services/wyrd.js";
 import { buildSystemPrompt } from "./utils/systemPrompt.js";
 import { loadSettings } from "./config/settings.js";
-import { shouldPrompt, isDenied, getEffectiveMode } from "./config/permissions.js";
+import {
+  shouldPrompt,
+  isDenied,
+  getEffectiveMode,
+  getDeniedReason,
+  isToolAllowedInMode,
+} from "./config/permissions.js";
 import { loadContextSession, appendMessage, updateContextSession } from "./session/history.js";
 import { exec } from "node:child_process";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
@@ -100,6 +106,8 @@ export async function runQueryLoop(
     } catch {}
   }
 
+  const permissionMode = getEffectiveMode();
+
   const systemPrompt = buildSystemPrompt({
     mode: settings.responseMode,
     cwd,
@@ -109,9 +117,15 @@ export async function runQueryLoop(
     gitBranch: gitBranch || undefined,
     customInstructions: customInstructions || undefined,
     aiLanguage: settings.aiLanguage,
+    permissionMode,
   });
 
-  const tools = getToolsForProvider();
+  // 📋 Plan mode: only expose read-only / planning tools so the model cannot call writes
+  // ⚡ Turbo mode: expose every tool (no filtering)
+  let tools = getToolsForProvider();
+  if (permissionMode === "plan") {
+    tools = tools.filter((t) => isToolAllowedInMode(t.function.name, "plan"));
+  }
   const totalUsage: TokenUsage = { inputTokens: 0, outputTokens: 0 };
   let loopCount = 0;
   const maxLoops = 50;
@@ -277,11 +291,12 @@ export async function runQueryLoop(
         }
 
         if (isDenied(tc.name)) {
-          callbacks.onToolEnd(tc.name, tc.id, "", `Tool "${tc.name}" is denied by permission rules.`);
+          const reason = getDeniedReason(tc.name);
+          callbacks.onToolEnd(tc.name, tc.id, "", reason);
           return {
             id: tc.id,
             output: "",
-            error: `Tool "${tc.name}" is blocked by permission rules. The user has denied this tool.`,
+            error: reason,
           };
         }
 

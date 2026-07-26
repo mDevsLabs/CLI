@@ -352,10 +352,7 @@ cmd("permissions", ["perms", "perm", "allowed-tools"], "Permissions", "View and 
       const active = m.id === state.mode ? " (active)" : "";
       output += `  ${m.symbol} ${m.label.padEnd(15)} ${m.description}${active}\n`;
     }
-    output += "\nSwitch mode: /mode <standard|cautious|plan|turbo>\n";
-    output += "  Ctrl+T cycle: Standard → Plan → Turbo → Terminal\n";
-    output += "  Shift+Tab: full cycle including Cautious\n";
-    output += "  CLI flags: mai --turbo  or  mai --cautious";
+    output += "\nSwitch mode: mai --turbo  or  mai --cautious";
     return { output };
   }
 
@@ -376,14 +373,7 @@ cmd("mode", [], "Permissions", "Show or change permission mode", (args) => {
   if (!args) {
     const mode = getEffectiveMode();
     const meta = getModeMeta(mode);
-    let output = `Current mode: ${meta.label} [${meta.symbol}] — ${meta.description}\n\n`;
-    output += "Modes:\n";
-    for (const m of getAllModes()) {
-      const active = m.id === mode ? " ← active" : "";
-      output += `  ${m.symbol} ${m.label.padEnd(10)} ${m.description}${active}\n`;
-    }
-    output += "\nCtrl+T: Standard → Plan → Turbo → Terminal\nShift+Tab: includes Cautious\nUsage: /mode <standard|cautious|plan|turbo>";
-    return { output };
+    return { output: `Current mode: ${meta.label} [${meta.symbol}] — ${meta.description}` };
   }
 
   const valid: PermissionMode[] = ["standard", "cautious", "plan", "turbo"];
@@ -392,7 +382,7 @@ cmd("mode", [], "Permissions", "Show or change permission mode", (args) => {
     state.mode = args as PermissionMode;
     savePermissions(state);
     const meta = getModeMeta(args as PermissionMode);
-    return { output: `Switched to ${meta.label} mode [${meta.symbol}] — ${meta.description}` };
+    return { output: `Switched to ${meta.label} mode — ${meta.description}` };
   }
 
   return { output: `Invalid mode. Options: standard, cautious, plan, turbo` };

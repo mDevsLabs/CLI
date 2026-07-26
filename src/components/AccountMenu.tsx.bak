@@ -49,7 +49,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ authState, onBack, onU
 
   const handleNewValueSubmit = () => {
     if (!newValue.trim()) {
-      setError("The new value cannot be empty.");
+      setError("La nouvelle valeur ne peut pas être vide.");
       return;
     }
     if (fieldToEdit === "email" && !newValue.includes("@")) {

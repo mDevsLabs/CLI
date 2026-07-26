@@ -467,20 +467,24 @@
           </p>
           <div class="features-grid">
             <div class="feature-item">
-              <h4>Standard</h4>
-              <p style="font-size: 0.84rem; color: var(--text-muted);">Demande confirmation avant toute écriture de fichier ou exécution de commande shell.</p>
+              <h4>Standard (~)</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Demande confirmation avant écritures de fichiers, commandes shell et effets de bord réseau.</p>
             </div>
             <div class="feature-item">
               <h4>Plan (P)</h4>
-              <p style="font-size: 0.84rem; color: var(--text-muted);">L'IA décrit les étapes et plans d'action structurés avant d'exécuter.</p>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Mode lecture seule : exploration, architecture et plans structurés. Aucune écriture ni commande shell. Outils autorisés : FileRead, Glob, Grep, WebSearch, WebFetch, TodoWrite.</p>
             </div>
             <div class="feature-item">
               <h4>Turbo (*)</h4>
-              <p style="font-size: 0.84rem; color: var(--text-muted);">Mode autonome sans demande de confirmation. Exécution à haute vitesse.</p>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Autonomie totale : tous les outils et toutes les commandes sont auto-approuvés. Les règles deny sont ignorées.</p>
             </div>
             <div class="feature-item">
               <h4>Terminal</h4>
-              <p style="font-size: 0.84rem; color: var(--text-muted);">Bascule la boîte de saisie en invite de commande directe shell sans passer par l'IA.</p>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Invite shell directe sans passer par l'IA. Revenez en Standard avec Ctrl+T.</p>
+            </div>
+            <div class="feature-item">
+              <h4>Cautious (!)</h4>
+              <p style="font-size: 0.84rem; color: var(--text-muted);">Demande confirmation avant chaque outil. Accessible via Shift+Tab ou <code>/mode cautious</code>.</p>
             </div>
           </div>
         </div>

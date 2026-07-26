@@ -287,10 +287,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ onClose }) => {
           </Box>
           <SelectInput
             items={[
-              { label: "Standard (Default formatting, standard prompt)", value: "standard" },
-              { label: "Plan (Architectural mode, creates plans and tasks)", value: "plan" },
-              { label: "Turbo (Fast output, no reasoning shown)", value: "turbo" },
-              { label: "Terminal (No markdown, plain CLI interface)", value: "terminal" },
+              { label: "Standard — ask before writes, shell, and side effects", value: "standard" },
+              { label: "Plan — read-only planning (explore + design, no execution)", value: "plan" },
+              { label: "Turbo — full autonomy, all tools & commands auto-approved", value: "turbo" },
+              { label: "Terminal — direct shell prompt, no AI", value: "terminal" },
             ]}
             onSelect={(item) => {
               const updated = loadSettings();

@@ -5,7 +5,14 @@ import Spinner from "ink-spinner";
 import { useStatusWord } from "../utils/statusWords.js";
 import { getProvider } from "../providers/index.js";
 import { loadSettings, saveSettings, type OpenAgentSettings } from "../config/settings.js";
-import { getEffectiveMode, getModeMeta, addRule, loadPermissions, savePermissions } from "../config/permissions.js";
+import {
+  getEffectiveMode,
+  getModeMeta,
+  getNextCtrlTModeLabel,
+  addRule,
+  loadPermissions,
+  savePermissions,
+} from "../config/permissions.js";
 import { runQueryLoop, describeToolCall, type QueryCallbacks } from "../query.js";
 import {
   createSession,
@@ -187,39 +194,68 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
 
     if (key.ctrl && ch === "t") {
       if (terminalMode) {
+        // Terminal → Standard
         setTerminalMode(false);
         const state = loadPermissions();
         state.mode = "standard";
         savePermissions(state);
         setPermModeKey((k: number) => k + 1);
-        setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: standard` }]);
+        const meta = getModeMeta("standard");
+        setDisplayMessages((prev: any) => [
+          ...prev,
+          { role: "system", content: `Mode: ${meta.label} [${meta.symbol}] — ${meta.description}` },
+        ]);
       } else {
         const state = loadPermissions();
-        if (state.mode === "standard") {
+        // Ctrl+T cycle: Standard → Plan → Turbo → Terminal → Standard
+        if (state.mode === "standard" || state.mode === "cautious") {
           state.mode = "plan";
           savePermissions(state);
           setPermModeKey((k: number) => k + 1);
-          setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: plan` }]);
+          const meta = getModeMeta("plan");
+          setDisplayMessages((prev: any) => [
+            ...prev,
+            { role: "system", content: `Mode: ${meta.label} [${meta.symbol}] — ${meta.description}` },
+          ]);
         } else if (state.mode === "plan") {
           state.mode = "turbo";
           savePermissions(state);
           setPermModeKey((k: number) => k + 1);
-          setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: turbo` }]);
+          const meta = getModeMeta("turbo");
+          setDisplayMessages((prev: any) => [
+            ...prev,
+            { role: "system", content: `Mode: ${meta.label} [${meta.symbol}] — ${meta.description}` },
+          ]);
         } else {
+          // turbo (or unknown) → Terminal
           setTerminalMode(true);
+          setDisplayMessages((prev: any) => [
+            ...prev,
+            { role: "system", content: `Mode: Terminal — direct shell, no AI` },
+          ]);
         }
       }
       return;
     }
 
     if (key.shift && key.tab) {
+      // Full permission-mode cycle including Cautious (Shift+Tab)
       const state = loadPermissions();
-      const modes: Array<"standard" | "cautious" | "turbo" | "plan"> = ["standard", "cautious", "turbo", "plan"];
+      const modes: Array<"standard" | "cautious" | "plan" | "turbo"> = [
+        "standard",
+        "cautious",
+        "plan",
+        "turbo",
+      ];
       const idx = modes.indexOf(state.mode);
       state.mode = modes[(idx + 1) % modes.length];
       savePermissions(state);
       setPermModeKey((k: number) => k + 1);
-      setDisplayMessages((prev: any) => [...prev, { role: "system", content: `Mode: ${state.mode}` }]);
+      const meta = getModeMeta(state.mode);
+      setDisplayMessages((prev: any) => [
+        ...prev,
+        { role: "system", content: `Mode: ${meta.label} [${meta.symbol}] — ${meta.description}` },
+      ]);
       return;
     }
 
@@ -480,6 +516,7 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
         }
 
         if (result.action === "clear") {
+          stdout?.write("\x1Bc");
           setDisplayMessages([]);
           messagesRef.current = [];
           setStreamingText("");
@@ -493,20 +530,51 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           return;
         }
 
+        if (result.action === "new") {
+          stdout?.write("\x1Bc");
+          const newMeta = createSession(process.cwd(), settings.provider, settings.model);
+          setSessionId(newMeta.id);
+          messagesRef.current = [];
+          setStreamingText("");
+          setTokenUsage({ inputTokens: 0, outputTokens: 0 });
+          messageCountRef.current = 0;
+          clearTodos();
+          setDisplayMessages([{ role: "system", content: result.output || "New conversation session started." }]);
+          return;
+        }
+
+        if (result.action === "rename") {
+          stdout?.write("\x1Bc");
+          const currentMessages = messagesRef.current
+            .filter((m) => m.role === "user" || m.role === "assistant")
+            .map((m) => ({
+              role: m.role as "user" | "assistant",
+              content: typeof m.content === "string" ? m.content : JSON.stringify(m.content),
+            }));
+          setDisplayMessages([
+            ...currentMessages,
+            ...(result.output ? [{ role: "system" as const, content: result.output }] : [])
+          ]);
+          return;
+        }
+
         if (result.action === "resume" && result.data) {
+          stdout?.write("\x1Bc");
           const loaded = loadSession(result.data.id);
           if (loaded) {
             messagesRef.current = loaded.messages;
             setSessionId(loaded.meta.id);
             messageCountRef.current = loaded.messages.length;
-            setDisplayMessages(
-              loaded.messages
-                .filter((m) => m.role === "user" || m.role === "assistant")
-                .map((m) => ({
-                  role: m.role as "user" | "assistant",
-                  content: typeof m.content === "string" ? m.content : JSON.stringify(m.content),
-                }))
-            );
+            const restored = loaded.messages
+              .filter((m) => m.role === "user" || m.role === "assistant")
+              .map((m) => ({
+                role: m.role as "user" | "assistant",
+                content: typeof m.content === "string" ? m.content : JSON.stringify(m.content),
+              }));
+            setDisplayMessages([
+              { role: "system", content: result.output || `Resumed session: ${loaded.meta.summary || "(no summary)"}` },
+              ...restored
+            ]);
           }
           return;
         }
@@ -929,8 +997,13 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
                 <Text>{getBanner(termSize.columns)}</Text>
                 <Text color="gray">
                   {permMode.mode === "turbo"
-                    ? "\x1b[31m⚡ turbo\x1b[0m"
-                    : permMode.label} • /help for commands
+                    ? "\x1b[35m* turbo\x1b[0m"
+                    : permMode.mode === "plan"
+                      ? "\x1b[34mP plan\x1b[0m"
+                      : permMode.mode === "cautious"
+                        ? "\x1b[31m! cautious\x1b[0m"
+                        : permMode.label}{" "}
+                  • /help for commands
                 </Text>
                 {project ? (
                   <Text color="cyan" dimColor>
@@ -1084,28 +1157,12 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
               }}
               placeholder={
                 terminalMode
-                  ? `Run a command… (Ctrl+T for ${
-                      terminalMode
-                        ? "standard"
-                        : permMode.mode === "standard"
-                          ? "plan"
-                          : permMode.mode === "plan"
-                            ? "turbo"
-                            : "terminal"
-                    })`
+                  ? `Run a command… (Ctrl+T for ${getNextCtrlTModeLabel(permMode.mode, true)})`
                   : isProcessing
                     ? "Queue another message…"
                     : interruptPrompt
                       ? "Tell mAI CLI what to do instead…"
-                      : `Message mAI CLI… (Ctrl+T for ${
-                          terminalMode
-                            ? "standard"
-                            : permMode.mode === "standard"
-                              ? "plan"
-                              : permMode.mode === "plan"
-                                ? "turbo"
-                                : "terminal"
-                        })`
+                      : `Message mAI CLI… (Ctrl+T for ${getNextCtrlTModeLabel(permMode.mode, false)})`
               }
             />
           </Box>
@@ -1257,8 +1314,10 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
             <Text color="magenta" bold>Terminal Mode</Text>
           ) : permMode.mode === "turbo" ? (
             <Text color="magenta" bold>Turbo [{permMode.symbol}]</Text>
+          ) : permMode.mode === "plan" ? (
+            <Text color="blue" bold>Plan [{permMode.symbol}]</Text>
           ) : permMode.mode === "cautious" ? (
-            <Text color="yellow">{permMode.label} <Text dimColor>[{permMode.symbol}]</Text></Text>
+            <Text color="red" bold>Cautious [{permMode.symbol}]</Text>
           ) : (
             <Text color="cyan">{permMode.label} <Text dimColor>[{permMode.symbol}]</Text></Text>
           )}

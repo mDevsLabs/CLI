@@ -1,4 +1,5 @@
 import type { ResponseMode } from "../config/settings.js";
+import type { PermissionMode } from "../config/permissions.js";
 
 /** ISO-ish language codes used in settings → English name for system prompt phrasing. */
 export const AI_LANGUAGES: Array<{ code: string; name: string; nativeName: string }> = [
@@ -165,6 +166,57 @@ CAPABILITIES:
 
 You are in the user's terminal at their working directory. Help them build great software.`;
 
+/** 📋 Plan mode: research + architecture only, no side effects. */
+const PLAN_MODE_PROMPT = `
+PERMISSION MODE: PLAN (read-only)
+You are in Plan mode. Your job is to understand the codebase and produce a clear, actionable plan — not to implement it.
+
+RULES:
+- You MAY use: FileRead, Glob, Grep, WebSearch, WebFetch, TodoWrite.
+- You MUST NOT write files, edit files, run shell commands, post to social media, or use Upload.
+- Explore thoroughly before planning: read relevant files, search the repo, check docs if needed.
+- Structure your plan with:
+  1. Goal / problem statement
+  2. Current state findings (what you discovered)
+  3. Proposed approach (steps, files to touch, risks)
+  4. Ordered task list (use TodoWrite when helpful)
+  5. Open questions or decisions for the user
+- End with a short note that the user can switch to Standard or Turbo (Ctrl+T) to execute the plan.
+- If the user asks you to implement something, explain that Plan mode is read-only and suggest switching mode — still give the best plan you can.`;
+
+/** ⚡ Turbo mode: full autonomy, all tools allowed. */
+const TURBO_MODE_PROMPT = `
+PERMISSION MODE: TURBO (full autonomy)
+All tools and shell commands are auto-approved. Deny rules are ignored. Act with full agency:
+- Run any tool or command without hesitation.
+- Complete multi-step work end-to-end.
+- Prefer speed and thoroughness; still avoid destructive actions unless the task requires them (e.g. do not rm -rf the repo unless explicitly asked).`;
+
+/** ~ Standard mode reminder. */
+const STANDARD_MODE_PROMPT = `
+PERMISSION MODE: STANDARD
+Mutating actions (Bash, FileWrite, FileEdit, posts, Upload) may require user confirmation. Prefer dedicated tools over raw bash when possible.`;
+
+/** ! Cautious mode reminder. */
+const CAUTIOUS_MODE_PROMPT = `
+PERMISSION MODE: CAUTIOUS
+Every tool call requires user confirmation. Keep tool usage minimal and purposeful. Batch reasoning; avoid unnecessary calls.`;
+
+function permissionModePrompt(mode?: PermissionMode): string | undefined {
+  switch (mode) {
+    case "plan":
+      return PLAN_MODE_PROMPT;
+    case "turbo":
+      return TURBO_MODE_PROMPT;
+    case "cautious":
+      return CAUTIOUS_MODE_PROMPT;
+    case "standard":
+      return STANDARD_MODE_PROMPT;
+    default:
+      return undefined;
+  }
+}
+
 export function buildSystemPrompt(options: {
   mode: ResponseMode;
   cwd: string;
@@ -174,9 +226,16 @@ export function buildSystemPrompt(options: {
   gitBranch?: string;
   customInstructions?: string;
   aiLanguage?: string;
+  /** Active permission / working mode (standard, plan, turbo, cautious). */
+  permissionMode?: PermissionMode;
 }): string {
   const base = options.mode === "concise" ? CONCISE_PROMPT : EXPLANATIVE_PROMPT;
   const sections: string[] = [base];
+
+  const permPrompt = permissionModePrompt(options.permissionMode);
+  if (permPrompt) {
+    sections.push(permPrompt);
+  }
 
   if (options.thinking) {
     sections.push(`

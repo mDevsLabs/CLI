@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Avec mAI CLI, discutez et codez directement dans votre terminal !",
   "type": "module",
   "bin": {
@@ -11,7 +11,9 @@
     "dev": "bun run src/entrypoints/cli.tsx",
     "build": "bun run scripts/build.ts",
     "start": "node dist/cli.mjs",
-    "lint": "bun run tsc --noEmit"
+    "lint": "bun run tsc --noEmit",
+    "reset": "bun run scripts/resetLimits.ts",
+    "reset-limits": "bun run scripts/resetLimits.ts"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -21,6 +23,7 @@
     "@google/generative-ai": "^0.24.0",
     "@mistralai/mistralai": "^1.5.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "@types/pg": "^8.20.0",
     "chalk": "^5.4.1",
     "cli-highlight": "^2.1.11",
     "clipboardy": "^4.0.0",
@@ -28,6 +31,8 @@
     "conf": "^13.1.0",
     "diff": "^7.0.0",
     "disposable-email-domains": "^1.0.62",
+    "dotenv": "^17.4.2",
+    "dotenv-expand": "^13.0.0",
     "fast-glob": "^3.3.3",
     "figures": "^6.1.0",
     "glob": "^11.0.1",
@@ -41,6 +46,7 @@
     "marked-terminal": "^7.3.0",
     "openai": "^4.86.0",
     "ora": "^8.2.0",
+    "pg": "^8.22.0",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "snoowrap": "^1.23.0",
