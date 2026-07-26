@@ -58,18 +58,20 @@ async function* streamRequest(
       ? [{ role: "system", content: options.systemPrompt }, ...messages]
       : messages,
     stream: true,
+    stream_options: { include_usage: true }, // Demande les infos d'usage dans le stream SSE
   };
 
   if (tools.length > 0) body.tools = tools;
   if (options.temperature !== undefined) body.temperature = options.temperature;
   if (options.maxTokens) body.max_tokens = options.maxTokens;
 
-  const response = await fetch("https://mai.val.run", {
+  const response = await fetch("https://mai.val.run/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "HTTP-Referer": "https://github.com/mDevsLabs/mAI-CLI",
       "X-Title": "mAI CLI",
+      "Authorization": `Bearer ${loadAuthState().authToken}`,
     },
     body: JSON.stringify(body),
   });
@@ -89,6 +91,7 @@ async function* streamRequest(
   const toolCallBuffers: Map<number, { id: string; name: string; args: string }> = new Map();
   let totalUsageTokens = 0;
   let receivedAnyValidChunk = false;
+  let usageAlreadyYielded = false; // Evite le double comptage
 
   while (true) {
     const { done, value } = await reader.read();
@@ -127,6 +130,7 @@ async function* streamRequest(
         if (data.usage) {
           const usageSum = (data.usage.prompt_tokens || 0) + (data.usage.completion_tokens || 0);
           totalUsageTokens = usageSum;
+          usageAlreadyYielded = true;
           yield {
             type: "done",
             usage: {
@@ -208,6 +212,16 @@ async function* streamRequest(
 
   if (totalUsageTokens > 0) {
     try { checkAndAddMaiUsage(totalUsageTokens); } catch {}
+    // Seulement si l'usage n'a pas déjà été émis en inline (via stream_options)
+    if (!usageAlreadyYielded) {
+      yield {
+        type: "done",
+        usage: {
+          inputTokens: Math.floor(totalUsageTokens * 0.7),
+          outputTokens: Math.floor(totalUsageTokens * 0.3),
+        },
+      } as StreamChunk;
+    }
   }
 }
 
@@ -230,12 +244,13 @@ async function completeRequest(
   if (options.temperature !== undefined) body.temperature = options.temperature;
   if (options.maxTokens) body.max_tokens = options.maxTokens;
 
-  const response = await fetch("https://mdevslabs--e54fec60883e11f1b8d71607ee4eb77e.web.val.run", {
+  const response = await fetch("https://mai.val.run/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "HTTP-Referer": "https://github.com/mDevsLabs/mAI-CLI",
       "X-Title": "mAI CLI",
+      "Authorization": `Bearer ${loadAuthState().authToken}`,
     },
     body: JSON.stringify(body),
   });

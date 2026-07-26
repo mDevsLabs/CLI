@@ -4,6 +4,18 @@ Toutes les modifications notables apportées au projet **mAI CLI** sont document
 
 ---
 
+## [Version 0.3.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.3.0) - 2026-07-26
+
+### Introducing mAI Provider 2.0
+- **Discorver mAI** : Prenez nos modèles avec 2M tokens confondus offerts chaque semaine !
+- **Unification** : Nous avons regouper l'API de discussion de nos modèles, de l'usage et de connexion !
+
+### Comptes
+- **Database** : Nous avons connectés vos comptes avec une base de données européenne pour sauvegarder plus facilement vos données et nous permettre de vous offrir des récompenses !
+
+### Performance & bugs
+- **Fixes** : Nous avons corriger divers bugs et améliorer les performances !
+
 ## [Version 0.2.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.2.0) - 2026-07-26
 
 ### Introducing mAI Provider

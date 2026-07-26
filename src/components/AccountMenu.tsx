@@ -3,7 +3,8 @@ import { Box, Text, useInput } from "ink";
 import TextInput from "ink-text-input";
 import SelectInput from "ink-select-input";
 import Spinner from "ink-spinner";
-import { loadAuthState, updateProfile, verifyPassword, hashPassword, type AuthState } from "../services/authStore.js";
+import { loadAuthState, type AuthState } from "../services/authStore.js";
+import { apiUpdateProfile } from "../services/apiClient.js";
 
 interface AccountMenuProps {
   authState: AuthState;
@@ -71,22 +72,22 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ authState, onBack, onU
     setStep("submitting");
     setError(null);
 
-    // Simulation of network delay or just to show the spinner briefly
-    await new Promise(r => setTimeout(r, 500));
-
-    if (!verifyPassword(currentPassword)) {
-      setError("Mot de passe actuel incorrect.");
-      setStep("current-password");
-      return;
-    }
+    await new Promise(r => setTimeout(r, 300));
 
     try {
-      const updates: Partial<AuthState> = {};
+      const updates: Record<string, string> = {};
       if (fieldToEdit === "email") updates.email = newValue.trim();
       if (fieldToEdit === "username") updates.username = newValue.trim();
-      if (fieldToEdit === "password") updates.passwordHash = hashPassword(newValue);
+      if (fieldToEdit === "password") updates.newPassword = newValue;
 
-      updateProfile(updates);
+      const res = await apiUpdateProfile(currentPassword, updates);
+
+      if (res.error) {
+        setError(res.error);
+        setStep("current-password");
+        return;
+      }
+
       const updatedState = loadAuthState();
       onUpdate(updatedState);
 

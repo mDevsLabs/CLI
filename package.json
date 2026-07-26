@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Avec mAI CLI, discutez et codez directement dans votre terminal !",
   "type": "module",
   "bin": {

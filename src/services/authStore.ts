@@ -13,6 +13,7 @@ export interface AuthState {
   email: string | null;
   username: string | null;
   passwordHash: string | null;
+  authToken: string | null;  // JWT from Val Town API (14 days)
   tier: Tier;
   tokensUsed: number;
   weekStart: string;
@@ -22,6 +23,7 @@ const DEFAULT_STATE: AuthState = {
   email: null,
   username: null,
   passwordHash: null,
+  authToken: null,
   tier: "Free",
   tokensUsed: 0,
   weekStart: getStartOfWeek(),
@@ -124,19 +126,11 @@ export function updateProfile(updates: Partial<AuthState>) {
 
 export function logout() {
   const state = loadAuthState();
-  // On conserve le password et email pour une reconnexion ?
-  // Non, le logout efface la session active. Mais en local, on a qu'un profil.
-  // Pour rester simple, on peut juste le marquer déconnecté mais sans tout perdre ?
-  // La demande initiale : /logout déconnecte. Si on efface email, il perd le compte.
-  // On va juste effacer la session (email) ? S'il se reconnecte avec le même email, il retrouve. 
-  // Mais s'il y a qu'un seul compte stocké, effacer l'email efface l'accès.
-  // Bon, effaçons juste l'email et gardons le compte en mémoire ? Non, s'il se déconnecte il perd son accès.
-  // Gardons la logique précédente : email = null, tier = Free.
-  // Les tokens seront conservés ou perdus ? Perdons-les pour un nouvel utilisateur.
-  // En fait, comme tout est local, on ne peut stocker qu'un seul compte à la fois.
   state.email = null;
   state.tier = "Free";
   state.passwordHash = null;
+  state.authToken = null;
+  state.username = null;
   saveAuthState(state);
 }
 

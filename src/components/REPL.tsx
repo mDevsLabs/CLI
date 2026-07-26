@@ -40,6 +40,7 @@ import { SettingsMenu } from "./SettingsMenu.js";
 import { AuthView } from "./AuthView.js";
 import { UsageView } from "./UsageView.js";
 import { loadAuthState } from "../services/authStore.js";
+import { apiLogUsage } from "../services/apiClient.js";
 import { subscribeTodos, clearTodos, type TodoItem } from "../tools/TodoWriteTool/index.js";
 import { setUploadListener } from "../tools/UploadTool/index.js";
 import { filterStreamText, shortPath } from "../utils/streamFilter.js";
@@ -758,12 +759,24 @@ export function REPL({ settings: initialSettings, thinkingEnabled: initialThinki
           ]);
         },
         onDone: (usage) => {
+          const newInput = usage.inputTokens;
+          const newOutput = usage.outputTokens;
           setTokenUsage((prev) => ({
-            inputTokens: prev.inputTokens + usage.inputTokens,
-            outputTokens: prev.outputTokens + usage.outputTokens,
+            inputTokens: prev.inputTokens + newInput,
+            outputTokens: prev.outputTokens + newOutput,
             cacheReadTokens: (prev.cacheReadTokens || 0) + (usage.cacheReadTokens || 0),
             costUsd: usage.costUsd != null ? (prev.costUsd || 0) + usage.costUsd : prev.costUsd,
           }));
+          // Sync tokens vers la BDD uniquement si le provider actif est "mai"
+          const totalNew = newInput + newOutput;
+          if (totalNew > 0 && activeProviderId === "mai" && loadAuthState().authToken) {
+            apiLogUsage(totalNew, "chat", {
+              model: activeModelId || settings.model,
+              provider: activeProviderId,
+              inputTokens: newInput,
+              outputTokens: newOutput,
+            }).catch(() => { /* Silencieux si offline */ });
+          }
         },
         onError: (err) => {
           setError(err);
