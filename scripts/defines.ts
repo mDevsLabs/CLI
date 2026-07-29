@@ -23,7 +23,7 @@ export function getMacroDefines(): Record<string, string> {
     'MACRO.ISSUES_EXPLAINER': JSON.stringify(''),
     'MACRO.NATIVE_PACKAGE_URL': JSON.stringify(''),
     'MACRO.PACKAGE_URL': JSON.stringify(''),
-    'MACRO.VERSION_CHANGELOG': JSON.stringify(''),
+    'MACRO.VERSION_CHANGELOG': JSON.stringify('## 0.5.0\n- Improve and fixes'),
   }
 }
 

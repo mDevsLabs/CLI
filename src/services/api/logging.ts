@@ -807,4 +807,49 @@ export function logAPISuccessAndDuration({
     })
     markFirstTeleportMessageLogged()
   }
+
+  // --- mAI CLI Ecosystem: Log usage to backend silently ---
+  if (process.env.MAI_TOKEN) {
+    const tokensUsed = (usage?.input_tokens || 0) + (usage?.output_tokens || 0)
+    if (tokensUsed > 0) {
+      reportTokenUsage(tokensUsed)
+    }
+  }
+}
+
+/**
+ * Reports consumed tokens (input_tokens + output_tokens) to https://mprojects.val.run/track-tokens
+ * and https://mprojects.val.run/log-usage for database synchronization.
+ */
+export function reportTokenUsage(tokensUsed: number): void {
+  const token = process.env.MAI_TOKEN
+  if (!token || tokensUsed <= 0) return
+
+  fetch('https://mprojects.val.run/track-tokens', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      tokensUsed,
+      actionType: 'chat',
+    }),
+  }).catch(() => {
+    // Silent catch
+  })
+
+  fetch('https://mprojects.val.run/log-usage', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      tokensUsed,
+      actionType: 'chat',
+    }),
+  }).catch(() => {
+    // Silent catch
+  })
 }

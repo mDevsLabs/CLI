@@ -80,6 +80,12 @@ function cleanupTerminalModes(): void {
     //      here first makes onRender() scribble a REPL frame onto main.
     // Calling unmount() now does the final render on the alt buffer,
     // unsubscribes from signal-exit, and writes 1049l exactly once.
+    //
+    // In non-alt-screen mode (e.g. PowerShell on Windows where fullscreen is
+    // disabled by default), we ALSO call unmount() so that log-update's
+    // renderPreviousOutput_DEPRECATED runs and positions the cursor below the
+    // last rendered frame. Without this, the process exits with the cursor
+    // stuck inside the Ink frame and PowerShell's prompt overlaps the content.
     const inst = instances.get(process.stdout)
     if (inst?.isAltScreenActive) {
       try {
@@ -88,6 +94,17 @@ function cleanupTerminalModes(): void {
         // Reconciler/render threw — fall back to manual alt-screen exit
         // so printResumeHint still hits the main buffer.
         writeSync(1, EXIT_ALT_SCREEN)
+      }
+    } else if (inst && !inst.isAltScreenActive) {
+      // Main-screen (non-fullscreen) mode: call unmount() so the final frame
+      // cleanup runs (cursor repositioning via log-update). unmount() sends its
+      // own terminal-reset sequences internally, so detachForShutdown() below
+      // is still needed to prevent signal-exit's deferred unmount from firing
+      // again after process.exit().
+      try {
+        inst.unmount()
+      } catch {
+        // Ignore reconciler errors — we're exiting anyway.
       }
     }
     // Catches events that arrived during the unmount tree-walk.

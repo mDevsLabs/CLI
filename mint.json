@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Claude Code Architecture",
+  "name": "mAI CLI Architecture",
   "logo": {
     "dark": "/docs/logo/dark.svg",
     "light": "/docs/logo/light.svg"
@@ -22,10 +22,10 @@
   },
   "topbarCtaButton": {
     "type": "github",
-    "url": "https://github.com/claude-code-best/claude-code"
+    "url": "https://github.com/mai/claude-code"
   },
   "search": {
-    "prompt": "搜索 Claude Code 架构文档..."
+    "prompt": "搜索 mAI CLI 架构文档..."
   },
   "redirects": [
     {

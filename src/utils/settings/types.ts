@@ -56,7 +56,7 @@ export const PermissionsSchema = lazySchema(() =>
       defaultMode: z
         .enum(PERMISSION_MODES)
         .optional()
-        .describe('Default permission mode when Claude Code needs access'),
+        .describe('Default permission mode when mAI CLI needs access'),
       disableBypassPermissionsMode: z
         .enum(['disable'])
         .optional()
@@ -251,7 +251,7 @@ export const SettingsSchema = lazySchema(() =>
       $schema: z
         .literal(CLAUDE_CODE_SETTINGS_SCHEMA_URL)
         .optional()
-        .describe('JSON Schema reference for Claude Code settings'),
+        .describe('JSON Schema reference for mAI CLI settings'),
       apiKeyHelper: z
         .string()
         .optional()
@@ -284,7 +284,7 @@ export const SettingsSchema = lazySchema(() =>
                   .describe('IdP issuer URL for OIDC discovery'),
                 clientId: z
                   .string()
-                  .describe("Claude Code's client_id registered at the IdP"),
+                  .describe("mAI CLI's client_id registered at the IdP"),
                 callbackPort: z
                   .number()
                   .int()
@@ -325,7 +325,7 @@ export const SettingsSchema = lazySchema(() =>
         ),
       env: EnvironmentVariablesSchema()
         .optional()
-        .describe('Environment variables to set for Claude Code sessions'),
+        .describe('Environment variables to set for mAI CLI sessions'),
       // Attribution for commits and PRs
       attribution: z
         .object({
@@ -347,7 +347,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Customize attribution text for commits and PRs. ' +
-            'Each field defaults to the standard Claude Code attribution if not set.',
+            'Each field defaults to the standard mAI CLI attribution if not set.',
         ),
       includeCoAuthoredBy: z
         .boolean()
@@ -375,7 +375,7 @@ export const SettingsSchema = lazySchema(() =>
       model: z
         .string()
         .optional()
-        .describe('Override the default model used by Claude Code'),
+        .describe('Override the default model used by mAI CLI'),
       // Enterprise allowlist of models
       availableModels: z
         .array(z.string())
@@ -680,7 +680,7 @@ export const SettingsSchema = lazySchema(() =>
         .string()
         .optional()
         .describe(
-          'Custom Tavily API endpoint URL. Defaults to https://tavily.claude-code-best.win. ' +
+          'Custom Tavily API endpoint URL. Defaults to https://tavily.mai.win. ' +
             'Used by both WebSearch and WebFetch when tavily adapter is selected.',
         ),
       braveApiKey: z

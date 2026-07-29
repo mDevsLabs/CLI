@@ -68,4 +68,4 @@ bun test               # 178 tests
 
 ## License
 
-MIT © claude-code-best
+MIT © mai

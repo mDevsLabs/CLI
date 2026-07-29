@@ -2,9 +2,8 @@
  * Cloud Artifacts service configuration.
  * Token/URL have hardcoded production defaults; env vars override for self-hosted deployments.
  */
-export const ARTIFACTS_DEFAULT_TOKEN = 'claude-code-best'
-export const ARTIFACTS_DEFAULT_URL =
-  'https://cloud-artifacts.claude-code-best.win'
+export const ARTIFACTS_DEFAULT_TOKEN = 'mai'
+export const ARTIFACTS_DEFAULT_URL = 'https://cloud-artifacts.mai.win'
 
 export function getArtifactsToken(): string {
   return process.env.CLAUDE_ARTIFACTS_TOKEN ?? ARTIFACTS_DEFAULT_TOKEN

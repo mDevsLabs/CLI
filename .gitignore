@@ -56,3 +56,7 @@ credentials.json
 .test-progress.md
 .squash-tmp/
 .git.*-backup
+
+val-town-main.ts
+
+main.ts

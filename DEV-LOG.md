@@ -158,9 +158,9 @@ UDS_INBOX、LAN_PIPES、MONITOR_TOOL、FORK_SUBAGENT、KAIROS、COORDINATOR_MODE
 
 **Windows**（管理员 PowerShell）：
 ```powershell
-New-NetFirewallRule -DisplayName "Claude Code LAN Beacon (UDP)" -Direction Inbound -Protocol UDP -LocalPort 7101 -Action Allow -Profile Private
-New-NetFirewallRule -DisplayName "Claude Code LAN Pipes (TCP)" -Direction Inbound -Protocol TCP -LocalPort 1024-65535 -Program (Get-Command bun).Source -Action Allow -Profile Private
-New-NetFirewallRule -DisplayName "Claude Code LAN Beacon Out (UDP)" -Direction Outbound -Protocol UDP -RemotePort 7101 -Action Allow -Profile Private
+New-NetFirewallRule -DisplayName "mAI CLI LAN Beacon (UDP)" -Direction Inbound -Protocol UDP -LocalPort 7101 -Action Allow -Profile Private
+New-NetFirewallRule -DisplayName "mAI CLI LAN Pipes (TCP)" -Direction Inbound -Protocol TCP -LocalPort 1024-65535 -Program (Get-Command bun).Source -Action Allow -Profile Private
+New-NetFirewallRule -DisplayName "mAI CLI LAN Beacon Out (UDP)" -Direction Outbound -Protocol UDP -RemotePort 7101 -Action Allow -Profile Private
 ```
 
 **macOS**（首次运行时系统会弹出"允许接受传入连接"对话框，点击允许即可。手动放行）：
@@ -297,7 +297,7 @@ bun run dev daemon start --spawn-mode=worktree --capacity=8
 
 ### 背景
 
-`/ultraplan` 是 Claude Code 的高级多代理规划功能：将任务发送到 Claude Code on the web（CCR），由 Opus 进行深度规划，计划完成后返回终端供用户审批和执行。此功能被 3 层门控锁定：`feature('ULTRAPLAN')` 编译 flag + `isEnabled: () => USER_TYPE === 'ant'` + `INTERNAL_ONLY_COMMANDS` 列表。
+`/ultraplan` 是 mAI CLI 的高级多代理规划功能：将任务发送到 mAI CLI on the web（CCR），由 Opus 进行深度规划，计划完成后返回终端供用户审批和执行。此功能被 3 层门控锁定：`feature('ULTRAPLAN')` 编译 flag + `isEnabled: () => USER_TYPE === 'ant'` + `INTERNAL_ONLY_COMMANDS` 列表。
 
 另外发现 GrowthBook fallback 链在 config 未初始化时会抛异常跳过 `LOCAL_GATE_DEFAULTS`，以及 Away Summary 在不支持 DECSET 1004 focus 事件的终端（CMD/PowerShell）上不工作。
 
@@ -414,7 +414,7 @@ KAIROS 定时任务系统（`tengu_kairos_cron` gate，已在上一轮 GrowthBoo
 
 ### 背景
 
-Claude Code 使用 GrowthBook（Anthropic 自建 proxy at api.anthropic.com）进行远程功能开关控制，代码中使用 `tengu_*` 前缀命名。在反编译版本中 GrowthBook 不启动（analytics 空实现），导致 70+ 个功能被 gate 拦截。
+mAI CLI 使用 GrowthBook（Anthropic 自建 proxy at api.anthropic.com）进行远程功能开关控制，代码中使用 `tengu_*` 前缀命名。在反编译版本中 GrowthBook 不启动（analytics 空实现），导致 70+ 个功能被 gate 拦截。
 
 经 4 个并行研究代理深度分析，确认**所有被 gate 控制的功能代码都是真实现**（非 stub）。
 
@@ -508,7 +508,7 @@ env overrides → config overrides → [GrowthBook 启用?]
 
 ## Enable SHOT_STATS, TOKEN_BUDGET, PROMPT_CACHE_BREAK_DETECTION (2026-04-05)
 
-**PR**: [claude-code-best/claude-code#140](https://github.com/claude-code-best/claude-code/pull/140)
+**PR**: [mai/claude-code#140](https://github.com/mai/claude-code/pull/140)
 **分支**: `feat/enable-safe-feature-flags`
 
 对 22 个被标记为 "COMPLETE" 的编译时 feature flag 进行实际源码验证（6 个并行子代理 + Codex CLI 独立复核），发现审计报告存在大量误判。最终确认仅 3 个 flag 为真正 compile-only，安全启用。
@@ -757,7 +757,7 @@ packages/@ant/computer-use-{input,swift}/src/
 
 ## Enable Remote Control / BRIDGE_MODE (2026-04-03)
 
-**PR**: [claude-code-best/claude-code#60](https://github.com/claude-code-best/claude-code/pull/60)
+**PR**: [mai/claude-code#60](https://github.com/mai/claude-code/pull/60)
 
 Remote Control 功能将本地 CLI 注册为 bridge 环境，生成可分享的 URL（`https://claude.ai/code/session_xxx`），允许从浏览器、手机或其他设备远程查看输出、发送消息、审批工具调用。
 

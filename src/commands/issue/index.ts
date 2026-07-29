@@ -354,7 +354,7 @@ const issue: Command = {
         // to ~/.claude/issue-drafts/ and tell the user where to find it.
         const MAX_URL_BODY = 4096
         const sessionSummary = getTranscriptSummary()
-        const fullBodyText = `## Context from Claude Code session\n\n${sessionSummary}`
+        const fullBodyText = `## Context from mAI CLI session\n\n${sessionSummary}`
 
         let bodyText = fullBodyText
         let draftPath: string | null = null
@@ -439,18 +439,14 @@ const issue: Command = {
       // Build rich body: session context + template (if present) + errors
       const sessionSummary = getTranscriptSummary(5)
       const bodyParts: string[] = [
-        '## Context from Claude Code session',
+        '## Context from mAI CLI session',
         '',
         sessionSummary,
       ]
       if (templateBody) {
         bodyParts.push('', '---', '', templateBody)
       }
-      bodyParts.push(
-        '',
-        '---',
-        '_Created via `/issue` command in Claude Code._',
-      )
+      bodyParts.push('', '---', '_Created via `/issue` command in mAI CLI._')
       const body = bodyParts.join('\n')
 
       // Build gh issue create args

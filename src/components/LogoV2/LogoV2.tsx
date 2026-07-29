@@ -14,7 +14,7 @@ import {
 } from '../../utils/logoV2Utils.js';
 import { truncate } from '../../utils/format.js';
 import { getDisplayPath } from '../../utils/file.js';
-import { Clawd } from './Clawd.js';
+import { Star } from './Star.js';
 import { FeedColumn } from './FeedColumn.js';
 import {
   createRecentActivityFeed,
@@ -201,8 +201,8 @@ export function LogoV2(): React.ReactNode {
   const layoutMode = getLayoutMode(columns);
 
   const userTheme = resolveThemeSetting(getGlobalConfig().theme);
-  const borderTitle = ` ${color('claude', userTheme)('Claude Code')} ${color('inactive', userTheme)(`v${version}`)} `;
-  const compactBorderTitle = color('claude', userTheme)(' Claude Code ');
+  const borderTitle = ` ${color('claude', userTheme)('mAI CLI')} ${color('inactive', userTheme)(`v${version}`)} `;
+  const compactBorderTitle = color('claude', userTheme)(' mAI CLI ');
 
   // Early return for compact mode
   if (layoutMode === 'compact') {
@@ -242,7 +242,7 @@ export function LogoV2(): React.ReactNode {
           >
             <Text bold>{welcomeMessage}</Text>
             <Box marginY={1}>
-              <Clawd />
+              <Star />
             </Box>
             <Text dimColor>{modelDisplayName}</Text>
             <Text dimColor>{billingType}</Text>
@@ -309,7 +309,7 @@ export function LogoV2(): React.ReactNode {
                 <Text bold>{welcomeMessage}</Text>
               </Box>
 
-              <Clawd />
+              <Star />
 
               <Box flexDirection="column" alignItems="center">
                 <Text dimColor>{modelLine}</Text>

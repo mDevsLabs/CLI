@@ -50,14 +50,19 @@ export async function performLogout({ clearOnboarding = false }): Promise<void> 
 
 function clearChatGPTSettingsAuthMode(): void {
   delete process.env.OPENAI_AUTH_MODE;
+  delete process.env.MAI_TOKEN;
+  delete process.env.OPENAI_API_KEY;
+  delete process.env.OPENAI_BASE_URL;
+  delete process.env.CLAUDE_CODE_USE_OPENAI;
+
   const userSettings = getSettingsForSource('userSettings') ?? {};
-  const env = userSettings.env ?? {};
-  const hasOpenAICompatibleConfig =
-    Boolean(env.OPENAI_API_KEY ?? process.env.OPENAI_API_KEY) &&
-    Boolean(env.OPENAI_BASE_URL ?? process.env.OPENAI_BASE_URL);
   const settingsUpdate: Parameters<typeof updateSettingsForSource>[1] = {
-    ...(userSettings.modelType === 'openai' && !hasOpenAICompatibleConfig ? { modelType: undefined } : {}),
+    ...(userSettings.modelType === 'openai' ? { modelType: undefined } : {}),
     env: {
+      MAI_TOKEN: undefined,
+      OPENAI_API_KEY: undefined,
+      OPENAI_BASE_URL: undefined,
+      CLAUDE_CODE_USE_OPENAI: undefined,
       OPENAI_AUTH_MODE: undefined,
     } as unknown as Record<string, string>,
   };

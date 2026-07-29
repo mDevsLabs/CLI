@@ -4,7 +4,7 @@
 		{
 			"type": "bun",
 			"request": "attach",
-			"name": "Attach to Claude Code",
+			"name": "Attach to mAI CLI",
 			"url": "ws://localhost:8888/2dc3gzl5xot",
 			"stopOnEntry": false,
 			"internalConsoleOptions": "neverOpen"

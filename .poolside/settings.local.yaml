@@ -1,0 +1,6 @@
+tools:
+    shell:
+        allow:
+            - grep *
+            - head *
+            - powershell *

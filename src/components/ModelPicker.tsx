@@ -2,6 +2,8 @@ import capitalize from 'lodash-es/capitalize.js';
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { has1mContext } from '../utils/context.js';
+import { getAnthropicApiKey } from '../utils/auth.js';
+import type { ModelOption } from '../utils/model/modelOptions.js';
 import { useExitOnCtrlCDWithKeybindings } from 'src/hooks/useExitOnCtrlCDWithKeybindings.js';
 import {
   type AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
@@ -105,8 +107,23 @@ export function ModelPicker({
     effortValue !== undefined ? convertEffortValueToLevel(effortValue) : undefined,
   );
 
+  const [dynamicModelOptions, setDynamicModelOptions] = useState<ModelOption[]>([]);
+  const [loadingModels, setLoadingModels] = useState(true);
+
+  React.useEffect(() => {
+    import('../utils/model/maiModels.js')
+      .then(module => {
+        setDynamicModelOptions(module.getLocalModelOptions());
+        setLoadingModels(false);
+      })
+      .catch(() => {
+        setDynamicModelOptions(getModelOptions(isFastMode ?? false));
+        setLoadingModels(false);
+      });
+  }, [isFastMode]);
+
   // Memoize all derived values to prevent re-renders
-  const modelOptions = useMemo(() => getModelOptions(isFastMode ?? false), [isFastMode]);
+  const modelOptions = useMemo(() => dynamicModelOptions, [dynamicModelOptions]);
 
   // Ensure the initial value is in the options list
   // This handles edge cases where the user's current model (e.g., 'haiku' for 3P users)
@@ -229,6 +246,18 @@ export function ModelPicker({
     const wants1M = marked1MValues.has(baseValue);
     const finalValue = wants1M ? `${baseValue}[1m]` : baseValue;
     onSelect(finalValue, selectedEffort);
+  }
+
+  if (loadingModels) {
+    const content = (
+      <Box flexDirection="column" padding={1}>
+        <Text color="remember" bold>
+          Select model
+        </Text>
+        <Text dimColor>Loading models from catalog...</Text>
+      </Box>
+    );
+    return isStandaloneCommand ? <Pane color="permission">{content}</Pane> : content;
   }
 
   const content = (

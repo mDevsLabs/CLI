@@ -1,241 +1,36 @@
 import React from 'react';
-import { Box, Text, useTheme } from '@anthropic/ink';
-import { env } from '../../utils/env.js';
+import { Box, Text, useTheme, useAnimationFrame } from '@anthropic/ink';
+import type { Theme } from '@anthropic/ink';
+import { intensityToColor } from '../EffortPanel/rippleAnimation.js';
 
-const WELCOME_V2_WIDTH = 58;
+const ASCII_STAR = `          ★          
+        ✦ ✧ ✦        
+      ✦ ✧ ▲ ✧ ✦      
+    ★ ✧ █ ✪ █ ✧ ★    
+      ✦ ✧ ▼ ✧ ✦      
+        ✦ ✧ ✦        
+          ★          `;
 
 export function WelcomeV2(): React.ReactNode {
   const [theme] = useTheme();
-  const welcomeMessage = 'Welcome to Claude Code';
-
-  if (env.terminal === 'Apple_Terminal') {
-    return <AppleTerminalWelcomeV2 theme={theme} welcomeMessage={welcomeMessage} />;
-  }
-
-  if (['light', 'light-daltonized', 'light-ansi'].includes(theme)) {
-    return (
-      <Box width={WELCOME_V2_WIDTH}>
-        <Text>
-          <Text>
-            <Text color="claude">{welcomeMessage} </Text>
-            <Text dimColor>v{MACRO.VERSION} </Text>
-          </Text>
-          <Text>{'…………………………………………………………………………………………………………………………………………………………'}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'            ░░░░░░                                        '}</Text>
-          <Text>{'    ░░░   ░░░░░░░░░░                                      '}</Text>
-          <Text>{'   ░░░░░░░░░░░░░░░░░░░                                    '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>
-            <Text dimColor>{'                           ░░░░'}</Text>
-            <Text>{'                     ██    '}</Text>
-          </Text>
-          <Text>
-            <Text dimColor>{'                         ░░░░░░░░░░'}</Text>
-            <Text>{'               ██▒▒██  '}</Text>
-          </Text>
-          <Text>{'                                            ▒▒      ██   ▒'}</Text>
-          <Text>
-            {'      '}
-            <Text color="clawd_body"> █████████ </Text>
-            {'                         ▒▒░░▒▒      ▒ ▒▒'}
-          </Text>
-          <Text>
-            {'      '}
-            <Text color="clawd_body" backgroundColor="clawd_background">
-              ██▄█████▄██
-            </Text>
-            {'                           ▒▒         ▒▒ '}
-          </Text>
-          <Text>
-            {'      '}
-            <Text color="clawd_body"> █████████ </Text>
-            {'                          ░          ▒   '}
-          </Text>
-          <Text>
-            {'…………………'}
-            <Text color="clawd_body">{'█ █   █ █'}</Text>
-            {'……………………………………………………………………░…………………………▒…………'}
-          </Text>
-        </Text>
-      </Box>
-    );
-  }
+  const welcomeMessage = 'Welcome to mAI CLI';
+  const [, time] = useAnimationFrame(80);
+  const intensity = ((Math.sin(time / 300) + 1) / 2) * 0.6 + 0.4;
+  const animatedBlue = intensityToColor(intensity, 0);
 
   return (
-    <Box width={WELCOME_V2_WIDTH}>
+    <Box flexDirection="column">
       <Text>
-        <Text>
-          <Text color="claude">{welcomeMessage} </Text>
-          <Text dimColor>v{MACRO.VERSION} </Text>
-        </Text>
-        <Text>{'…………………………………………………………………………………………………………………………………………………………'}</Text>
-        <Text>{'                                                          '}</Text>
-        <Text>{'     *                                       █████▓▓░     '}</Text>
-        <Text>{'                                 *         ███▓░     ░░   '}</Text>
-        <Text>{'            ░░░░░░                        ███▓░           '}</Text>
-        <Text>{'    ░░░   ░░░░░░░░░░                      ███▓░           '}</Text>
-        <Text>
-          <Text>{'   ░░░░░░░░░░░░░░░░░░░    '}</Text>
-          <Text bold>*</Text>
-          <Text>{'                ██▓░░      ▓   '}</Text>
-        </Text>
-        <Text>{'                                             ░▓▓███▓▓░    '}</Text>
-        <Text dimColor>{' *                                 ░░░░                   '}</Text>
-        <Text dimColor>{'                                 ░░░░░░░░                 '}</Text>
-        <Text dimColor>{'                               ░░░░░░░░░░░░░░░░           '}</Text>
-        <Text>
-          {'      '}
-          <Text color="clawd_body"> █████████ </Text>
-          {'                                       '}
-          <Text dimColor>*</Text>
-          <Text> </Text>
-        </Text>
-        <Text>
-          {'      '}
-          <Text color="clawd_body">██▄█████▄██</Text>
-          <Text>{'                        '}</Text>
-          <Text bold>*</Text>
-          <Text>{'                '}</Text>
-        </Text>
-        <Text>
-          {'      '}
-          <Text color="clawd_body"> █████████ </Text>
-          {'     *                                   '}
-        </Text>
-        <Text>
-          {'…………………'}
-          <Text color="clawd_body">{'█ █   █ █'}</Text>
-          {'………………………………………………………………………………………………………………'}
-        </Text>
+        <Text color="claude">{welcomeMessage} </Text>
+        <Text dimColor>v{MACRO.VERSION} </Text>
       </Text>
-    </Box>
-  );
-}
-
-type AppleTerminalWelcomeV2Props = {
-  theme: string;
-  welcomeMessage: string;
-};
-
-function AppleTerminalWelcomeV2({ theme, welcomeMessage }: AppleTerminalWelcomeV2Props): React.ReactNode {
-  const isLightTheme = ['light', 'light-daltonized', 'light-ansi'].includes(theme);
-
-  if (isLightTheme) {
-    return (
-      <Box width={WELCOME_V2_WIDTH}>
-        <Text>
-          <Text>
-            <Text color="claude">{welcomeMessage} </Text>
-            <Text dimColor>v{MACRO.VERSION} </Text>
+      <Box flexDirection="column" alignItems="center">
+        {ASCII_STAR.split('\n').map((line, i) => (
+          <Text key={i} color={animatedBlue as keyof Theme} wrap="truncate">
+            {line}
           </Text>
-          <Text>{'…………………………………………………………………………………………………………………………………………………………'}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>{'            ░░░░░░                                        '}</Text>
-          <Text>{'    ░░░   ░░░░░░░░░░                                      '}</Text>
-          <Text>{'   ░░░░░░░░░░░░░░░░░░░                                    '}</Text>
-          <Text>{'                                                          '}</Text>
-          <Text>
-            <Text dimColor>{'                           ░░░░'}</Text>
-            <Text>{'                     ██    '}</Text>
-          </Text>
-          <Text>
-            <Text dimColor>{'                         ░░░░░░░░░░'}</Text>
-            <Text>{'               ██▒▒██  '}</Text>
-          </Text>
-          <Text>{'                                            ▒▒      ██   ▒'}</Text>
-          <Text>{'                                          ▒▒░░▒▒      ▒ ▒▒'}</Text>
-          <Text>
-            {'      '}
-            <Text color="clawd_body">▗</Text>
-            <Text color="clawd_background" backgroundColor="clawd_body">
-              {' '}
-              ▗{'     '}▖{' '}
-            </Text>
-            <Text color="clawd_body">▖</Text>
-            {'                           ▒▒         ▒▒ '}
-          </Text>
-          <Text>
-            {'       '}
-            <Text backgroundColor="clawd_body">{' '.repeat(9)}</Text>
-            {'                           ░          ▒   '}
-          </Text>
-          <Text>
-            {'…………………'}
-            <Text backgroundColor="clawd_body"> </Text>
-            <Text> </Text>
-            <Text backgroundColor="clawd_body"> </Text>
-            <Text>{'   '}</Text>
-            <Text backgroundColor="clawd_body"> </Text>
-            <Text> </Text>
-            <Text backgroundColor="clawd_body"> </Text>
-            {'……………………………………………………………………░…………………………▒…………'}
-          </Text>
-        </Text>
+        ))}
       </Box>
-    );
-  }
-
-  return (
-    <Box width={WELCOME_V2_WIDTH}>
-      <Text>
-        <Text>
-          <Text color="claude">{welcomeMessage} </Text>
-          <Text dimColor>v{MACRO.VERSION} </Text>
-        </Text>
-        <Text>{'…………………………………………………………………………………………………………………………………………………………'}</Text>
-        <Text>{'                                                          '}</Text>
-        <Text>{'     *                                       █████▓▓░     '}</Text>
-        <Text>{'                                 *         ███▓░     ░░   '}</Text>
-        <Text>{'            ░░░░░░                        ███▓░           '}</Text>
-        <Text>{'    ░░░   ░░░░░░░░░░                      ███▓░           '}</Text>
-        <Text>
-          <Text>{'   ░░░░░░░░░░░░░░░░░░░    '}</Text>
-          <Text bold>*</Text>
-          <Text>{'                ██▓░░      ▓   '}</Text>
-        </Text>
-        <Text>{'                                             ░▓▓███▓▓░    '}</Text>
-        <Text dimColor>{' *                                 ░░░░                   '}</Text>
-        <Text dimColor>{'                                 ░░░░░░░░                 '}</Text>
-        <Text dimColor>{'                               ░░░░░░░░░░░░░░░░           '}</Text>
-        <Text>
-          {'                                                      '}
-          <Text dimColor>*</Text>
-          <Text> </Text>
-        </Text>
-        <Text>
-          {'        '}
-          <Text color="clawd_body">▗</Text>
-          <Text color="clawd_background" backgroundColor="clawd_body">
-            {' '}
-            ▗{'     '}▖{' '}
-          </Text>
-          <Text color="clawd_body">▖</Text>
-          <Text>{'                       '}</Text>
-          <Text bold>*</Text>
-          <Text>{'                '}</Text>
-        </Text>
-        <Text>
-          {'        '}
-          <Text backgroundColor="clawd_body">{' '.repeat(9)}</Text>
-          {'      *                                   '}
-        </Text>
-        <Text>
-          {'…………………'}
-          <Text backgroundColor="clawd_body"> </Text>
-          <Text> </Text>
-          <Text backgroundColor="clawd_body"> </Text>
-          <Text>{'   '}</Text>
-          <Text backgroundColor="clawd_body"> </Text>
-          <Text> </Text>
-          <Text backgroundColor="clawd_body"> </Text>
-          {'………………………………………………………………………………………………………………'}
-        </Text>
-      </Text>
     </Box>
   );
 }

@@ -99,7 +99,7 @@ JSON：
 
 ```json
 {
-  "name": "claude-code-best",
+  "name": "mai",
   "version": "2.2.1",
   "runtime": "bun",
   "features": ["buddy", "bridge_mode", "ultrathink"]

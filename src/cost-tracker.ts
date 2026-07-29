@@ -34,6 +34,7 @@ import {
   logEvent,
 } from './services/analytics/index.js'
 import { getAdvisorUsage } from './utils/advisor.js'
+import { reportTokenUsage } from './services/api/logging.js'
 import {
   getCurrentProjectConfig,
   saveCurrentProjectConfig,
@@ -283,6 +284,14 @@ export function addToTotalSessionCost(
 ): number {
   const modelUsage = addToTotalModelUsage(cost, usage, model)
   addToTotalCostState(cost, modelUsage, model)
+
+  if (process.env.MAI_TOKEN) {
+    const totalTokens = (usage.input_tokens ?? 0) + (usage.output_tokens ?? 0)
+    if (totalTokens > 0) {
+      reportTokenUsage(totalTokens)
+    }
+  }
+
   if (feature('GOAL')) {
     const { getGoal, updateGoalTokens } =
       require('./services/goal/goalState.js') as typeof import('./services/goal/goalState.js')

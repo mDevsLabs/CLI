@@ -41,7 +41,6 @@ export async function call(
 
     return (
       <Login
-        startingMessage={'Starting new login following /upgrade. Exit with Ctrl-C to use existing account.'}
         onDone={success => {
           context.onChangeAPIKey();
           onDone(success ? 'Login successful' : 'Login interrupted');

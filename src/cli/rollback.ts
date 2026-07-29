@@ -1,5 +1,5 @@
 /**
- * `claude rollback [target]` — roll back to a previous Claude Code version.
+ * `claude rollback [target]` — roll back to a previous mAI CLI version.
  *
  * ANT-only command (USER_TYPE === "ant").
  *
@@ -57,7 +57,7 @@ export async function rollback(
   const { spawnSync } = await import('child_process')
   const result = spawnSync(
     'npm',
-    ['install', '-g', `@anthropic-ai/claude-code@${target}`],
+    ['install', '-g', `@mdevs/mai-cli@${target}`],
     { stdio: 'inherit' },
   )
 

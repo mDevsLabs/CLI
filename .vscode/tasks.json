@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Start Claude Code TUI",
+			"label": "Start mAI CLI TUI",
 			"type": "shell",
 			"command": "bun run dev:inspect",
 			"isBackground": true,

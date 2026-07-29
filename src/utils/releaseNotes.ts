@@ -133,8 +133,9 @@ export async function getStoredChangelog(): Promise<string> {
     changelogMemoryCache = content
     return content
   } catch {
-    changelogMemoryCache = ''
-    return ''
+    const fallback = MACRO.VERSION_CHANGELOG || ''
+    changelogMemoryCache = fallback
+    return fallback
   }
 }
 
@@ -145,7 +146,7 @@ export async function getStoredChangelog(): Promise<string> {
  * the cache is populated before first render via `await checkForReleaseNotes()`.
  */
 export function getStoredChangelogFromMemory(): string {
-  return changelogMemoryCache ?? ''
+  return changelogMemoryCache ?? MACRO.VERSION_CHANGELOG ?? ''
 }
 
 /**

@@ -2,7 +2,7 @@
 
 ## 需求背景
 
-当前 Claude Code 有 60+ 内置工具和无限 MCP 工具，Agent 在处理任务时缺乏"根据任务描述自动发现最匹配工具"的能力。现有 `ToolSearchTool` 仅处理延迟加载（按需加载 schema via `tool_reference`），不做语义发现。`tool_reference` 机制存在以下局限：
+当前 mAI CLI 有 60+ 内置工具和无限 MCP 工具，Agent 在处理任务时缺乏"根据任务描述自动发现最匹配工具"的能力。现有 `ToolSearchTool` 仅处理延迟加载（按需加载 schema via `tool_reference`），不做语义发现。`tool_reference` 机制存在以下局限：
 
 1. **仅 Anthropic 一方 API 支持** — OpenAI/Gemini/Grok 兼容层不支持 `tool_reference` beta 特性
 2. **破坏 prompt cache** — 动态注入工具 schema 导致缓存失效

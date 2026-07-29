@@ -2014,3 +2014,22 @@ export async function validateForceLoginOrg(): Promise<OrgValidationResult> {
 }
 
 class GcpCredentialsTimeoutError extends Error {}
+
+/**
+ * Checks if the user is authenticated (has MAI_TOKEN, OAuth token, or API key).
+ */
+export function isAuthenticated(): boolean {
+  if (process.env.MAI_TOKEN !== undefined && !process.env.MAI_TOKEN.trim()) {
+    return false
+  }
+  const userSettings = getSettingsForSource('userSettings')
+  const tokenInEnv = process.env.MAI_TOKEN?.trim()
+  const tokenInSettings = userSettings?.env?.MAI_TOKEN?.trim()
+  if (tokenInEnv || tokenInSettings) {
+    return true
+  }
+  const { hasToken } = getAuthTokenSource()
+  if (hasToken) return true
+  if (hasAnthropicApiKeyAuth()) return true
+  return false
+}

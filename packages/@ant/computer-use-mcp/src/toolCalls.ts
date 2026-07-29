@@ -3211,7 +3211,7 @@ async function handleOpenTerminal(
   }
 
   const agentNames: Record<string, string> = {
-    claude: 'Claude Code',
+    claude: 'mAI CLI',
     codex: 'Codex',
     gemini: 'Gemini',
     custom: args.command as string,

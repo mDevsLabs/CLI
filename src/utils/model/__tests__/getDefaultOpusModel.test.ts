@@ -8,19 +8,11 @@ import { ALL_MODEL_CONFIGS } from '../configs.js'
 import { getDefaultOpusModel } from '../model.js'
 import { getOpus46Option } from '../modelOptions.js'
 import { getModelStrings } from '../modelStrings.js'
+import { MAI_MODELS } from '../maiModels.js'
 
 /**
- * Verifies getDefaultOpusModel() returns Opus 4.7 across all providers
- * (firstParty + Bedrock/Vertex/Foundry). This is the Gap #2 assertion:
- * as of 2026-04-17 all 3P vendors have published Opus 4.7, so the fork
- * must not fall back to Opus 4.6 on 3P.
- *
- * Authoritative sources for 3P availability:
- *   - AWS Bedrock: docs.aws.amazon.com/bedrock/.../model-card-anthropic-claude-opus-4-7.html
- *   - Google Vertex AI: docs.cloud.google.com/vertex-ai/.../claude/opus-4-7
- *   - Microsoft Foundry: ai.azure.com/catalog/models/claude-opus-4-7
+ * Verifies getDefaultOpusModel() returns default mAI model across providers
  */
-
 const envKeys = [
   'CLAUDE_CODE_USE_GEMINI',
   'CLAUDE_CODE_USE_BEDROCK',
@@ -61,23 +53,23 @@ describe('getDefaultOpusModel', () => {
     resetProviderState()
   })
 
-  test('returns Opus 4.7 for firstParty', () => {
-    expect(getDefaultOpusModel()).toBe(ALL_MODEL_CONFIGS.opus47.firstParty)
+  test('returns default mAI model for firstParty', () => {
+    expect(getDefaultOpusModel()).toBe(MAI_MODELS[0].id)
   })
 
-  test('returns Opus 4.7 for bedrock (3P no longer lags)', () => {
+  test('returns default mAI model for bedrock', () => {
     process.env.CLAUDE_CODE_USE_BEDROCK = '1'
-    expect(getDefaultOpusModel()).toBe(ALL_MODEL_CONFIGS.opus47.bedrock)
+    expect(getDefaultOpusModel()).toBe(MAI_MODELS[0].id)
   })
 
-  test('returns Opus 4.7 for vertex (3P no longer lags)', () => {
+  test('returns default mAI model for vertex', () => {
     process.env.CLAUDE_CODE_USE_VERTEX = '1'
-    expect(getDefaultOpusModel()).toBe(ALL_MODEL_CONFIGS.opus47.vertex)
+    expect(getDefaultOpusModel()).toBe(MAI_MODELS[0].id)
   })
 
-  test('returns Opus 4.7 for foundry (3P no longer lags)', () => {
+  test('returns default mAI model for foundry', () => {
     process.env.CLAUDE_CODE_USE_FOUNDRY = '1'
-    expect(getDefaultOpusModel()).toBe(ALL_MODEL_CONFIGS.opus47.foundry)
+    expect(getDefaultOpusModel()).toBe(MAI_MODELS[0].id)
   })
 
   test('honors ANTHROPIC_DEFAULT_OPUS_MODEL env override (any provider)', () => {
