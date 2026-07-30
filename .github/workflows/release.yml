@@ -36,8 +36,21 @@ jobs:
       - name: Type check
         run: bun run typecheck
 
+      - name: Update package.json version
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          CLEAN_VERSION="${VERSION#v}"
+          echo "Setting package version to $CLEAN_VERSION"
+          npm version "$CLEAN_VERSION" --no-git-tag-version --allow-same-version
+
       - name: Publish to npm
-        run: npm publish --access public
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          if [[ "$VERSION" =~ (alpha|beta|rc) ]]; then
+            npm publish --access public --tag next
+          else
+            npm publish --access public
+          fi
 
       - name: Generate changelog
         id: changelog
