@@ -100,3 +100,28 @@ export function apiCreateSession(body: {
 }) {
   return api<Session>('POST', '/web/sessions', body)
 }
+
+export interface AuthResult {
+  token: string
+  expires_in: number
+  username: string
+  email?: string | null
+  phone?: string | null
+}
+
+export function apiRegister(body: {
+  username: string
+  email: string
+  phone?: string
+  password: string
+}): Promise<AuthResult> {
+  return api<AuthResult>('POST', '/web/users/register', body)
+}
+
+export function apiLogin(body: {
+  username?: string
+  email?: string
+  password: string
+}): Promise<AuthResult> {
+  return api<AuthResult>('POST', '/web/users/login', body)
+}

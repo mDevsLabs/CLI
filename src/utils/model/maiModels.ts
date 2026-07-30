@@ -2462,6 +2462,47 @@ export function getMaiModelMaxOutput(id: string): number {
   return model ? model.maxOutput : 8192
 }
 
+export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
+  try {
+    const token = process.env.MAI_TOKEN || process.env.OPENAI_API_KEY
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    const res = await fetch('https://mprojects.val.run/v1/models', { headers })
+    if (res.ok) {
+      const json = await res.json()
+      const data = Array.isArray(json) ? json : json.data || []
+      const options: ModelOption[] = data.map((m: any) => {
+        const id = m.id || m.name
+        const label = m.name || m.id || id
+        const context =
+          m.maxContext || m.context_length || m.context_window || 128000
+        const output = m.maxOutput || m.max_output_tokens || 8192
+        const provider = m.provider || m.owned_by || 'mAI'
+        return {
+          value: id as any,
+          label,
+          description: `Provider: ${provider} | Context: ${Number(context).toLocaleString()} | Output: ${Number(output).toLocaleString()}`,
+        }
+      })
+      return [
+        {
+          value: null as any,
+          label: 'Default (recommended)',
+          description: 'Use the default model for your plan',
+        },
+        ...options,
+      ]
+    }
+  } catch {
+    // fallback
+  }
+  return getLocalModelOptions()
+}
+
 export function getLocalModelOptions(): ModelOption[] {
   const subType = getSubscriptionType()
   const isPaid =

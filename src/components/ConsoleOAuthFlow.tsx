@@ -435,11 +435,7 @@ function OAuthStatusMessage({
     case 'idle':
       return (
         <Box flexDirection="column" gap={1} marginTop={1}>
-          <Text bold>
-            {startingMessage
-              ? startingMessage
-              : `mAI CLI can be used with your Claude subscription or billed based on API usage through your Console account.`}
-          </Text>
+          {startingMessage && <Text bold>{startingMessage}</Text>}
 
           <Text>Select login method:</Text>
 

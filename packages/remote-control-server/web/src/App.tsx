@@ -2,8 +2,10 @@ import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { IdentityPanel } from './components/IdentityPanel';
 import { TokenManagerDialog } from './components/TokenManagerDialog';
+import { AuthDialog } from './components/AuthDialog';
 import { ThemeProvider } from './lib/theme';
 import { getUuid, setUuid, apiBind, setActiveApiToken } from './api/client';
+import type { AuthResult } from './api/client';
 import { ACPDirectView } from './components/ACPDirectView';
 import { useTokens } from './hooks/useTokens';
 
@@ -14,6 +16,7 @@ export default function App() {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [identityOpen, setIdentityOpen] = useState(false);
   const [tokenDialogOpen, setTokenDialogOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const [acpDirect, setAcpDirect] = useState<{ url: string; token: string } | null>(null);
   const { tokens, activeTokenId, activeLabel, activeTokenValue, setActiveTokenId, addToken, removeToken, updateToken } =
     useTokens();
@@ -22,6 +25,14 @@ export default function App() {
   useEffect(() => {
     setActiveApiToken(activeTokenValue);
   }, [activeTokenValue]);
+
+  // When user logs in via AuthDialog, store the returned token
+  const handleAuthSuccess = useCallback(
+    (result: AuthResult) => {
+      addToken(result.token, result.username);
+    },
+    [addToken],
+  );
 
   const handleSetActiveToken = useCallback(
     (id: string) => {
@@ -115,6 +126,7 @@ export default function App() {
         <Navbar
           onIdentityClick={() => setIdentityOpen(true)}
           onTokenClick={() => setTokenDialogOpen(true)}
+          onAuthClick={() => setAuthOpen(true)}
           activeTokenLabel={currentSessionId ? undefined : activeLabel}
           sessionTitle={currentSessionId || (acpDirect ? 'ACP' : undefined)}
           onBack={currentSessionId || acpDirect ? navigateToDashboard : undefined}
@@ -144,6 +156,8 @@ export default function App() {
           onRemove={removeToken}
           onUpdate={updateToken}
         />
+
+        <AuthDialog open={authOpen} onClose={() => setAuthOpen(false)} onSuccess={handleAuthSuccess} />
       </div>
     </ThemeProvider>
   );

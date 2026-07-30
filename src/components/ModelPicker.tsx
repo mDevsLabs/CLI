@@ -112,8 +112,9 @@ export function ModelPicker({
 
   React.useEffect(() => {
     import('../utils/model/maiModels.js')
-      .then(module => {
-        setDynamicModelOptions(module.getLocalModelOptions());
+      .then(module => module.fetchModelOptionsFromApi())
+      .then(options => {
+        setDynamicModelOptions(options);
         setLoadingModels(false);
       })
       .catch(() => {

@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "The mAI agent, directly in your terminal!",
   "type": "module",
   "author": "mDevsLabs",
@@ -67,7 +67,8 @@
     "typecheck": "tsc --noEmit",
     "precheck": "bun run typecheck && bun run check:fix && bun test",
     "rcs": "bun run scripts/rcs.ts",
-    "reset": "bun run scripts/reset-limits.ts"
+    "reset:api": "node --env-file=.env scripts/reset-api-usage.js",
+    "reset:mai": "node --env-file=.env scripts/reset-mai-usage.js"
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "^0.19.0",

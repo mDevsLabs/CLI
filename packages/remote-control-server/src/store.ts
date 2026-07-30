@@ -4,6 +4,9 @@ import { randomUUID } from 'node:crypto'
 
 export interface UserRecord {
   username: string
+  email: string | null
+  phone: string | null
+  passwordHash: string | null
   createdAt: Date
 }
 
@@ -61,6 +64,7 @@ export interface SessionWorkerRecord {
 // ---------- Stores (in-memory Maps) ----------
 
 const users = new Map<string, UserRecord>()
+const emailToUsername = new Map<string, string>() // email → username index
 const tokenToUser = new Map<string, { username: string; createdAt: Date }>()
 const environments = new Map<string, EnvironmentRecord>()
 const sessions = new Map<string, SessionRecord>()
@@ -72,12 +76,29 @@ const sessionOwners = new Map<string, Set<string>>()
 
 // ---------- User ----------
 
-export function storeCreateUser(username: string): UserRecord {
+export function storeCreateUser(
+  username: string,
+  opts?: { email?: string; phone?: string; passwordHash?: string },
+): UserRecord {
   const existing = users.get(username)
   if (existing) return existing
-  const record: UserRecord = { username, createdAt: new Date() }
+  const record: UserRecord = {
+    username,
+    email: opts?.email ?? null,
+    phone: opts?.phone ?? null,
+    passwordHash: opts?.passwordHash ?? null,
+    createdAt: new Date(),
+  }
   users.set(username, record)
+  if (opts?.email) emailToUsername.set(opts.email.toLowerCase(), username)
   return record
+}
+
+/** Find a user by email address (case-insensitive). */
+export function storeGetUserByEmail(email: string): UserRecord | undefined {
+  const username = emailToUsername.get(email.toLowerCase())
+  if (!username) return undefined
+  return users.get(username)
 }
 
 export function storeGetUser(username: string): UserRecord | undefined {
@@ -429,6 +450,7 @@ export function storeMarkAcpAgentOnline(id: string): boolean {
 
 export function storeReset() {
   users.clear()
+  emailToUsername.clear()
   tokenToUser.clear()
   environments.clear()
   sessions.clear()

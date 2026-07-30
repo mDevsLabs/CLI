@@ -15,7 +15,6 @@ import { isRunningOnHomespace } from '../utils/envUtils.js';
 import { PreflightStep } from '../utils/preflightChecks.js';
 import type { ThemeSetting } from '../utils/theme.js';
 import { ApproveApiKey } from './ApproveApiKey.js';
-import { ConsoleOAuthFlow } from './ConsoleOAuthFlow.js';
 import { Select } from './CustomSelect/select.js';
 import { WelcomeV2 } from './LogoV2/WelcomeV2.js';
 import { PressEnterToContinue } from './PressEnterToContinue.js';
@@ -61,7 +60,7 @@ export function Onboarding({ onDone }: Props): React.ReactNode {
 
   function handleThemeSelection(newTheme: ThemeSetting) {
     setTheme(newTheme);
-    goToNextStep();
+    onDone();
   }
 
   const exitState = useExitOnCtrlCDWithKeybindings();
@@ -140,17 +139,6 @@ export function Onboarding({ onDone }: Props): React.ReactNode {
     steps.push({
       id: 'api-key',
       component: <ApproveApiKey customApiKeyTruncated={apiKeyNeedingApproval} onDone={handleApiKeyDone} />,
-    });
-  }
-
-  if (oauthEnabled) {
-    steps.push({
-      id: 'oauth',
-      component: (
-        <SkippableStep skip={skipOAuth} onSkip={goToNextStep}>
-          <ConsoleOAuthFlow onDone={goToNextStep} />
-        </SkippableStep>
-      ),
     });
   }
 
