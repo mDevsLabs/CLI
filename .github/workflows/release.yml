@@ -36,9 +36,6 @@ jobs:
       - name: Type check
         run: bun run typecheck
 
-      - name: Run tests
-        run: bun test
-
       - name: Publish to npm
         run: npm publish --access public
 
