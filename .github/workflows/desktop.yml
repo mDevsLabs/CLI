@@ -60,7 +60,7 @@ jobs:
         run: bun run build
 
       - name: Upload CLI dist
-        uses: actions/upload-artifact@330a01c490aca1516041387c5a2d8f2afc02ca # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cli-dist
           path: dist/
@@ -104,7 +104,7 @@ jobs:
 
       # Python requis pour node-gyp / node-pty sur tous les OS
       - name: Setup Python (node-gyp)
-        uses: actions/setup-python@a309ff8b426b58ec0ad9d40d3627a5233aa54a0 # v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.11"
 
@@ -115,7 +115,7 @@ jobs:
           sudo apt-get install -y rpm fakeroot dpkg
 
       - name: Download CLI dist
-        uses: actions/download-artifact@fa0a91b85d4bd85d9de46e83082fa6b9ea42dc3 # v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: cli-dist
           path: dist/
@@ -145,7 +145,7 @@ jobs:
           npx electron-builder --publish never --${{ matrix.platform }} --${{ matrix.arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@330a01c490aca1516041387c5a2d8f2afc02ca
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: desktop-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
@@ -163,7 +163,7 @@ jobs:
 
       - name: Upload unpacked (debug)
         if: failure()
-        uses: actions/upload-artifact@330a01c490aca1516041387c5a2d8f2afc02ca
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: debug-${{ matrix.platform }}-${{ matrix.arch }}
           path: apps/desktop/release/
@@ -180,7 +180,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Download all artifacts
-        uses: actions/download-artifact@fa0a91b85d4bd85d9de46e83082fa6b9ea42dc3
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           path: artifacts
           merge-multiple: true
