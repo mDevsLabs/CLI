@@ -7,9 +7,9 @@ import { isEnvDefinedFalsy } from '../utils/envUtils.js'
 import { getAPIProvider } from '../utils/model/providers.js'
 import { getWorkload } from '../utils/workloadContext.js'
 
-const DEFAULT_PREFIX = `You are mAI CLI, Anthropic's official CLI for Claude.`
-const AGENT_SDK_CLAUDE_CODE_PRESET_PREFIX = `You are mAI CLI, Anthropic's official CLI for Claude, running within the Claude Agent SDK.`
-const AGENT_SDK_PREFIX = `You are a Claude agent, built on Anthropic's Claude Agent SDK.`
+const DEFAULT_PREFIX = `You are mAI CLI, Anthropic's official CLI for mAI.`
+const AGENT_SDK_CLAUDE_CODE_PRESET_PREFIX = `You are mAI CLI, Anthropic's official CLI for mAI, running within the mAI Agent SDK.`
+const AGENT_SDK_PREFIX = `You are a mAI agent, built on Anthropic's mAI Agent SDK.`
 
 const CLI_SYSPROMPT_PREFIX_VALUES = [
   DEFAULT_PREFIX,
