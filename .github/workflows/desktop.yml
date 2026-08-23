@@ -125,14 +125,20 @@ jobs:
 
       - name: Install desktop deps
         working-directory: apps/desktop
+        env:
+          npm_config_msvs_version: "2022"
+          GYP_MSVS_VERSION: "2022"
         run: |
           # npm ci nécessite package-lock.json ; on utilise npm install si absent
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if [ -f package-lock.json ]; then npm ci --ignore-scripts; else npm install --ignore-scripts; fi
         shell: bash
 
       - name: Rebuild native modules (node-pty)
         working-directory: apps/desktop
-        run: npx electron-rebuild -f -w node-pty
+        env:
+          npm_config_msvs_version: "2022"
+          GYP_MSVS_VERSION: "2022"
+        run: npx @electron/rebuild -f -w node-pty
 
       - name: Build desktop (vite + electron-builder)
         working-directory: apps/desktop
