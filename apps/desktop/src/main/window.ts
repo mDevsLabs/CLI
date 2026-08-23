@@ -1,9 +1,13 @@
 import { BrowserWindow, shell } from 'electron'
+import { existsSync } from 'fs'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 
 export function createMainWindow(): BrowserWindow {
   const iconPath = join(__dirname, '../../resources/icon.png')
+  const preloadCjs = join(__dirname, '../preload/index.cjs')
+  const preloadJs = join(__dirname, '../preload/index.js')
+  const preloadPath = existsSync(preloadCjs) ? preloadCjs : preloadJs
 
   const win = new BrowserWindow({
     width: 1200,
@@ -18,7 +22,7 @@ export function createMainWindow(): BrowserWindow {
     trafficLightPosition: { x: 12, y: 12 },
     icon: iconPath,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: preloadPath,
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false,

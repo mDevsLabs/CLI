@@ -8,6 +8,9 @@ export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin({ exclude: ['node-pty'] })],
     build: {
+      lib: {
+        entry: resolve(__dirname, 'src/main/index.ts')
+      },
       rollupOptions: {
         external: ['node-pty']
       }
@@ -16,6 +19,9 @@ export default defineConfig({
   preload: {
     plugins: [externalizeDepsPlugin()],
     build: {
+      lib: {
+        entry: resolve(__dirname, 'src/preload/index.ts')
+      },
       rollupOptions: {
         output: {
           format: 'cjs'
