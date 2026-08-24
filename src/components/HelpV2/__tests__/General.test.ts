@@ -46,14 +46,14 @@ describe('Permission option labels', () => {
 describe('Help General page getting started guide', () => {
   test('step 1 mentions exploring code', () => {
     const step1 =
-      'Ask a question or describe a task — Claude will explore your code and respond.'
+      'Ask a question or describe a task — mAI CLI will explore your code and respond.'
     expect(step1).toContain('explore')
     expect(step1).toContain('question')
   })
 
   test('step 2 mentions reviewing actions', () => {
     const step2 =
-      'When Claude wants to edit files or run commands, you review and approve each action.'
+      'When mAI CLI wants to edit files or run commands, you review and approve each action.'
     expect(step2).toContain('review')
     expect(step2).toContain('approve')
   })

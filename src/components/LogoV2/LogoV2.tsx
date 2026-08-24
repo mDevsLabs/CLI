@@ -163,7 +163,7 @@ export function LogoV2(): React.ReactNode {
             <Text dimColor>tmux session: {process.env.CLAUDE_CODE_TMUX_SESSION}</Text>
             <Text dimColor>
               {process.env.CLAUDE_CODE_TMUX_PREFIX_CONFLICTS
-                ? `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} ${process.env.CLAUDE_CODE_TMUX_PREFIX} d (press prefix twice - Claude uses ${process.env.CLAUDE_CODE_TMUX_PREFIX})`
+                ? `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} ${process.env.CLAUDE_CODE_TMUX_PREFIX} d (press prefix twice - mAI CLI uses ${process.env.CLAUDE_CODE_TMUX_PREFIX})`
                 : `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} d`}
             </Text>
           </Box>
@@ -363,7 +363,7 @@ export function LogoV2(): React.ReactNode {
           <Text dimColor>tmux session: {process.env.CLAUDE_CODE_TMUX_SESSION}</Text>
           <Text dimColor>
             {process.env.CLAUDE_CODE_TMUX_PREFIX_CONFLICTS
-              ? `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} ${process.env.CLAUDE_CODE_TMUX_PREFIX} d (press prefix twice - Claude uses ${process.env.CLAUDE_CODE_TMUX_PREFIX})`
+              ? `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} ${process.env.CLAUDE_CODE_TMUX_PREFIX} d (press prefix twice - mAI CLI uses ${process.env.CLAUDE_CODE_TMUX_PREFIX})`
               : `Detach: ${process.env.CLAUDE_CODE_TMUX_PREFIX} d`}
           </Text>
         </Box>
