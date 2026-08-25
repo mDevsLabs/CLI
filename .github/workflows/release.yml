@@ -7,6 +7,11 @@ on:
         description: "Version (exemple : v1.9.0)"
         required: true
         type: string
+      beta:
+        description: "Pre-release npm bêta"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -44,9 +49,14 @@ jobs:
           npm version "$CLEAN_VERSION" --no-git-tag-version --allow-same-version
 
       - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NODE_AUTH_TOKEN }}
         run: |
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          if [[ "$VERSION" =~ (alpha|beta|rc) ]]; then
+          IS_BETA="${{ github.event.inputs.beta }}"
+          if [ "$IS_BETA" = "true" ] || [[ "$VERSION" =~ beta ]]; then
+            npm publish --access public --tag beta
+          elif [[ "$VERSION" =~ (alpha|rc) ]]; then
             npm publish --access public --tag next
           else
             npm publish --access public
@@ -82,4 +92,4 @@ jobs:
 
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG:-HEAD}...${{ github.event.inputs.version || github.ref_name }}
           draft: false
-          prerelease: ${{ contains(github.event.inputs.version || github.ref_name, 'rc') || contains(github.event.inputs.version || github.ref_name, 'beta') || contains(github.event.inputs.version || github.ref_name, 'alpha') }}
+          prerelease: ${{ github.event.inputs.beta == true || github.event.inputs.beta == 'true' || contains(github.event.inputs.version || github.ref_name, 'rc') || contains(github.event.inputs.version || github.ref_name, 'beta') || contains(github.event.inputs.version || github.ref_name, 'alpha') }}
