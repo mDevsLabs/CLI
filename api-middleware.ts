@@ -55,7 +55,9 @@ export function registerMiddleware(app: Hono) {
       path === "/models/mai" ||
       path === "/mai/models" ||
       path === "/v1/status" ||
-      path === "/status";
+      path === "/status" ||
+      path === "/v1/web/search" ||
+      path.startsWith("/v1/web/");
 
     const authHeader =
       c.req.header("Authorization") || c.req.header("authorization");
@@ -108,17 +110,12 @@ export function registerMiddleware(app: Hono) {
       return diff === 0;
     }
 
-    // 1. Clé système MAI_API_KEY (accès complet aux modèles Plus/Max) — comparaison constant-time
-    if (systemMaiApiKey && apiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
-      userPlan = "Plus";
-      currentUserId = "system-mai";
-    }
-    // 2. Clé API utilisateur enregistrée ou Token JWT
-    else if (apiKey) {
+    // Résolution de l'authentification : Clé API utilisateur enregistrée, Clé système, ou Token JWT
+    if (apiKey) {
       const sql = getDb();
       try {
         const rows = await sql`
-          SELECT k.*, u.tier as user_tier
+          SELECT k.*, u.tier as user_tier, u.id as u_id
           FROM mprojects_api_keys k
           LEFT JOIN users u ON k.user_id = u.id::text OR k.user_id = u.username OR k.user_id = u.email
           WHERE k.api_key = ${apiKey}::text
@@ -130,6 +127,9 @@ export function registerMiddleware(app: Hono) {
           userPlan = apiKeyData.user_tier || apiKeyData.plan || "Free";
           currentUserId = apiKeyData.user_id;
           matchedApiKey = apiKeyData.api_key || apiKey;
+        } else if (systemMaiApiKey && timingSafeEqual(apiKey, systemMaiApiKey)) {
+          userPlan = "Plus";
+          currentUserId = "system-mai";
         } else {
           // Tenter de valider le token comme un JWT de session
           try {
@@ -250,18 +250,14 @@ export function registerMiddleware(app: Hono) {
 
     await next();
 
-    if (isPublicRoute) {
-      return; // Ne pas logger les requêtes vers les routes publiques
-    }
-
     const latency = Date.now() - startTime;
     const status = c.res.status;
     const endpoint = c.req.path;
     const method = c.req.method;
 
-    // Logging & Mise à jour quota (uniquement pour les clés API utilisateur réelles)
-    const isJwtRoute = path.startsWith("/v1/devices");
-    if (!isJwtRoute && apiKey && apiKey !== systemMaiApiKey) {
+    // Logging & Décompte de 1 crédit API (pour toutes les requêtes avec clé API valide incluant audio, images, web search et chat)
+    const isExcludedRoute = path.startsWith("/v1/devices") || path === "/v1/status" || path === "/status";
+    if (!isExcludedRoute && apiKey && apiKey !== systemMaiApiKey) {
       try {
         const sql = getDb();
         const effectiveKeyToLog = matchedApiKey || apiKey;
@@ -277,7 +273,7 @@ export function registerMiddleware(app: Hono) {
           WHERE api_key = ${effectiveKeyToLog}::text
         `;
       } catch (err) {
-        console.error("Erreur logging API:", err);
+        console.error("Erreur logging API & mise à jour quota:", err);
       }
     }
   });

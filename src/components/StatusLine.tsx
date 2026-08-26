@@ -27,6 +27,7 @@ import { useMainLoopModel } from '../hooks/useMainLoopModel.js';
 import { type ReadonlySettings, useSettings } from '../hooks/useSettings.js';
 import { Ansi, Box, Text } from '@anthropic/ink';
 import { getRawUtilization } from '../services/claudeAiLimits.js';
+import { useClaudeAiLimits } from '../services/claudeAiLimitsHook.js';
 import type { Message } from '../types/message.js';
 import type { StatusLineCommandInput } from '../types/statusLine.js';
 import type { VimMode } from '../types/textInputTypes.js';
@@ -338,6 +339,8 @@ function StatusLineInner({ messagesRef, lastAssistantMessageId, vimMode }: Props
   // re-reads settings.json on every call, so another session's /model write
   // would leak into this session's statusline (anthropics/claude-code#37596).
   const mainLoopModel = useMainLoopModel();
+  // Subscribe to rate limit updates so BuiltinStatusLine re-renders when API quota headers change
+  useClaudeAiLimits();
 
   // Keep latest values in refs for stable callback access
   const settingsRef = useRef(settings);
