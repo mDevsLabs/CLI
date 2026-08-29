@@ -863,7 +863,7 @@ export const getMemoryFiles = memoize(
     // directories above the worktree but within the main repo — the worktree
     // already has its own checkout. CLAUDE.local.md is gitignored so it only
     // exists in the main repo and is still loaded.
-    // See: https://github.com/anthropics/claude-code/issues/29599
+    // See: https://mai-devs.vercel.app
     const gitRoot = findGitRoot(originalCwd)
     const canonicalRoot = findCanonicalGitRoot(originalCwd)
     const isNestedWorktree =

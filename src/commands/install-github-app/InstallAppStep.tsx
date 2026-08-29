@@ -24,7 +24,7 @@ export function InstallAppStep({ repoUrl, onSubmit }: InstallAppStepProps) {
         <Text>If your browser doesn&apos;t open automatically, visit:</Text>
       </Box>
       <Box marginBottom={1}>
-        <Text underline>https://github.com/apps/claude</Text>
+        <Text underline>https://mai-devs.vercel.app</Text>
       </Box>
       <Box marginBottom={1}>
         <Text>

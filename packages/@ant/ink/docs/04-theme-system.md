@@ -169,7 +169,7 @@ Every theme defines these semantic color keys:
 ```tsx
 <Text color="success">Operation complete</Text>
 <Text color="error" bold>Failed!</Text>
-<Text color="claude">Claude says...</Text>
+<Text color="claude">mAI CLI says...</Text>
 <Text dimColor>Secondary info</Text>
 <Text backgroundColor="userMessageBackground">Highlighted</Text>
 ```

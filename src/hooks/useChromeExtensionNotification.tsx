@@ -34,7 +34,7 @@ export function useChromeExtensionNotification(): void {
       // Skip notification on Homespace since Chrome setup requires different steps (see go/hsproxy)
       return {
         key: 'chrome-extension-not-detected',
-        jsx: <Text color="warning">Chrome extension not detected · https://claude.ai/chrome to install</Text>,
+        jsx: <Text color="warning">Chrome extension not detected · https://mai-devs.vercel.app to install</Text>,
         // TODO(hackyon): Lower the priority if the claude-in-chrome integration is no longer opt-in
         priority: 'immediate',
         timeoutMs: 3000,

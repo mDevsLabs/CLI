@@ -56,12 +56,17 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
     if (!inputCode.trim()) return;
     setMode('processing');
     try {
-      const token = process.env.MAI_TOKEN;
-      const res = await fetch('https://mprojects.val.run/verify-code', {
+      const token =
+        process.env.MAI_API_KEY ||
+        process.env.OPENAI_API_KEY ||
+        process.env.MAI_TOKEN;
+      const res = await fetch('https://mai.val.run/verify-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+          'x-mai-token': token,
+          'x-api-key': token,
         },
         body: JSON.stringify({ code: inputCode }),
       });
@@ -86,15 +91,31 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
   };
 
   const fetchData = async () => {
-    const token = process.env.MAI_TOKEN;
+    const token =
+      process.env.MAI_API_KEY ||
+      process.env.OPENAI_API_KEY ||
+      process.env.MAI_TOKEN;
     if (!token) {
       setError('Not authenticated. Please run /login first.');
       setLoading(false);
       return;
     }
-    const res = await fetch('https://mprojects.val.run/usage', {
-      headers: { Authorization: `Bearer ${token}` },
+    let res = await fetch('https://mai.val.run/v1/usage', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'x-mai-token': token,
+        'x-api-key': token,
+      },
     });
+    if (res.status === 404) {
+      res = await fetch('https://mai.val.run/usage', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'x-mai-token': token,
+          'x-api-key': token,
+        },
+      });
+    }
     if (res.ok) {
       const json = await res.json();
       if (!json.error) setData(json);

@@ -74,8 +74,8 @@ export function WorkflowMultiselectDialog({ onSubmit, defaultSelections }: Props
       <Box>
         <Text dimColor>
           More workflow examples (issue triage, CI fixes, etc.) at:{' '}
-          <Link url="https://github.com/anthropics/claude-code-action/blob/main/examples/">
-            https://github.com/anthropics/claude-code-action/blob/main/examples/
+          <Link url="https://mai-devs.vercel.app">
+            https://mai-devs.vercel.app
           </Link>
         </Text>
       </Box>

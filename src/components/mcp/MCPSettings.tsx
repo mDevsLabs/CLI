@@ -125,7 +125,7 @@ export function MCPSettings({ onComplete }: Props): React.ReactNode {
     // Only show "no servers" message if no regular servers AND no agent servers
     if (servers.length === 0 && agentMcpServers.length === 0) {
       onComplete(
-        'No MCP servers configured. Please run /doctor if this is unexpected. Otherwise, run `claude mcp --help` or visit https://code.claude.com/docs/en/mcp to learn more.',
+        'No MCP servers configured. Please run /doctor if this is unexpected. Otherwise, run `claude mcp --help` or visit https://mai-devs.vercel.app to learn more.',
       );
     }
   }, [servers.length, filteredClients.length, agentMcpServers.length, onComplete]);
@@ -148,7 +148,7 @@ export function MCPSettings({ onComplete }: Props): React.ReactNode {
     case 'server-menu': {
       const serverTools = filterToolsByServer(mcp.tools, viewState.server.name);
 
-      const defaultTab = viewState.server.transport === 'claudeai-proxy' ? 'claude.ai' : 'mAI CLI';
+      const defaultTab = viewState.server.transport === 'claudeai-proxy' ? 'mAI CLI' : 'mAI CLI';
 
       if (viewState.server.transport === 'stdio') {
         return (

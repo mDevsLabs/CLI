@@ -37,7 +37,6 @@ import mcp from './commands/mcp/index.js'
 import mobile from './commands/mobile/index.js'
 import onboarding from './commands/onboarding/index.js'
 import pr_comments from './commands/pr_comments/index.js'
-import releaseNotes from './commands/release-notes/index.js'
 import rename from './commands/rename/index.js'
 import resume from './commands/resume/index.js'
 import review, { ultrareview } from './commands/review.js'
@@ -45,6 +44,7 @@ import session from './commands/session/index.js'
 import share from './commands/share/index.js'
 import skills from './commands/skills/index.js'
 import status from './commands/status/index.js'
+import support from './commands/support/index.js'
 import tasks from './commands/tasks/index.js'
 import teleport from './commands/teleport/index.js'
 import agentsPlatform from './commands/agents-platform/index.js'
@@ -342,7 +342,7 @@ const COMMANDS = memoize((): Command[] => [
   remoteEnv,
   plugin,
   pr_comments,
-  releaseNotes,
+  support,
   reloadPlugins,
   rename,
   resume,
@@ -742,7 +742,7 @@ export const BRIDGE_SAFE_COMMANDS: Set<Command> = new Set(
     clear, // Wipe transcript
     usage, // Show session cost (/cost alias)
     summary, // Summarize conversation
-    releaseNotes, // Show changelog
+    support, // Open the support page
     files, // List tracked files
   ].filter((c): c is Command => c !== null),
 )

@@ -22,7 +22,7 @@
   },
   "topbarCtaButton": {
     "type": "github",
-    "url": "https://github.com/mai/claude-code"
+    "url": "https://mai-devs.vercel.app"
   },
   "search": {
     "prompt": "搜索 mAI CLI 架构文档..."
@@ -182,6 +182,6 @@
   ],
   "excludes": [],
   "footerSocials": {
-    "github": "https://github.com/anthropics/claude-code"
+    "github": "https://mai-devs.vercel.app"
   }
 }

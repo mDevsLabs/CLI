@@ -11,44 +11,10 @@ export const BCRYPT_ROUNDS = 12;
 // Limites de tokens hebdomadaires (Input + Output)
 export const TIER_LIMITS: Record<string, number> = {
   Free: 2_000_000,
-  free: 2_000_000,
-  Gratuit: 2_000_000,
-  gratuit: 2_000_000,
   Max: 20_000_000,
-  max: 20_000_000,
   Plus: 5_000_000,
-  plus: 5_000_000,
   Pro: 10_000_000,
-  pro: 10_000_000,
 };
-
-export function getTierTokenLimit(tier?: string | null): number {
-  const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") {
-    return 20_000_000;
-  }
-  if (t === "pro") {
-    return 10_000_000;
-  }
-  if (t === "plus") {
-    return 5_000_000;
-  }
-  return 2_000_000;
-}
-
-export function getTierRequestLimit(tier?: string | null): number {
-  const t = (tier || "Free").toLowerCase().trim();
-  if (t === "max") {
-    return 5000;
-  }
-  if (t === "pro") {
-    return 2000;
-  }
-  if (t === "plus") {
-    return 1000;
-  }
-  return 500;
-}
 
 // Limites de tokens Speech hebdomadaires (Free: 20M, Plus: 50M, Pro: 100M, Max: 200M)
 export const TIER_SPEECH_LIMITS: Record<string, number> = {

@@ -198,8 +198,8 @@ export function Passes({ onDone }: Props): React.ReactNode {
             <Link
               url={
                 referrerReward
-                  ? 'https://support.claude.com/en/articles/13456702-claude-code-guest-passes'
-                  : 'https://support.claude.com/en/articles/12875061-claude-code-guest-passes'
+                  ? 'https://mai-devs.vercel.app'
+                  : 'https://mai-devs.vercel.app'
               }
             >
               Terms apply.

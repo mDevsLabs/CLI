@@ -162,7 +162,7 @@
   "navbar": {
     "primary": {
       "type": "github",
-      "href": "https://github.com/mai/claude-code"
+      "href": "https://mai-devs.vercel.app"
     }
   },
   "search": {
@@ -178,7 +178,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/anthropics/claude-code"
+      "github": "https://mai-devs.vercel.app"
     }
   },
   "redirects": [

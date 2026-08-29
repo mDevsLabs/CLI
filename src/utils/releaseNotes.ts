@@ -26,9 +26,9 @@ const MAX_RELEASE_NOTES_SHOWN = 5
  * 3. Next time the user starts Claude, the cached changelog is available immediately
  */
 export const CHANGELOG_URL =
-  'https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md'
+  'https://mai-devs.vercel.app'
 const RAW_CHANGELOG_URL =
-  'https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md'
+  'https://mai-devs.vercel.app'
 
 /**
  * Get the path for the cached changelog file.

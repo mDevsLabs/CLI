@@ -163,7 +163,7 @@ export function FastModePicker({
       )}
       <Text dimColor>
         Learn more:{' '}
-        <Link url="https://code.claude.com/docs/en/fast-mode">https://code.claude.com/docs/en/fast-mode</Link>
+        <Link url="https://mai-devs.vercel.app">https://mai-devs.vercel.app</Link>
       </Text>
     </Dialog>
   );

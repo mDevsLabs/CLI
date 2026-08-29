@@ -119,9 +119,9 @@ export const callAutofixPr: LocalJSXCommandCall = async (
       // Honest message: the local lock is released and any in-flight
       // teleport request is aborted, but a CCR session that has already
       // started running on the cloud will continue until it completes or is
-      // cancelled from claude.ai/code.
+      // cancelled from mAI CLI/code.
       onDone(
-        `Stopped local monitoring of ${m.repo}#${m.prNumber}. Any already-running remote session continues until it finishes or is cancelled from claude.ai/code.`,
+        `Stopped local monitoring of ${m.repo}#${m.prNumber}. Any already-running remote session continues until it finishes or is cancelled from mAI CLI/code.`,
         { display: 'system' },
       )
       return null
@@ -309,7 +309,7 @@ If no fix was needed, omit <commits-pushed> and <files-changed> and explain in <
     // which a bundle-cloned source cannot do (teleport.tsx documents this).
     // Note: refs/pull/<n>/head is not a pushable ref. We do NOT pass
     // reuseOutcomeBranch — the orchestrator generates a claude/* branch and
-    // the user pushes/PRs from claude.ai/code.
+    // the user pushes/PRs from mAI CLI/code.
     let teleportFailMsg: string | undefined
     const captureFailMsg = (msg: string) => {
       teleportFailMsg = msg

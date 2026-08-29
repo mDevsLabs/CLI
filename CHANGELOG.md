@@ -7,9 +7,9 @@ All notable changes to the **mAI CLI** project are documented in this file.
 ## [0.5.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/0.5.0) - 2026-07-29
 
 ### Introducing a new mAI CLI !
-- **News**: mAI CLI is now based on Claude Code
+- **News**: mAI CLI is now based on mAI CLI
 - **API**: the mAI provider is still available and offers you the best free models for 2M tokens per week!
-- **Features**: you get roughly the same features as in Claude Code!
+- **Features**: you get roughly the same features as in mAI CLI!
 - **Modes**: discover more AI agent modes!
 
 ## [0.4.0](https://github.com/mDevsLabs/mAI-CLI/releases/tag/v0.4.0) - 2026-07-26

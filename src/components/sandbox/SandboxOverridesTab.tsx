@@ -104,7 +104,7 @@ function OverridesSelect({ onComplete, currentMode }: Props & { currentMode: Ove
         </Text>
         <Text dimColor>
           Learn more:{' '}
-          <Link url="https://code.claude.com/docs/en/sandboxing#configure-sandboxing">
+          <Link url="https://mai-devs.vercel.app">
             code.claude.com/docs/en/sandboxing#configure-sandboxing
           </Link>
         </Text>

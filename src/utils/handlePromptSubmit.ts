@@ -38,6 +38,8 @@ import { processUserInput } from './processUserInput/processUserInput.js'
 import type { QueryGuard } from './QueryGuard.js'
 import { queryCheckpoint, startQueryProfile } from './queryProfiler.js'
 import { runWithWorkload } from './workloadContext.js'
+import { checkQuotaUsage } from '../services/api/quotaCheck.js'
+import { createAssistantAPIErrorMessage } from './messages.js'
 
 function exit(): void {
   gracefulShutdownSync(0)
@@ -588,6 +590,20 @@ async function executeUserInput(params: ExecuteUserInputParams): Promise<void> {
               ? primaryCmd.value
               : undefined
           const shouldCallBeforeQuery = primaryMode === 'prompt'
+
+          if (shouldQuery) {
+            const quotaCheck = await checkQuotaUsage()
+            if (!quotaCheck.allowed) {
+              newMessages.push(
+                createAssistantAPIErrorMessage({
+                  content: quotaCheck.error || 'Quota de tokens mAI dépassé.',
+                  error: 'rate_limit',
+                }),
+              )
+              shouldQuery = false
+            }
+          }
+
           await onQuery(
             newMessages,
             abortController,

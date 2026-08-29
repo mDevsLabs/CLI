@@ -174,7 +174,7 @@ export const callTeleport: LocalJSXCommandCall = async (
     if (sessions.length === 0) {
       logEvent('tengu_teleport_null', {})
       onDone(
-        'No active sessions found on claude.ai/code.\nStart a new session at https://claude.ai/code',
+        'No active sessions found on mAI CLI/code.\nStart a new session at https://mai-devs.vercel.app',
         { display: 'system' },
       )
       return null

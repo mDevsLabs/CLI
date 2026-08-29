@@ -6,7 +6,7 @@
 
 正文段落里包含 **粗体**、*斜体*、~~删除线~~、`行内代码`、以及组合 **粗体 + _斜体_ + `code`**。还有 [一个链接](https://example.com) 指向 example.com。
 
-支持中英文混排：Claude Orange `#D77757` 是 Anthropic 的主色。Emoji：🚀 ✅ 🎯。
+支持中英文混排：mAI CLI Orange `#D77757` 是 Anthropic 的主色。Emoji：🚀 ✅ 🎯。
 
 ## 标题层级
 
@@ -48,7 +48,7 @@
 
 | 名称       | 类型     | 数量 | 备注           |
 | ---------- | :------: | ---: | -------------- |
-| Claude     | 模型     |    1 | 推荐           |
+| mAI CLI     | 模型     |    1 | 推荐           |
 | Opus 4.7   | 模型     |    2 | 最强           |
 | Haiku 4.5  | 模型     |    3 | 最快           |
 
@@ -171,7 +171,7 @@ gantt
 
 ## 行内 HTML
 
-直接写的 HTML 会被透传：<kbd>Ctrl</kbd> + <kbd>C</kbd>，<span style="color: #D77757">Claude Orange 文字</span>。
+直接写的 HTML 会被透传：<kbd>Ctrl</kbd> + <kbd>C</kbd>，<span style="color: #D77757">mAI CLI Orange 文字</span>。
 
 ## 结论
 

@@ -19,7 +19,7 @@ function formatModelPricing(costs: {
 }
 
 describe('COST_TIER constant values', () => {
-  // These verify the documented pricing from https://platform.claude.com/docs/en/about-claude/pricing
+  // These verify the documented pricing from https://mai-devs.vercel.app
   test('COST_TIER_3_15: $3/$15 (Sonnet tier)', () => {
     expect(formatModelPricing({ inputTokens: 3, outputTokens: 15 })).toBe(
       '$3/$15 per Mtok',

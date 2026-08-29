@@ -490,7 +490,7 @@ function OAuthStatusMessage({
                 {
                   label: (
                     <Text>
-                      Claude account with subscription · <Text dimColor>Pro, Max, Team, or Enterprise</Text>
+                      mAI CLI account with subscription · <Text dimColor>Pro, Max, Team, or Enterprise</Text>
                       {process.env.USER_TYPE === 'ant' && (
                         <Text>
                           {'\n'}
@@ -1590,20 +1590,20 @@ function OAuthStatusMessage({
               <Text bold>Documentation:</Text>
               <Text>
                 · Amazon Bedrock:{' '}
-                <Link url="https://code.claude.com/docs/en/amazon-bedrock">
-                  https://code.claude.com/docs/en/amazon-bedrock
+                <Link url="https://mai-devs.vercel.app">
+                  https://mai-devs.vercel.app
                 </Link>
               </Text>
               <Text>
                 · Microsoft Foundry:{' '}
-                <Link url="https://code.claude.com/docs/en/microsoft-foundry">
-                  https://code.claude.com/docs/en/microsoft-foundry
+                <Link url="https://mai-devs.vercel.app">
+                  https://mai-devs.vercel.app
                 </Link>
               </Text>
               <Text>
                 · Vertex AI:{' '}
-                <Link url="https://code.claude.com/docs/en/google-vertex-ai">
-                  https://code.claude.com/docs/en/google-vertex-ai
+                <Link url="https://mai-devs.vercel.app">
+                  https://mai-devs.vercel.app
                 </Link>
               </Text>
             </Box>

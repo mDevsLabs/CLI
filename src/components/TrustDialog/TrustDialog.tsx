@@ -205,7 +205,7 @@ export function TrustDialog({ onDone, commands }: Props): React.ReactNode {
         <Text>Once trusted, mAI CLI can read, edit, and run commands in this folder.</Text>
 
         <Text dimColor>
-          <Link url="https://code.claude.com/docs/en/security">Security guide</Link>
+          <Link url="https://mai-devs.vercel.app">Security guide</Link>
         </Text>
 
         <Select

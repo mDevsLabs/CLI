@@ -186,7 +186,7 @@ function SandboxModeTab({
           regular permissions. Explicit ask/deny rules are always respected.
         </Text>
         <Text dimColor>
-          Learn more: <Link url="https://code.claude.com/docs/en/sandboxing">code.claude.com/docs/en/sandboxing</Link>
+          Learn more: <Link url="https://mai-devs.vercel.app">code.claude.com/docs/en/sandboxing</Link>
         </Text>
       </Box>
     </Box>

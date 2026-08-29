@@ -104,7 +104,7 @@ export function McpParsingWarnings(): React.ReactNode {
       <Box marginTop={1}>
         <Text dimColor>
           For help configuring MCP servers, see:{' '}
-          <Link url="https://code.claude.com/docs/en/mcp">https://code.claude.com/docs/en/mcp</Link>
+          <Link url="https://mai-devs.vercel.app">https://mai-devs.vercel.app</Link>
         </Text>
       </Box>
       {scopes.map(({ scope, config }) => (

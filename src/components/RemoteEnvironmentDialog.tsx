@@ -15,7 +15,7 @@ import { Select } from './CustomSelect/select.js';
 import { Byline, Dialog, KeyboardShortcutHint, LoadingState } from '@anthropic/ink';
 
 const DIALOG_TITLE = 'Select Remote Environment';
-const SETUP_HINT = `Configure environments at: https://claude.ai/code`;
+const SETUP_HINT = `Configure environments at: https://mai-devs.vercel.app`;
 
 type Props = {
   onDone: (message?: string) => void;

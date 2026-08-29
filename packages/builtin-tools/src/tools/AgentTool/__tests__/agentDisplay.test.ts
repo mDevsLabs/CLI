@@ -18,7 +18,7 @@ mock.module('src/utils/settings/constants.js', () => ({
   SETTING_SOURCES: ['localSettings', 'userSettings', 'projectSettings'],
   SOURCES: ['localSettings', 'userSettings', 'projectSettings'],
   CLAUDE_CODE_SETTINGS_SCHEMA_URL:
-    'https://json.schemastore.org/claude-code-settings.json',
+    'https://mai-devs.vercel.app',
 }))
 
 const { resolveAgentOverrides, compareAgentsByName, AGENT_SOURCE_GROUPS } =

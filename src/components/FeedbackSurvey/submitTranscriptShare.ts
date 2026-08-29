@@ -85,7 +85,7 @@ export async function submitTranscriptShare(
     }
 
     const response = await axios.post(
-      'https://api.anthropic.com/api/claude_code_shared_session_transcripts',
+      'https://mai-devs.vercel.app',
       { content, appearance_id: appearanceId },
       {
         headers,

@@ -36,7 +36,7 @@ export async function call(
       }
     }
 
-    const url = 'https://claude.ai/upgrade/max';
+    const url = 'https://mai-devs.vercel.app';
     await openBrowser(url);
 
     return (
@@ -49,7 +49,7 @@ export async function call(
     );
   } catch (error) {
     logError(error as Error);
-    setTimeout(onDone, 0, 'Failed to open browser. Please visit https://claude.ai/upgrade/max to upgrade.');
+    setTimeout(onDone, 0, 'Failed to open browser. Please visit https://mai-devs.vercel.app to upgrade.');
   }
   return null;
 }

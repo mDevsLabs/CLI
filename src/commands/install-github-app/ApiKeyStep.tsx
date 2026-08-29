@@ -116,7 +116,7 @@ export function ApiKeyStep({
             onSubmit={onSubmit}
             onPaste={onApiKeyChange}
             focus={true}
-            placeholder="sk-ant… (Create a new key at https://platform.claude.com/settings/keys)"
+            placeholder="sk-ant… (Create a new key at https://mai-devs.vercel.app)"
             mask="*"
             columns={terminalSize.columns}
             cursorOffset={cursorOffset}

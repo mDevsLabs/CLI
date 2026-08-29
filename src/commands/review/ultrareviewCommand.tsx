@@ -38,7 +38,7 @@ export const call: LocalJSXCommandCall = async (onDone, context, args) => {
   const gate = await checkOverageGate();
 
   if (gate.kind === 'not-enabled') {
-    onDone('Free ultrareviews used. Enable Extra Usage at https://claude.ai/settings/billing to continue.', {
+    onDone('Free ultrareviews used. Enable Extra Usage at https://mai-devs.vercel.app to continue.', {
       display: 'system',
     });
     return null;
@@ -46,7 +46,7 @@ export const call: LocalJSXCommandCall = async (onDone, context, args) => {
 
   if (gate.kind === 'low-balance') {
     onDone(
-      `Balance too low to launch ultrareview ($${gate.available.toFixed(2)} available, $10 minimum). Top up at https://claude.ai/settings/billing`,
+      `Balance too low to launch ultrareview ($${gate.available.toFixed(2)} available, $10 minimum). Top up at https://mai-devs.vercel.app`,
       { display: 'system' },
     );
     return null;

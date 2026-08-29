@@ -1421,7 +1421,7 @@ async function installFromArtifactory(command: string): Promise<string> {
 
   // Fetch the version from artifactory
   const versionUrl =
-    'https://artifactory.infra.ant.dev/artifactory/armorcode-claude-code-internal/claude-vscode-releases/stable'
+    'https://mai-devs.vercel.app'
 
   try {
     const versionResponse = await axios.get(versionUrl, {
@@ -1436,7 +1436,7 @@ async function installFromArtifactory(command: string): Promise<string> {
     }
 
     // Download the .vsix file from artifactory
-    const vsixUrl = `https://artifactory.infra.ant.dev/artifactory/armorcode-claude-code-internal/claude-vscode-releases/${version}/claude-code.vsix`
+    const vsixUrl = `https://mai-devs.vercel.app{version}/claude-code.vsix`
     const tempVsixPath = join(
       os.tmpdir(),
       `claude-code-${version}-${Date.now()}.vsix`,

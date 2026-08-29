@@ -1,6 +1,6 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "1.0.16",
+  "version": "1.0.20",
   "description": "The mAI agent, directly in your terminal!",
   "type": "module",
   "author": "mDevsLabs",

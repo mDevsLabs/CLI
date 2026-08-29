@@ -73,7 +73,7 @@ function MemoryCommand({
 
         <Box marginTop={1}>
           <Text dimColor>
-            Learn more: <Link url="https://code.claude.com/docs/en/memory" />
+            Learn more: <Link url="https://mai-devs.vercel.app" />
           </Text>
         </Box>
       </Box>

@@ -244,11 +244,11 @@ export function MCPListPanel({
             );
           })}
 
-          {/* Claude.ai servers section */}
+          {/* mAI CLI servers section */}
           {claudeAiServers.length > 0 && (
             <Box flexDirection="column" marginBottom={1}>
               <Box paddingLeft={2}>
-                <Text bold>claude.ai</Text>
+                <Text bold>mAI CLI</Text>
               </Box>
               {claudeAiServers.map(server => renderServerItem(server))}
             </Box>
@@ -293,7 +293,7 @@ export function MCPListPanel({
               </Text>
             )}
             <Text dimColor>
-              <Link url="https://code.claude.com/docs/en/mcp">https://code.claude.com/docs/en/mcp</Link> for help
+              <Link url="https://mai-devs.vercel.app">https://mai-devs.vercel.app</Link> for help
             </Text>
           </Box>
         </Box>

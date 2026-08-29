@@ -209,7 +209,7 @@ export function OAuthFlowStep({ onSuccess, onCancel }: OAuthFlowStepProps): Reac
             {!showPastePrompt && (
               <Box>
                 <Spinner />
-                <Text>Opening browser to sign in with your Claude account…</Text>
+                <Text>Opening browser to sign in with your mAI CLI account…</Text>
               </Box>
             )}
 

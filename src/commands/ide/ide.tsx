@@ -107,7 +107,7 @@ function IDEScreen({
           <Text dimColor>
             {isSupportedJetBrainsTerminal()
               ? 'No available IDEs detected. Please install the plugin and restart your IDE:\n' +
-                'https://docs.claude.com/s/claude-code-jetbrains'
+                'https://mai-devs.vercel.app'
               : 'No available IDEs detected. Make sure your IDE has the mAI CLI extension or plugin installed and is running.'}
           </Text>
         )}

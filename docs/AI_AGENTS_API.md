@@ -1,7 +1,7 @@
 # Guide Exhaustif de l'API mAI pour Agents IA Autonomes (LLMs & Multi-Agents) 🚀🤖
 
 > **Document de référence technique et d'intégration pour Agents IA**  
-> Ce document décrit les spécifications exhaustives de l'ensemble des routes de l'API mAI (`https://mdevslabs--01a03d93d1b372e9b1fcba5dbfb23c3c.web.val.run`, `https://mai.val.run` ou base locale `/api`), leurs protocoles de communication multi-modèles (OpenAI, Anthropic, Google Gemini), les quotas, schémas de données et règles de sécurité.
+> Ce document décrit les spécifications exhaustives de l'ensemble des routes de l'API mAI (`https://mai.val.run` ou base locale `/api`), leurs protocoles de communication multi-modèles (OpenAI, Anthropic, Google Gemini), les quotas, schémas de données et règles de sécurité.
 
 ---
 
@@ -298,7 +298,7 @@ Retourne l'ensemble des clés API enregistrées avec leur compteur de requêtes 
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://mdevslabs--01a03d93d1b372e9b1fcba5dbfb23c3c.web.val.run/v1",
+  baseURL: "https://mai.val.run/v1",
   apiKey: process.env.MAI_API_KEY, // mp-xxxxxxxx
 });
 
@@ -311,7 +311,7 @@ async function main() {
   console.log("IA:", response.choices[0].message.content);
 
   // 2. Vérification des Quotas Audio
-  const usageRes = await fetch("https://mdevslabs--01a03d93d1b372e9b1fcba5dbfb23c3c.web.val.run/v1/audio/usage", {
+  const usageRes = await fetch("https://mai.val.run/v1/audio/usage", {
     headers: { Authorization: `Bearer ${process.env.MAI_API_KEY}` },
   });
   const usage = await usageRes.json();
@@ -329,7 +329,7 @@ import requests
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://mdevslabs--01a03d93d1b372e9b1fcba5dbfb23c3c.web.val.run/v1",
+    base_url="https://mai.val.run/v1",
     api_key=os.environ.get("MAI_API_KEY")
 )
 
@@ -342,7 +342,7 @@ print(completion.choices[0].message.content)
 
 # Consultation du Stockage Cloud
 storage_res = requests.get(
-    "https://mdevslabs--01a03d93d1b372e9b1fcba5dbfb23c3c.web.val.run/cloud/storage",
+    "https://mai.val.run/cloud/storage",
     headers={"Authorization": f"Bearer {os.environ.get('MAI_API_KEY')}"}
 )
 print("Stockage:", storage_res.json())

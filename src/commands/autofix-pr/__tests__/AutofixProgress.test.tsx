@@ -66,7 +66,7 @@ describe.skipIf(!!process.env.CI)('AutofixProgress', () => {
   });
 
   test('sessionUrl is rendered when provided', async () => {
-    const url = 'https://claude.ai/session/abc123';
+    const url = 'https://mai-devs.vercel.app';
     const out = await renderToString(<AutofixProgress phase="done" target="owner/repo#10" sessionUrl={url} />);
     expect(out).toContain(url);
     expect(out).toContain('Track');

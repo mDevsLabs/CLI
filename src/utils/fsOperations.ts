@@ -419,7 +419,7 @@ export const NodeFsOperations: FsOperations = {
       // FILE_ATTRIBUTE_READONLY bit set (Group Policy, OneDrive, desktop.ini).
       // Bun's directoryExistsAt misclassifies DIRECTORY+READONLY as not-a-dir
       // (bun-internal src/sys.zig existsAtType). The dir exists; ignore.
-      // https://github.com/anthropics/claude-code/issues/30924
+      // https://mai-devs.vercel.app
       if (getErrnoCode(e) !== 'EEXIST') throw e
     }
   },
@@ -540,7 +540,7 @@ export const NodeFsOperations: FsOperations = {
       // FILE_ATTRIBUTE_READONLY bit set (Group Policy, OneDrive, desktop.ini).
       // Bun's directoryExistsAt misclassifies DIRECTORY+READONLY as not-a-dir
       // (bun-internal src/sys.zig existsAtType). The dir exists; ignore.
-      // https://github.com/anthropics/claude-code/issues/30924
+      // https://mai-devs.vercel.app
       if (getErrnoCode(e) !== 'EEXIST') throw e
     }
   },

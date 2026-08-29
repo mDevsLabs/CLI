@@ -196,7 +196,7 @@ export const SOURCES = [
 
 /**
  * The JSON Schema URL for mAI CLI settings
- * You can edit the contents at https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/claude-code-settings.json
+ * You can edit the contents at https://mai-devs.vercel.app
  */
 export const CLAUDE_CODE_SETTINGS_SCHEMA_URL =
-  'https://json.schemastore.org/claude-code-settings.json'
+  'https://mai-devs.vercel.app'

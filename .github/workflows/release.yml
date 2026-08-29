@@ -1,22 +1,45 @@
 name: Release
 
+# Canaux de publication :
+#   - push sur `canary` → npm canal bêta (dist-tag `beta`), version unique par run
+#   - push sur `main`   → npm stable (dist-tag `latest`)
+#   - manuel (workflow_dispatch) → canal au choix, version explicite optionnelle
+#
+# Gestion des versions (jamais de `npm publish --force`) :
+#   - bêta    : `<base>-beta.<run_number>` — unique par construction ;
+#               en cas de re-run après publication, suffixe `.<run_attempt>`
+#   - stable  : version de package.json ; si déjà publiée ou <= latest npm,
+#               bump patch automatique pour forcer la publication
+#   - `--tag beta` explicite : le canal bêta n'écrase jamais `latest`
+
 on:
+  push:
+    branches:
+      - canary
+      - main
   workflow_dispatch:
     inputs:
-      version:
-        description: "Version (exemple : v1.9.0)"
+      channel:
+        description: "Canal de publication"
         required: true
-        type: string
-      beta:
-        description: "Pre-release npm bêta"
+        type: choice
+        default: stable
+        options:
+          - stable
+          - beta
+      version:
+        description: "Version explicite (optionnel, ex. v1.9.0 ou v1.9.0-beta.1)"
         required: false
-        type: boolean
-        default: false
+        type: string
 
 permissions:
   contents: write
   packages: write
   id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -36,60 +59,127 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Resolve channel
+        id: channel
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            CHANNEL="${{ github.event.inputs.channel }}"
+          elif [ "${{ github.ref_name }}" = "canary" ]; then
+            CHANNEL="beta"
+          else
+            CHANNEL="stable"
+          fi
+          echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+          echo "Canal de publication : $CHANNEL"
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Type check
         run: bun run typecheck
 
-      - name: Update package.json version
+      - name: Compute version (beta)
+        if: steps.channel.outputs.channel == 'beta'
         run: |
-          VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          CLEAN_VERSION="${VERSION#v}"
-          echo "Setting package version to $CLEAN_VERSION"
-          npm version "$CLEAN_VERSION" --no-git-tag-version --allow-same-version
+          PKG=$(node -p "require('./package.json').name")
+          BASE=$(node -p "require('./package.json').version.split('-')[0]")
+          EXPLICIT="${{ github.event.inputs.version }}"
+          if [ -n "$EXPLICIT" ]; then
+            VERSION="${EXPLICIT#v}"
+            case "$VERSION" in
+              *-*) : ;;
+              *) echo "::error::Une version bêta explicite doit porter un suffixe de pré-release (ex. 1.9.0-beta.1), pas '$VERSION'." ; exit 1 ;;
+            esac
+            if npm view "$PKG@$VERSION" version >/dev/null 2>&1; then
+              echo "::error::La version $VERSION existe déjà sur npm — choisissez-en une autre."
+              exit 1
+            fi
+          else
+            VERSION="${BASE}-beta.${{ github.run_number }}"
+            if npm view "$PKG@$VERSION" version >/dev/null 2>&1; then
+              VERSION="${VERSION}.${{ github.run_attempt }}"
+            fi
+          fi
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Version bêta : $VERSION"
+
+      - name: Compute version (stable)
+        if: steps.channel.outputs.channel == 'stable'
+        run: |
+          PKG=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version.split('-')[0]")
+          EXPLICIT="${{ github.event.inputs.version }}"
+          if [ -n "$EXPLICIT" ]; then
+            VERSION="${EXPLICIT#v}"
+            case "$VERSION" in
+              *-*) echo "::error::Une version stable explicite ne doit pas porter de suffixe de pré-release ('$VERSION') — publez-la sur le canal bêta." ; exit 1 ;;
+            esac
+            if npm view "$PKG@$VERSION" version >/dev/null 2>&1; then
+              echo "::error::La version $VERSION existe déjà sur npm — choisissez-en une autre."
+              exit 1
+            fi
+            LATEST=$(npm view "$PKG" dist-tags.latest 2>/dev/null || echo "0.0.0")
+            RANK=$(node -e "const k=v=>v.split('.').reduce((a,n)=>a*10000+ +n,1); console.log(k('$VERSION')>k('$LATEST')?'1':'0')")
+            if [ "$RANK" != "1" ]; then
+              echo "::error::La version stable $VERSION est <= latest npm ($LATEST) — elle rétrograderait le canal stable. Bumpez la version."
+              exit 1
+            fi
+          else
+            LATEST=$(npm view "$PKG" dist-tags.latest 2>/dev/null || echo "0.0.0")
+            RANK=$(node -e "const k=v=>v.split('.').reduce((a,n)=>a*10000+ +n,1); console.log(k('$VERSION')>k('$LATEST')?'1':'0')")
+            if [ "$RANK" != "1" ]; then
+              echo "::notice::Version repo ($VERSION) <= latest npm ($LATEST) — alignement sur le prochain patch"
+              VERSION=$(node -e "const [x,y,z]='$LATEST'.split('.').map(Number); console.log([x,y,z+1].join('.'))")
+            fi
+            if npm view "$PKG@$VERSION" version >/dev/null 2>&1; then
+              echo "::notice::Version $VERSION déjà publiée — bump patch automatique"
+              VERSION=$(node -e "const [a,b,c]='$VERSION'.split('.').map(Number); console.log([a,b,c+1].join('.'))")
+            fi
+          fi
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Version stable : $VERSION"
 
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN || secrets.NODE_AUTH_TOKEN }}
         run: |
-          VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          IS_BETA="${{ github.event.inputs.beta }}"
-          if [ "$IS_BETA" = "true" ] || [[ "$VERSION" =~ beta ]]; then
+          if [ "${{ steps.channel.outputs.channel }}" = "beta" ]; then
             npm publish --access public --tag beta
-          elif [[ "$VERSION" =~ (alpha|rc) ]]; then
-            npm publish --access public --tag next
           else
-            npm publish --access public
+            npm publish --access public --tag latest
           fi
 
       - name: Generate changelog
         id: changelog
         run: |
-          VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          PREV_TAG=$(git tag --sort=-version:refname | grep -v "^${VERSION#v}$" | head -1)
-
+          TAG="v${{ env.VERSION }}"
+          PREV_TAG=$(git tag --sort=-version:refname | grep -vx "$TAG" | head -1)
           if [ -n "$PREV_TAG" ]; then
-            COMMITS=$(git log "${PREV_TAG}..HEAD" --pretty=format:"- %s (%h)" --no-merges)
+            COMMITS=$(git log "$PREV_TAG..HEAD" --pretty=format:"- %s (%h)" --no-merges)
+            COMPARE="https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${TAG}"
           else
             COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges -20)
+            COMPARE="https://github.com/${{ github.repository }}/commits/${TAG}"
           fi
-
           {
             echo "commits<<EOF"
             echo "$COMMITS"
             echo "EOF"
+            echo "compare=$COMPARE"
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2, 2026-04-25
         with:
-          tag_name: ${{ github.event.inputs.version || github.ref_name }}
-          name: ${{ github.event.inputs.version || github.ref_name }}
+          tag_name: v${{ env.VERSION }}
+          name: v${{ env.VERSION }}
           body: |
-            ## What's Changed on ${VERSION} ?
+            ## What's Changed in v${{ env.VERSION }} ?
 
             ${{ steps.changelog.outputs.commits }}
 
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG:-HEAD}...${{ github.event.inputs.version || github.ref_name }}
+            **Full Changelog**: ${{ steps.changelog.outputs.compare }}
           draft: false
-          prerelease: ${{ github.event.inputs.beta == true || github.event.inputs.beta == 'true' || contains(github.event.inputs.version || github.ref_name, 'rc') || contains(github.event.inputs.version || github.ref_name, 'beta') || contains(github.event.inputs.version || github.ref_name, 'alpha') }}
+          prerelease: ${{ steps.channel.outputs.channel == 'beta' }}
+          make_latest: ${{ steps.channel.outputs.channel == 'stable' }}

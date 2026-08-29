@@ -113,19 +113,39 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
     }
   });
 
-  function handleSaveToken(token: string) {
+  async function handleSaveAuth(token: string, directApiKey?: string) {
+    let resolvedApiKey = directApiKey;
+    if (!resolvedApiKey) {
+      try {
+        const res = await fetch('https://mai.val.run/api-keys', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const json = (await res.json()) as { keys?: { api_key: string }[] };
+          if (json.keys && json.keys.length > 0) {
+            resolvedApiKey = json.keys[0].api_key;
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    const finalApiKey = resolvedApiKey || token;
+
     updateSettingsForSource('userSettings', {
       env: {
         MAI_TOKEN: token,
-        OPENAI_API_KEY: token,
-        OPENAI_BASE_URL: 'https://mprojects.val.run',
+        MAI_API_KEY: finalApiKey,
+        OPENAI_API_KEY: finalApiKey,
+        OPENAI_BASE_URL: 'https://mai.val.run/v1',
         CLAUDE_CODE_USE_OPENAI: '1',
       },
       modelType: 'openai',
     });
     process.env.MAI_TOKEN = token;
-    process.env.OPENAI_API_KEY = token;
-    process.env.OPENAI_BASE_URL = 'https://mprojects.val.run';
+    process.env.MAI_API_KEY = finalApiKey;
+    process.env.OPENAI_API_KEY = finalApiKey;
+    process.env.OPENAI_BASE_URL = 'https://mai.val.run/v1';
     process.env.CLAUDE_CODE_USE_OPENAI = '1';
     delete process.env.CLAUDE_CODE_USE_BEDROCK;
     delete process.env.AWS_BEARER_TOKEN_BEDROCK;
@@ -136,7 +156,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
     setErrorMsg(null);
     setInfoMsg(null);
     try {
-      const endpoint = mode === 'login' ? 'https://mprojects.val.run/login' : 'https://mprojects.val.run/register';
+      const endpoint = mode === 'login' ? 'https://mai.val.run/login' : 'https://mai.val.run/register';
       const body =
         mode === 'login'
           ? { email: email.trim(), password }
@@ -155,7 +175,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
         setInfoMsg(`A 6-digit code has been sent to ${targetEmail}.`);
         setLoading(false);
       } else if (res.ok && data.token) {
-        handleSaveToken(data.token);
+        await handleSaveAuth(data.token, data.apiKey);
         props.onDone(true);
       } else {
         setErrorMsg(data.error || (mode === 'login' ? 'Login failed' : 'Registration failed'));
@@ -178,7 +198,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
     try {
       const targetEmail = verifiedEmail || email.trim();
       const endpoint =
-        mode === 'login' ? 'https://mprojects.val.run/verify-login' : 'https://mprojects.val.run/verify-register';
+        mode === 'login' ? 'https://mai.val.run/verify-login' : 'https://mai.val.run/verify-register';
       const body =
         mode === 'login'
           ? { email: targetEmail, code: code.trim() }
@@ -191,7 +211,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
       });
       const data = await res.json();
       if (res.ok && data.token) {
-        handleSaveToken(data.token);
+        await handleSaveAuth(data.token, data.apiKey);
         props.onDone(true);
       } else {
         setErrorMsg(data.error || 'Code verification failed');
@@ -210,7 +230,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
     setInfoMsg(null);
     try {
       const targetEmail = verifiedEmail || email.trim();
-      const res = await fetch('https://mprojects.val.run/resend-code', {
+      const res = await fetch('https://mai.val.run/resend-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: targetEmail, action: mode }),

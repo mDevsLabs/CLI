@@ -34,7 +34,7 @@ import { registerCleanup } from '../utils/cleanupRegistry.js';
 // TODO(prod-hardening): OAuth token may go stale over the 30min poll;
 // consider refresh.
 
-export const CCR_TERMS_URL = 'https://code.claude.com/docs/en/claude-code-on-the-web';
+export const CCR_TERMS_URL = 'https://mai-devs.vercel.app';
 
 export function getUltraplanTimeoutMs(): number {
   return getFeatureValue_CACHED_MAY_BE_STALE('tengu_ultraplan_timeout_seconds', 1800) * 1000;

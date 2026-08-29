@@ -113,6 +113,12 @@ export async function getAnthropicClient({
     ...(process.env.ANTHROPIC_AUTH_NONCE
       ? { 'x-auth-nonce': process.env.ANTHROPIC_AUTH_NONCE }
       : {}),
+    ...(process.env.MAI_TOKEN
+      ? {
+          'x-mai-token': process.env.MAI_TOKEN,
+          'x-api-key': process.env.MAI_TOKEN,
+        }
+      : {}),
   }
 
   // Log API client configuration for HFI debugging
