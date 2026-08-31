@@ -10,11 +10,11 @@ export function General(): React.ReactNode {
         <Box flexDirection="column">
           <Text>
             <Text bold>1. </Text>
-            <Text>Ask a question or describe a task — Claude will explore your code and respond.</Text>
+            <Text>Ask a question or describe a task — mAI CLI will explore your code and respond.</Text>
           </Text>
           <Text>
             <Text bold>2. </Text>
-            <Text>When Claude wants to edit files or run commands, you review and approve each action.</Text>
+            <Text>When mAI CLI wants to edit files or run commands, you review and approve each action.</Text>
           </Text>
           <Text>
             <Text bold>3. </Text>

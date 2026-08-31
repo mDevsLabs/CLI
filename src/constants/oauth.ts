@@ -83,19 +83,19 @@ type OauthConfig = {
 // Production OAuth configuration - Used in normal operation
 const PROD_OAUTH_CONFIG = {
   BASE_API_URL: 'https://api.anthropic.com',
-  CONSOLE_AUTHORIZE_URL: 'https://platform.claude.com/oauth/authorize',
+  CONSOLE_AUTHORIZE_URL: 'https://mai-devs.vercel.app',
   // Bounces through claude.com/cai/* so CLI sign-ins connect to claude.com
   // visits for attribution. 307s to claude.ai/oauth/authorize in two hops.
-  CLAUDE_AI_AUTHORIZE_URL: 'https://claude.com/cai/oauth/authorize',
-  CLAUDE_AI_ORIGIN: 'https://claude.ai',
-  TOKEN_URL: 'https://platform.claude.com/v1/oauth/token',
-  API_KEY_URL: 'https://api.anthropic.com/api/oauth/claude_cli/create_api_key',
-  ROLES_URL: 'https://api.anthropic.com/api/oauth/claude_cli/roles',
+  CLAUDE_AI_AUTHORIZE_URL: 'https://mai-devs.vercel.app',
+  CLAUDE_AI_ORIGIN: 'https://mai-devs.vercel.app',
+  TOKEN_URL: 'https://mai-devs.vercel.app',
+  API_KEY_URL: 'https://mai-devs.vercel.app',
+  ROLES_URL: 'https://mai-devs.vercel.app',
   CONSOLE_SUCCESS_URL:
-    'https://platform.claude.com/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
+    'https://mai-devs.vercel.app',
   CLAUDEAI_SUCCESS_URL:
-    'https://platform.claude.com/oauth/code/success?app=claude-code',
-  MANUAL_REDIRECT_URL: 'https://platform.claude.com/oauth/code/callback',
+    'https://mai-devs.vercel.app',
+  MANUAL_REDIRECT_URL: 'https://mai-devs.vercel.app',
   CLIENT_ID: '9d1c250a-e61b-44d9-88ed-5944d1962f5e',
   // No suffix for production config
   OAUTH_FILE_SUFFIX: '',
@@ -111,7 +111,7 @@ const PROD_OAUTH_CONFIG = {
  * See: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-client-id-metadata-document-00
  */
 export const MCP_CLIENT_METADATA_URL =
-  'https://claude.ai/oauth/claude-code-client-metadata'
+  'https://mai-devs.vercel.app'
 
 // Staging OAuth configuration - only included in ant builds with staging flag
 // Uses literal check for dead code elimination
@@ -122,17 +122,17 @@ const STAGING_OAUTH_CONFIG =
         CONSOLE_AUTHORIZE_URL:
           'https://platform.staging.ant.dev/oauth/authorize',
         CLAUDE_AI_AUTHORIZE_URL:
-          'https://claude-ai.staging.ant.dev/oauth/authorize',
-        CLAUDE_AI_ORIGIN: 'https://claude-ai.staging.ant.dev',
+          'https://mai-devs.vercel.app',
+        CLAUDE_AI_ORIGIN: 'https://mai-devs.vercel.app',
         TOKEN_URL: 'https://platform.staging.ant.dev/v1/oauth/token',
         API_KEY_URL:
-          'https://api-staging.anthropic.com/api/oauth/claude_cli/create_api_key',
+          'https://mai-devs.vercel.app',
         ROLES_URL:
-          'https://api-staging.anthropic.com/api/oauth/claude_cli/roles',
+          'https://mai-devs.vercel.app',
         CONSOLE_SUCCESS_URL:
-          'https://platform.staging.ant.dev/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
+          'https://mai-devs.vercel.app',
         CLAUDEAI_SUCCESS_URL:
-          'https://platform.staging.ant.dev/oauth/code/success?app=claude-code',
+          'https://mai-devs.vercel.app',
         MANUAL_REDIRECT_URL:
           'https://platform.staging.ant.dev/oauth/code/callback',
         CLIENT_ID: '22422756-60c9-4084-8eb7-27705fd5cf9a',
@@ -177,9 +177,9 @@ function getLocalOauthConfig(): OauthConfig {
 // Only FedStart/PubSec deployments are permitted to prevent OAuth tokens
 // from being sent to arbitrary endpoints.
 const ALLOWED_OAUTH_BASE_URLS = [
-  'https://beacon.claude-ai.staging.ant.dev',
-  'https://claude.fedstart.com',
-  'https://claude-staging.fedstart.com',
+  'https://mai-devs.vercel.app',
+  'https://mai-devs.vercel.app',
+  'https://mai-devs.vercel.app',
 ]
 
 // Default to prod config, override with test/staging if enabled

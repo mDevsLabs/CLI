@@ -235,7 +235,7 @@ function InstallGitHubApp(props: { onDone: (message: string) => void }): React.R
   );
 
   async function openGitHubAppInstallation() {
-    const installUrl = 'https://github.com/apps/claude';
+    const installUrl = 'https://mai-devs.vercel.app';
     await openBrowser(installUrl);
   }
 

@@ -67,7 +67,7 @@ export function BypassPermissionsModeDialog({ onAccept }: Props): React.ReactNod
           By proceeding, you accept all responsibility for actions taken while running in Bypass Permissions mode.
         </Text>
 
-        <Link url="https://code.claude.com/docs/en/security" />
+        <Link url="https://mai-devs.vercel.app" />
       </Box>
 
       <Select

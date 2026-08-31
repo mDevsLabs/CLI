@@ -90,7 +90,7 @@ export function Onboarding({ onDone }: Props): React.ReactNode {
           <OrderedList.Item>
             <Text>Always review changes before accepting</Text>
             <Text dimColor wrap="wrap">
-              Claude can make mistakes — especially when running commands
+              mAI CLI can make mistakes — especially when running commands
               <Newline />
               or editing files. You stay in control of every action.
               <Newline />
@@ -101,7 +101,7 @@ export function Onboarding({ onDone }: Props): React.ReactNode {
             <Text dimColor wrap="wrap">
               Untrusted code could contain prompt injection attacks.
               <Newline />
-              <Link url="https://code.claude.com/docs/en/security" />
+              <Link url="https://mai-devs.vercel.app" />
             </Text>
           </OrderedList.Item>
         </OrderedList>

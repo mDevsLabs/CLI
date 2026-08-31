@@ -96,182 +96,182 @@ export const MAI_MODELS: MaiModel[] = [
   },
   {
     id: 'anthropic/claude-3-haiku',
-    name: 'Claude 3 Haiku',
+    name: 'mAI CLI 3 Haiku',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 4096,
   },
   {
     id: 'anthropic/claude-fable-5',
-    name: 'Claude Fable 5',
+    name: 'mAI CLI Fable 5',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-fable-5:batch',
-    name: 'Claude Fable 5 (batch)',
+    name: 'mAI CLI Fable 5 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-haiku-4.5',
-    name: 'Claude Haiku 4.5',
+    name: 'mAI CLI Haiku 4.5',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-haiku-4.5:batch',
-    name: 'Claude Haiku 4.5 (batch)',
+    name: 'mAI CLI Haiku 4.5 (batch)',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-opus-4',
-    name: 'Claude Opus 4',
+    name: 'mAI CLI Opus 4',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 32000,
   },
   {
     id: 'anthropic/claude-opus-4.1',
-    name: 'Claude Opus 4.1',
+    name: 'mAI CLI Opus 4.1',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 32000,
   },
   {
     id: 'anthropic/claude-opus-4.1:batch',
-    name: 'Claude Opus 4.1 (batch)',
+    name: 'mAI CLI Opus 4.1 (batch)',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 32000,
   },
   {
     id: 'anthropic/claude-opus-4.5',
-    name: 'Claude Opus 4.5',
+    name: 'mAI CLI Opus 4.5',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-opus-4.5:batch',
-    name: 'Claude Opus 4.5 (batch)',
+    name: 'mAI CLI Opus 4.5 (batch)',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-opus-4.6',
-    name: 'Claude Opus 4.6',
+    name: 'mAI CLI Opus 4.6',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.6:batch',
-    name: 'Claude Opus 4.6 (batch)',
+    name: 'mAI CLI Opus 4.6 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.7',
-    name: 'Claude Opus 4.7',
+    name: 'mAI CLI Opus 4.7',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.7-fast',
-    name: 'Claude Opus 4.7 (Fast)',
+    name: 'mAI CLI Opus 4.7 (Fast)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.7:batch',
-    name: 'Claude Opus 4.7 (batch)',
+    name: 'mAI CLI Opus 4.7 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.8',
-    name: 'Claude Opus 4.8',
+    name: 'mAI CLI Opus 4.8',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.8-fast',
-    name: 'Claude Opus 4.8 (Fast)',
+    name: 'mAI CLI Opus 4.8 (Fast)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-4.8:batch',
-    name: 'Claude Opus 4.8 (batch)',
+    name: 'mAI CLI Opus 4.8 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-5',
-    name: 'Claude Opus 5',
+    name: 'mAI CLI Opus 5',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-opus-5-fast',
-    name: 'Claude Opus 5 (Fast)',
+    name: 'mAI CLI Opus 5 (Fast)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-sonnet-4',
-    name: 'Claude Sonnet 4',
+    name: 'mAI CLI Sonnet 4',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-sonnet-4.5',
-    name: 'Claude Sonnet 4.5',
+    name: 'mAI CLI Sonnet 4.5',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-sonnet-4.5:batch',
-    name: 'Claude Sonnet 4.5 (batch)',
+    name: 'mAI CLI Sonnet 4.5 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 64000,
   },
   {
     id: 'anthropic/claude-sonnet-4.6',
-    name: 'Claude Sonnet 4.6',
+    name: 'mAI CLI Sonnet 4.6',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-sonnet-5',
-    name: 'Claude Sonnet 5',
+    name: 'mAI CLI Sonnet 5',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: 'anthropic/claude-sonnet-5:batch',
-    name: 'Claude Sonnet 5 (batch)',
+    name: 'mAI CLI Sonnet 5 (batch)',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
@@ -2378,28 +2378,28 @@ export const MAI_MODELS: MaiModel[] = [
   },
   {
     id: '~anthropic/claude-fable-latest',
-    name: 'Claude Fable Latest',
+    name: 'mAI CLI Fable Latest',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: '~anthropic/claude-haiku-latest',
-    name: 'Claude Haiku Latest',
+    name: 'mAI CLI Haiku Latest',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 64000,
   },
   {
     id: '~anthropic/claude-opus-latest',
-    name: 'Claude Opus Latest',
+    name: 'mAI CLI Opus Latest',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
   },
   {
     id: '~anthropic/claude-sonnet-latest',
-    name: 'Claude Sonnet Latest',
+    name: 'mAI CLI Sonnet Latest',
     provider: 'mAI',
     maxContext: 1000000,
     maxOutput: 128000,
@@ -2464,14 +2464,22 @@ export function getMaiModelMaxOutput(id: string): number {
 
 export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
   try {
-    const token = process.env.MAI_TOKEN || process.env.OPENAI_API_KEY
+    const token =
+      process.env.MAI_API_KEY ||
+      process.env.OPENAI_API_KEY ||
+      process.env.MAI_TOKEN
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     }
     if (token) {
       headers['Authorization'] = `Bearer ${token}`
+      headers['x-mai-token'] = token
+      headers['x-api-key'] = token
     }
-    const res = await fetch('https://mprojects.val.run/v1/models', { headers })
+    const baseUrl = (process.env.OPENAI_BASE_URL || 'https://mai.val.run')
+      .replace(/\/+$/, '')
+      .replace(/\/v1$/, '')
+    const res = await fetch(`${baseUrl}/v1/models`, { headers })
     if (res.ok) {
       const json = await res.json()
       const data = Array.isArray(json) ? json : json.data || []

@@ -51,7 +51,7 @@ export function ExistingWorkflowStep({ repoName, onSelectAction }: ExistingWorkf
       <Box marginTop={1}>
         <Text dimColor>
           View the latest workflow template at:{' '}
-          <Text color="claude">https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml</Text>
+          <Text color="claude">https://mai-devs.vercel.app</Text>
         </Text>
       </Box>
     </Box>

@@ -109,7 +109,7 @@ export const call: LocalCommandCall = async args => {
     return {
       type: 'text' as const,
       value:
-        'Voice mode requires a Claude.ai account. Please run /login to sign in.',
+        'Voice mode requires a mAI CLI account. Please run /login to sign in.',
     }
   }
 

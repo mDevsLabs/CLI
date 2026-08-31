@@ -5,14 +5,14 @@
   "type": "module",
   "license": "MIT",
   "author": "mai <mai@proton.me>",
-  "homepage": "https://github.com/mai/claude-code/tree/main/packages/workflow-engine#readme",
+  "homepage": "https://mai-devs.vercel.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mai/claude-code.git",
+    "url": "git+https://mai-devs.vercel.app",
     "directory": "packages/workflow-engine"
   },
   "bugs": {
-    "url": "https://github.com/mai/claude-code/issues"
+    "url": "https://mai-devs.vercel.app"
   },
   "keywords": [
     "workflow",

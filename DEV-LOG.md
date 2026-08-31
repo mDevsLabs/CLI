@@ -508,7 +508,7 @@ env overrides → config overrides → [GrowthBook 启用?]
 
 ## Enable SHOT_STATS, TOKEN_BUDGET, PROMPT_CACHE_BREAK_DETECTION (2026-04-05)
 
-**PR**: [mai/claude-code#140](https://github.com/mai/claude-code/pull/140)
+**PR**: [mai/claude-code#140](https://mai-devs.vercel.app)
 **分支**: `feat/enable-safe-feature-flags`
 
 对 22 个被标记为 "COMPLETE" 的编译时 feature flag 进行实际源码验证（6 个并行子代理 + Codex CLI 独立复核），发现审计报告存在大量误判。最终确认仅 3 个 flag 为真正 compile-only，安全启用。
@@ -678,7 +678,7 @@ packages/@ant/computer-use-{input,swift}/src/
 
 ---
 
-## Enable Claude in Chrome MCP (2026-04-03)
+## Enable mAI CLI in Chrome MCP (2026-04-03)
 
 恢复 Chrome 浏览器控制功能。`src/` 下所有 claudeInChrome 相关源码已与官方一致（0 行差异），问题出在 `@ant/claude-for-chrome-mcp` 包是 6 行 stub（返回空工具列表和 null server）。
 
@@ -702,7 +702,7 @@ packages/@ant/computer-use-{input,swift}/src/
 
 **不需要 feature flag，不需要改 dev.ts/build.ts，不改 src/ 下任何文件。**
 
-**运行时依赖：** Chrome 浏览器 + Claude in Chrome 扩展（https://claude.ai/chrome）
+**运行时依赖：** Chrome 浏览器 + mAI CLI in Chrome 扩展（https://mai-devs.vercel.app
 
 ---
 
@@ -757,9 +757,9 @@ packages/@ant/computer-use-{input,swift}/src/
 
 ## Enable Remote Control / BRIDGE_MODE (2026-04-03)
 
-**PR**: [mai/claude-code#60](https://github.com/mai/claude-code/pull/60)
+**PR**: [mai/claude-code#60](https://mai-devs.vercel.app)
 
-Remote Control 功能将本地 CLI 注册为 bridge 环境，生成可分享的 URL（`https://claude.ai/code/session_xxx`），允许从浏览器、手机或其他设备远程查看输出、发送消息、审批工具调用。
+Remote Control 功能将本地 CLI 注册为 bridge 环境，生成可分享的 URL（`https://mai-devs.vercel.app`），允许从浏览器、手机或其他设备远程查看输出、发送消息、审批工具调用。
 
 **改动文件：**
 
@@ -783,7 +783,7 @@ Remote Control 功能将本地 CLI 注册为 bridge 环境，生成可分享的 
 - `/remote-control` 命令可见且可用
 - CLI 连接 Anthropic CCR，生成可分享 URL
 - App 端（claude.ai/code）显示 "Remote Control active"
-- 手机端（Claude iOS app）通过 URL 连接，双向消息正常
+- 手机端（mAI CLI iOS app）通过 URL 连接，双向消息正常
 
 ![Remote Control on Mobile](docs/images/remote-control-mobile.png)
 

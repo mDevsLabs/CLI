@@ -136,6 +136,7 @@ import {
   isCacheWarningEnabled,
   shouldShowCacheWarning,
 } from './utils/cacheWarning.js'
+import { checkQuotaUsage } from './services/api/quotaCheck.js'
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 const snipModule = feature('HISTORY_SNIP')
@@ -748,7 +749,7 @@ async function* queryLoop(
 
     const assistantMessages: AssistantMessage[] = []
     const toolResults: (UserMessage | AttachmentMessage)[] = []
-    // @see https://docs.claude.com/en/docs/build-with-claude/tool-use
+    // @see https://mai-devs.vercel.app
     // Note: stop_reason === 'tool_use' is unreliable -- it's not always set correctly.
     // Set during streaming whenever a tool_use block arrives — the sole
     // loop-exit signal. If false after streaming, we're done (modulo stop-hook retry).
@@ -896,6 +897,17 @@ async function* queryLoop(
         try {
           let streamingFallbackOccured = false
           queryCheckpoint('query_api_streaming_start')
+
+          // Vérification systématique du quota sur /usage avec jeton JWT avant chaque message
+          const quotaCheck = await checkQuotaUsage()
+          if (!quotaCheck.allowed) {
+            yield createAssistantAPIErrorMessage({
+              content: quotaCheck.error || 'Quota de tokens mAI dépassé.',
+              error: 'rate_limit',
+            })
+            return { reason: 'model_error', error: quotaCheck.error }
+          }
+
           for await (const message of deps.callModel({
             messages: prependUserContext(messagesForQuery, userContext),
             systemPrompt: fullSystemPrompt,

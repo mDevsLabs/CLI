@@ -7,7 +7,7 @@ import {
 import { getGroveNoticeConfig, getGroveSettings, isQualifiedForGrove } from '../../services/api/grove.js';
 import type { LocalJSXCommandOnDone } from '../../types/command.js';
 
-const FALLBACK_MESSAGE = 'Review and manage your privacy settings at https://claude.ai/settings/data-privacy-controls';
+const FALLBACK_MESSAGE = 'Review and manage your privacy settings at https://mai-devs.vercel.app';
 
 export async function call(onDone: LocalJSXCommandOnDone): Promise<React.ReactNode | null> {
   const qualified = await isQualifiedForGrove();

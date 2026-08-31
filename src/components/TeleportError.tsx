@@ -99,12 +99,12 @@ export function TeleportError({
       return (
         <Dialog title="Log in to Claude" onCancel={onCancel}>
           <Box flexDirection="column">
-            <Text dimColor>Teleport requires a Claude.ai account.</Text>
+            <Text dimColor>Teleport requires a mAI CLI account.</Text>
             <Text dimColor>Your Claude Pro/Max subscription will be used by mAI CLI.</Text>
           </Box>
           <Select
             options={[
-              { label: 'Login with Claude account', value: 'login' },
+              { label: 'Login with mAI CLI account', value: 'login' },
               { label: 'Exit', value: 'exit' },
             ]}
             onChange={handleLoginDialogSelect}

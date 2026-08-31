@@ -216,7 +216,7 @@ export async function openCurrentSessionInDesktop(): Promise<{
     return {
       success: false,
       error:
-        'Claude Desktop is not installed. Install it from https://claude.ai/download',
+        'Claude Desktop is not installed. Install it from https://mai-devs.vercel.app',
     }
   }
 

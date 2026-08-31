@@ -21,7 +21,7 @@ import { getGlobalConfig } from '../../utils/config.js'
 
 export interface AuthStatus {
   subscription: {
-    /** true when a claude.ai OAuth token is present in local storage */
+    /** true when a mAI CLI OAuth token is present in local storage */
     active: boolean
     /** subscription tier, or null when not logged in / API-key-only mode */
     plan: 'free' | 'pro' | 'max' | 'team' | 'enterprise' | 'unknown' | null

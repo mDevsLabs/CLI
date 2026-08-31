@@ -525,7 +525,7 @@ export function MCPRemoteServerMenu({
         ) : (
           <>
             <Text>
-              This will open claude.ai in the browser. Find the MCP server in the list and click &quot;Disconnect&quot;.
+              This will open mAI CLI in the browser. Find the MCP server in the list and click &quot;Disconnect&quot;.
             </Text>
             <Box marginLeft={3} flexDirection="column">
               <Text color="permission">

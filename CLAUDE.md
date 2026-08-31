@@ -110,7 +110,7 @@ bun run docs:dev
 
 ### Core Loop
 
-- **`src/query.ts`** — The main API query function. Sends messages to Claude API, handles streaming responses, processes tool calls, and manages the conversation turn loop.
+- **`src/query.ts`** — The main API query function. Sends messages to mAI CLI API, handles streaming responses, processes tool calls, and manages the conversation turn loop.
 - **`src/QueryEngine.ts`** — Higher-level orchestrator wrapping `query()`. Manages conversation state, compaction, file history snapshots, attribution, and turn-level bookkeeping. Used by the REPL screen.
 - **`src/screens/REPL.tsx`** — The interactive REPL screen (React/Ink component). Handles user input, message display, tool permission prompts, and keyboard shortcuts.
 
@@ -408,8 +408,8 @@ Impeccable 设计上下文保存在 `.impeccable.md` 中。设计 Web UI（RCS �
 
 ### 品牌色
 
-- 主色：Claude Orange `#D77757`（terra cotta）
-- 辅色：Claude Blue `#5769F7`
+- 主色：mAI CLI Orange `#D77757`（terra cotta）
+- 辅色：mAI CLI Blue `#5769F7`
 - 暗色模式使用温暖的深色表面（非冷蓝黑色）
 
 ### 目标用户

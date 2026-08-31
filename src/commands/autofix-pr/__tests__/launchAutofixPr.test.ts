@@ -54,7 +54,7 @@ const checkEligibilityMock = mock(() =>
   Promise.resolve({ eligible: true as const }),
 )
 const getSessionUrlMock = mock(
-  (id: string) => `https://claude.ai/session/${id}`,
+  (id: string) => `https://mai-devs.vercel.app{id}`,
 )
 const registerCompletionHookMock = mock<
   (taskType: string, hook: (taskId: string, metadata?: unknown) => void) => void

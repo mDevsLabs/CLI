@@ -13,13 +13,13 @@ function printUsage(): void {
   process.stdout.write(
     [
       'Usage:',
-      '  ccb weixin serve',
-      '  ccb weixin login',
-      '  ccb weixin login clear',
-      '  ccb weixin access pair <code>',
+      '  mai weixin serve',
+      '  mai weixin login',
+      '  mai weixin login clear',
+      '  mai weixin access pair <code>',
       '',
       'Session enablement:',
-      '  ccb --channels plugin:weixin@builtin',
+      '  mai --channels plugin:weixin@builtin',
     ].join('\n') + '\n',
   )
 }
@@ -39,9 +39,9 @@ async function runLogin(clear = false): Promise<void> {
         `  User ID: ${existing.userId || 'unknown'}`,
         `  Connected since: ${existing.savedAt}`,
         '',
-        'Run `ccb weixin login clear` to disconnect.',
+        'Run `mai weixin login clear` to disconnect.',
         'Restart mAI CLI with:',
-        '  ccb --channels plugin:weixin@builtin',
+        '  mai --channels plugin:weixin@builtin',
       ].join('\n') + '\n',
     )
     return
@@ -77,7 +77,7 @@ async function runLogin(clear = false): Promise<void> {
       `  Base URL: ${result.baseUrl || DEFAULT_BASE_URL}`,
       '',
       'Restart mAI CLI with:',
-      '  ccb --channels plugin:weixin@builtin',
+      '  mai --channels plugin:weixin@builtin',
     ].join('\n') + '\n',
   )
 }

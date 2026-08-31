@@ -34,9 +34,9 @@ export type HTTPServerInfo = ServerInfoBase & {
   config: McpHTTPServerConfig // HTTP 端点配置
 }
 
-/** Claude.ai 代理型 MCP 端点。 */
+/** mAI CLI 代理型 MCP 端点。 */
 export type ClaudeAIServerInfo = ServerInfoBase & {
-  transport: 'claudeai-proxy' // 经 Claude.ai 的代理通道
+  transport: 'claudeai-proxy' // 经 mAI CLI 的代理通道
   isAuthenticated: boolean | undefined // 代理侧鉴权展示用
   config: McpClaudeAIProxyServerConfig // 代理 id/url 等
 }

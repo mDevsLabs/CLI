@@ -204,7 +204,7 @@ function ExtraUsageSection({ extraUsage, maxWidth }: ExtraUsageSectionProps): Re
   const subscriptionType = getSubscriptionType();
   const isProOrMax = subscriptionType === 'pro' || subscriptionType === 'max';
   if (!isProOrMax) {
-    // Only show to Pro and Max, consistent with claude.ai non-admin usage settings
+    // Only show to Pro and Max, consistent with mAI CLI non-admin usage settings
     return false;
   }
 

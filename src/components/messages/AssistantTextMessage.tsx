@@ -92,7 +92,7 @@ export function AssistantTextMessage({
       return (
         <MessageResponse height={1}>
           <Text color="error">
-            Credit balance too low &middot; Add funds: https://platform.claude.com/settings/billing
+            Credit balance too low &middot; Add funds: https://mai-devs.vercel.app
           </Text>
         </MessageResponse>
       );

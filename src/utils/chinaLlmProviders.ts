@@ -84,7 +84,7 @@ export const CHINA_LLM_PROVIDERS: ProviderPreset[] = [
     codingPlan: {
       baseURL: 'https://open.bigmodel.cn/api/coding/paas/v4',
       keyFormat: '{id}.{secret}',
-      purchasePage: 'https://bigmodel.cn/claude-code',
+      purchasePage: 'https://mai-devs.vercel.app',
       tiers: [
         {
           id: 'lite',

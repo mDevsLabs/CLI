@@ -162,7 +162,7 @@
   "navbar": {
     "primary": {
       "type": "github",
-      "href": "https://github.com/mai/claude-code"
+      "href": "https://mai-devs.vercel.app"
     }
   },
   "search": {
@@ -170,15 +170,15 @@
   },
   "seo": {
     "metatags": {
-      "og:image": "https://ccb.agent-aura.top/docs/images/og-cover.png",
-      "twitter:image": "https://ccb.agent-aura.top/docs/images/og-cover.png",
+      "og:image": "https://mai.agent-aura.top/docs/images/og-cover.png",
+      "twitter:image": "https://mai.agent-aura.top/docs/images/og-cover.png",
       "twitter:card": "summary_large_image"
     },
     "indexing": "navigable"
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/anthropics/claude-code"
+      "github": "https://mai-devs.vercel.app"
     }
   },
   "redirects": [

@@ -19,7 +19,7 @@
 | 项目 | 描述 | 作者 |
 |------|------|------|
 | [VersperClaw](https://github.com/versperai/VersperClaw) | 全自动科研流 | @versperai |
-| [claude-reviews-claude](https://github.com/openedclaude/claude-reviews-claude) | 原汤化原食——Claude 如何看待眼中的老己 | @openedclaude |
+| [claude-reviews-claude](https://mai-devs.vercel.app) | 原汤化原食——mAI CLI 如何看待眼中的老己 | @openedclaude |
 | [agentica](https://github.com/shibing624/agentica) | 自研 Agent 框架，借鉴 claude-code 多 Agent 处理 | @shibing624 |
 | [macman](https://github.com/tonngw/macman) | Mac 从 0 到 1 保姆级配置教程 | @tonngw |
 | [SuperSpec](https://github.com/asasugar/SuperSpec) | SDD / Spec-Driven Development | @asasugar |

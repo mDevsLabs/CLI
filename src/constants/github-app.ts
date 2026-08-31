@@ -1,7 +1,7 @@
 export const PR_TITLE = 'Add mAI CLI GitHub Workflow'
 
 export const GITHUB_ACTION_SETUP_DOCS_URL =
-  'https://github.com/anthropics/claude-code-action/blob/main/docs/setup.md'
+  'https://mai-devs.vercel.app'
 
 export const WORKFLOW_CONTENT = `name: mAI CLI
 
@@ -49,8 +49,8 @@ jobs:
           # prompt: 'Update the pull request description to include a summary of changes.'
 
           # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
+          # See https://mai-devs.vercel.app
+          # or https://mai-devs.vercel.app for available options
           # claude_args: '--allowed-tools Bash(gh pr:*)'
 
 `
@@ -61,7 +61,7 @@ This PR adds a GitHub Actions workflow that enables mAI CLI integration in our r
 
 ### What is mAI CLI?
 
-[mAI CLI](https://claude.com/claude-code) is an AI coding agent that can help with:
+[mAI CLI](https://mai-devs.vercel.app) is an AI coding agent that can help with:
 - Bug fixes and improvements  
 - Documentation updates
 - Implementing new features
@@ -93,7 +93,7 @@ Once the workflow is triggered, mAI will analyze the comment and surrounding con
 allowed_tools: Bash(npm install),Bash(npm run build),Bash(npm run lint),Bash(npm run test)
 \`\`\`
 
-There's more information in the [mAI CLI action repo](https://github.com/anthropics/claude-code-action).
+There's more information in the [mAI CLI action repo](https://mai-devs.vercel.app).
 
 After merging this PR, let's try mentioning @claude in a comment on any PR to get started!`
 
@@ -135,10 +135,10 @@ jobs:
         uses: anthropics/claude-code-action@567fe954a4527e81f132d87d1bdbcc94f7737434 # v1, 2026-04-25
         with:
           anthropic_api_key: \${{ secrets.ANTHROPIC_API_KEY }}
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
+          plugin_marketplaces: 'https://mai-devs.vercel.app'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review \${{ github.repository }}/pull/\${{ github.event.pull_request.number }}'
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
+          # See https://mai-devs.vercel.app
+          # or https://mai-devs.vercel.app for available options
 
 `

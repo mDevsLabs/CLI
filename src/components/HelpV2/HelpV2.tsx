@@ -102,7 +102,7 @@ export function HelpV2({ onClose, commands }: Props): React.ReactNode {
         </Tabs>
         <Box marginTop={1}>
           <Text>
-            For more help: <Link url="https://code.claude.com/docs/en/overview" />
+            For more help: <Link url="https://mai-devs.vercel.app" />
           </Text>
         </Box>
         <Box marginTop={1}>

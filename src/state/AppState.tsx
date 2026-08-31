@@ -46,7 +46,20 @@ export {
   type SpeculationState,
 } from './AppStateStore.js';
 
-export const AppStoreContext = React.createContext<AppStateStore | null>(null);
+const GLOBAL_CONTEXT_KEY = Symbol.for('__MAI_APP_STORE_CONTEXT__');
+const GLOBAL_STORE_KEY = Symbol.for('__MAI_APP_STORE__');
+const GLOBAL_HAS_APP_STATE_CONTEXT_KEY = Symbol.for('__MAI_HAS_APP_STATE_CONTEXT__');
+
+type GlobalStateHolder = typeof globalThis & {
+  [GLOBAL_CONTEXT_KEY]?: React.Context<AppStateStore | null>;
+  [GLOBAL_STORE_KEY]?: AppStateStore | null;
+  [GLOBAL_HAS_APP_STATE_CONTEXT_KEY]?: React.Context<boolean>;
+};
+
+const g = globalThis as GlobalStateHolder;
+
+export const AppStoreContext: React.Context<AppStateStore | null> =
+  g[GLOBAL_CONTEXT_KEY] ?? (g[GLOBAL_CONTEXT_KEY] = React.createContext<AppStateStore | null>(null));
 
 type Props = {
   children: React.ReactNode;
@@ -54,7 +67,15 @@ type Props = {
   onChangeAppState?: (args: { newState: AppState; oldState: AppState }) => void;
 };
 
-const HasAppStateContext = React.createContext<boolean>(false);
+const HasAppStateContext: React.Context<boolean> =
+  g[GLOBAL_HAS_APP_STATE_CONTEXT_KEY] ?? (g[GLOBAL_HAS_APP_STATE_CONTEXT_KEY] = React.createContext<boolean>(false));
+
+export function getGlobalAppStateStore(): AppStateStore {
+  if (!g[GLOBAL_STORE_KEY]) {
+    g[GLOBAL_STORE_KEY] = createStore<AppState>(getDefaultAppState());
+  }
+  return g[GLOBAL_STORE_KEY]!;
+}
 
 export function AppStateProvider({ children, initialState, onChangeAppState }: Props): React.ReactNode {
   // Don't allow nested AppStateProviders.
@@ -66,7 +87,13 @@ export function AppStateProvider({ children, initialState, onChangeAppState }: P
   // Store is created once and never changes -- stable context value means
   // the provider never triggers re-renders. Consumers subscribe to slices
   // via useSyncExternalStore in useAppState(selector).
-  const [store] = useState(() => createStore<AppState>(initialState ?? getDefaultAppState(), onChangeAppState));
+  const [store] = useState(() => {
+    const s = createStore<AppState>(initialState ?? getDefaultAppState(), onChangeAppState);
+    g[GLOBAL_STORE_KEY] = s;
+    return s;
+  });
+
+  g[GLOBAL_STORE_KEY] = store;
 
   // Check on mount if bypass mode should be disabled
   // This handles the race condition where remote settings load BEFORE this component mounts,
@@ -104,10 +131,7 @@ export function AppStateProvider({ children, initialState, onChangeAppState }: P
 function useAppStore(): AppStateStore {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const store = useContext(AppStoreContext);
-  if (!store) {
-    throw new ReferenceError('useAppState/useSetAppState cannot be called outside of an <AppStateProvider />');
-  }
-  return store;
+  return store ?? g[GLOBAL_STORE_KEY] ?? getGlobalAppStateStore();
 }
 
 /**
@@ -151,7 +175,8 @@ export function useAppState<T>(selector: (state: AppState) => T): T {
  * this hook will never re-render from state changes.
  */
 export function useSetAppState(): (updater: (prev: AppState) => AppState) => void {
-  return useAppStore().setState;
+  const store = useContext(AppStoreContext) ?? g[GLOBAL_STORE_KEY] ?? getGlobalAppStateStore();
+  return store.setState;
 }
 
 /**
@@ -168,7 +193,7 @@ const NOOP_SUBSCRIBE = () => () => {};
  * Useful for components that may be rendered in contexts where AppStateProvider isn't available.
  */
 export function useAppStateMaybeOutsideOfProvider<T>(selector: (state: AppState) => T): T | undefined {
-  const store = useContext(AppStoreContext);
+  const store = useContext(AppStoreContext) ?? g[GLOBAL_STORE_KEY];
   return useSyncExternalStore(store ? store.subscribe : NOOP_SUBSCRIBE, () =>
     store ? selector(store.getState()) : undefined,
   );

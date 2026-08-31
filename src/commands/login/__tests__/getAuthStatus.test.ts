@@ -31,7 +31,7 @@ const SUBSCRIPTION_TOKEN_FIXTURE = {
   accessToken: 'access-token-value',
   refreshToken: 'refresh-token',
   expiresAt: Date.now() + 3_600_000,
-  scopes: ['user:inference', 'claude.ai'],
+  scopes: ['user:inference', 'mAI CLI'],
   subscriptionType: 'pro',
   rateLimitTier: null,
 }

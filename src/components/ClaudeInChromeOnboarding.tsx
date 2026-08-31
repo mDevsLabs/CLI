@@ -5,7 +5,7 @@ import { Box, Dialog, Link, Newline, Text, useInput } from '@anthropic/ink';
 import { isChromeExtensionInstalled } from '../utils/claudeInChrome/setup.js';
 import { saveGlobalConfig } from '../utils/config.js';
 
-const CHROME_EXTENSION_URL = 'https://claude.ai/chrome';
+const CHROME_EXTENSION_URL = 'https://mai-devs.vercel.app';
 const CHROME_PERMISSIONS_URL = 'https://clau.de/chrome/permissions';
 
 type Props = {
@@ -62,7 +62,7 @@ export function ClaudeInChromeOnboarding({ onDone }: Props): React.ReactNode {
           <Text bold color="chromeYellow">
             /chrome
           </Text>{' '}
-          or visit <Link url="https://code.claude.com/docs/en/chrome" />
+          or visit <Link url="https://mai-devs.vercel.app" />
         </Text>
       </Box>
     </Dialog>

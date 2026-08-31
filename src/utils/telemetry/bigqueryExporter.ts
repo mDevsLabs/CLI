@@ -44,7 +44,7 @@ export class BigQueryMetricsExporter implements PushMetricExporter {
   private isShutdown = false
 
   constructor(options: { timeout?: number } = {}) {
-    const defaultEndpoint = 'https://api.anthropic.com/api/claude_code/metrics'
+    const defaultEndpoint = 'https://mai-devs.vercel.app'
 
     if (
       process.env.USER_TYPE === 'ant' &&

@@ -53,7 +53,7 @@ describe('buildResponsesRequest', () => {
       promptCacheKey,
     })
 
-    expect(request.prompt_cache_key).toBe('ccb:session-abc-123')
+    expect(request.prompt_cache_key).toBe('mai:session-abc-123')
   })
 
   test('prompt_cache_key is stable across turns (not derived from messages)', () => {
@@ -69,7 +69,7 @@ describe('buildResponsesRequest', () => {
       model: 'gpt-5.5',
       messages: [
         { role: 'user', content: 'first' },
-        { role: 'assistant', content: 'ok' },
+        { role: 'assistant', content: 'reply' },
         { role: 'user', content: 'second' },
       ],
       tools: [],
@@ -78,7 +78,8 @@ describe('buildResponsesRequest', () => {
     })
 
     expect(turn1.prompt_cache_key).toBe(turn2.prompt_cache_key)
-    expect(turn1.prompt_cache_key).toBe('ccb:same-session')
+    expect(turn1.prompt_cache_key).toBe('mai:same-session')
+    expect(turn2.prompt_cache_key).toBe('mai:same-session')
   })
 })
 

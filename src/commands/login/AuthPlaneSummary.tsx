@@ -5,7 +5,7 @@
  * without arguments:
  *
  *   Anthropic auth status:
- *     ☑ Subscription (claude.ai)         pro plan
+ *     ☑ Subscription (mAI CLI)         pro plan
  *     ☐ Workspace API key                not set
  *          To enable /vault /agents-platform /memory-stores:
  *          1. Open https://console.anthropic.com/settings/keys
@@ -34,7 +34,7 @@ function SubscriptionRow({ subscription }: { subscription: AuthStatus['subscript
   return (
     <Box>
       <Text color={subscription.active ? 'success' : undefined}>
-        {icon} Subscription (claude.ai){'  '}
+        {icon} Subscription (mAI CLI){'  '}
       </Text>
       <Text dimColor={!subscription.active}>{statusText}</Text>
     </Box>
