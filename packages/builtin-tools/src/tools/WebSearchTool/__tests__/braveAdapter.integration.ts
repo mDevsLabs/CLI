@@ -20,12 +20,12 @@ const query = process.env.BRAVE_QUERY || 'Claude AI Anthropic'
 async function main() {
   if (!process.env.BRAVE_SEARCH_API_KEY && !process.env.BRAVE_API_KEY) {
     console.error(
-      '❌ Missing Brave API key. Set BRAVE_SEARCH_API_KEY or BRAVE_API_KEY.',
+      '[ERROR] Missing Brave API key. Set BRAVE_SEARCH_API_KEY or BRAVE_API_KEY.',
     )
     process.exit(1)
   }
 
-  console.log(`\n🔍 Searching Brave for: "${query}"\n`)
+  console.log(`\nSearching Brave for: "${query}"\n`)
 
   const adapter = new BraveSearchAdapter()
   const startTime = Date.now()
@@ -42,10 +42,10 @@ async function main() {
   })
 
   const elapsed = Date.now() - startTime
-  console.log(`\n✅ Done in ${elapsed}ms — ${results.length} result(s)\n`)
+  console.log(`\nDone in ${elapsed}ms — ${results.length} result(s)\n`)
 
   if (results.length === 0) {
-    console.log('⚠️  No results returned. Possible causes:')
+    console.log('[WARN] No results returned. Possible causes:')
     console.log('   - Brave returned no grounding data for the query')
     console.log('   - Network/firewall issue')
     console.log('   - Invalid or rate-limited Brave API key\n')
@@ -67,17 +67,17 @@ async function main() {
   let passed = true
   for (const [i, r] of results.entries()) {
     if (!r.title || typeof r.title !== 'string') {
-      console.error(`❌ Result ${i + 1}: missing or non-string title`, r)
+      console.error(`[ERROR] Result ${i + 1}: missing or non-string title`, r)
       passed = false
     }
     if (!r.url || !r.url.startsWith('http')) {
-      console.error(`❌ Result ${i + 1}: missing or non-http url`, r)
+      console.error(`[ERROR] Result ${i + 1}: missing or non-http url`, r)
       passed = false
     }
   }
 
   if (passed) {
-    console.log('✅ All results have valid structure.\n')
+    console.log('All results have valid structure.\n')
   } else {
     process.exit(1)
   }
@@ -85,7 +85,7 @@ async function main() {
 
 if (import.meta.main) {
   main().catch(e => {
-    console.error('❌ Fatal error:', e)
+    console.error('[ERROR] Fatal error:', e)
     process.exit(1)
   })
 }

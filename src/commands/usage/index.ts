@@ -5,5 +5,6 @@ export default {
   name: 'usage',
   aliases: ['cost', 'stats'],
   description: 'Show session cost, plan usage, and activity stats',
+  immediate: true,
   load: () => import('./usage.js'),
 } satisfies Command

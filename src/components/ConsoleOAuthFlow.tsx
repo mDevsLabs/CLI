@@ -95,7 +95,7 @@ export function ConsoleOAuthFlow({
   const orgUUID = settings.forceLoginOrgUUID;
   const forcedMethodMessage =
     forceLoginMethod === 'claudeai'
-      ? 'Login method pre-selected: Subscription Plan (Claude Pro/Max)'
+      ? 'Login method pre-selected: Subscription Plan (mAI Pro/Max)'
       : forceLoginMethod === 'console'
         ? 'Login method pre-selected: API Usage Billing (Anthropic Console)'
         : null;
@@ -1406,7 +1406,7 @@ function OAuthStatusMessage({
                 {
                   label: (
                     <Text>
-                      ✏️ Custom model
+                      Custom model
                       <Text dimColor> · enter model name manually</Text>
                       {'\n'}
                     </Text>

@@ -145,7 +145,7 @@ function ComputerUseAppListPanel({ request, onDone }: ComputerUseApprovalProps):
       {
         label: (
           <Text>
-            Deny, and tell Claude what to do differently <Text bold>(esc)</Text>
+            Deny, and tell mAI what to do differently <Text bold>(esc)</Text>
           </Text>
         ),
         value: 'deny',
@@ -241,7 +241,7 @@ function ComputerUseAppListPanel({ request, onDone }: ComputerUseApprovalProps):
 
         {request.willHide && request.willHide.length > 0 ? (
           <Text dimColor>
-            {request.willHide.length} other {plural(request.willHide.length, 'app')} will be hidden while Claude works.
+            {request.willHide.length} other {plural(request.willHide.length, 'app')} will be hidden while mAI works.
           </Text>
         ) : null}
 

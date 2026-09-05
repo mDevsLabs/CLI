@@ -216,7 +216,7 @@ export async function openCurrentSessionInDesktop(): Promise<{
     return {
       success: false,
       error:
-        'Claude Desktop is not installed. Install it from https://mai-devs.vercel.app',
+        'mAI Desktop is not installed. Install it from https://mai-devs.vercel.app',
     }
   }
 
@@ -227,7 +227,7 @@ export async function openCurrentSessionInDesktop(): Promise<{
   if (!opened) {
     return {
       success: false,
-      error: 'Failed to open Claude Desktop. Please try opening it manually.',
+      error: 'Failed to open mAI Desktop. Please try opening it manually.',
       deepLinkUrl,
     }
   }

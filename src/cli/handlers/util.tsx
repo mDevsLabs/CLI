@@ -43,7 +43,7 @@ export async function setupTokenHandler(root: Root): Promise<void> {
                 void resolve();
               }}
               mode="setup-token"
-              startingMessage="This will guide you through long-lived (1-year) auth token setup for your Claude account. Claude subscription required."
+              startingMessage="This will guide you through long-lived (1-year) auth token setup for your mAI account. mAI subscription required."
             />
           </Box>
         </KeybindingSetup>

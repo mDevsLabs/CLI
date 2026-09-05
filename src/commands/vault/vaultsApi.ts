@@ -115,7 +115,7 @@ function classifyError(err: unknown, id?: string): VaultsApiError {
     }
     if (status === 403) {
       return new VaultsApiError(
-        'Subscription required. Vault management requires a Claude Pro/Max/Team subscription.',
+        'Subscription required. Vault management requires a mAI Pro/Max/Team subscription.',
         403,
       )
     }

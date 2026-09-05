@@ -354,7 +354,7 @@ function ThinkbackMenu({
         {/* Description for first-time users */}
         {!hasGenerated && (
           <Box flexDirection="column">
-            <Text>Relive your year of coding with Claude.</Text>
+            <Text>Relive your year of coding with mAI.</Text>
             <Text dimColor>{"We'll create a personalized ASCII animation celebrating your journey."}</Text>
           </Box>
         )}

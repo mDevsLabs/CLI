@@ -51,7 +51,7 @@ export function ViewHookMode({ selectedHook, eventSupportsMatcher, onCancel }: P
             Status message: <Text dimColor>{selectedHook.config.statusMessage}</Text>
           </Text>
         )}
-        <Text dimColor>To modify or remove this hook, edit settings.json directly or ask Claude to help.</Text>
+        <Text dimColor>To modify or remove this hook, edit settings.json directly or ask mAI to help.</Text>
       </Box>
     </Dialog>
   );

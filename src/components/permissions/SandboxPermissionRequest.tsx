@@ -60,7 +60,7 @@ export function SandboxPermissionRequest({
     {
       label: (
         <Text>
-          No, and tell Claude what to do differently <Text bold>(esc)</Text>
+          No, and tell mAI what to do differently <Text bold>(esc)</Text>
         </Text>
       ),
       value: 'no',

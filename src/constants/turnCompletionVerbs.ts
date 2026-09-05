@@ -7,6 +7,6 @@ export const TURN_COMPLETION_VERBS = [
   'Cogitated',
   'Cooked',
   'Crunched',
-  'Sautéed',
+  'Sauteed',
   'Worked',
 ]

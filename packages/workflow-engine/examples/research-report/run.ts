@@ -133,7 +133,9 @@ async function llmAgent(params: AgentRunParams): Promise<AgentRunResult> {
       .trim()
     if (truncated) {
       console.error(
-        paint.yellow(`  ⚠ 输出被 max_tokens 截断（${outputTokens} tokens）`),
+        paint.yellow(
+          `  WARNING: output truncated by max_tokens (${outputTokens} tokens)`,
+        ),
       )
     }
     return { kind: 'ok', output: text, usage: { outputTokens } }
@@ -261,8 +263,8 @@ function makePorts(runsDir: string): WorkflowPorts {
 async function main(): Promise<void> {
   const topic = process.argv[2]
   if (!topic) {
-    console.error(paint.red('✗ 用法：run.ts <研究主题>'))
-    console.error(paint.dim('  例：bun run run.ts "Edge Computing"'))
+    console.error(paint.red('✗ Usage: run.ts <research-topic>'))
+    console.error(paint.dim('  Example: bun run run.ts "Edge Computing"'))
     process.exit(1)
   }
 
@@ -284,7 +286,7 @@ async function main(): Promise<void> {
 
   if (result.status !== 'completed') {
     console.error(
-      paint.red(`✗ workflow ${result.status}：${result.error ?? ''}`),
+      paint.red(`✗ workflow ${result.status}: ${result.error ?? ''}`),
     )
     process.exit(1)
   }
@@ -296,12 +298,12 @@ async function main(): Promise<void> {
   }
   console.log(
     paint.bold(
-      paint.green(`\n════════ 技术研究报告：${ret.topic ?? topic} ════════`),
+      paint.green(`\n════════ Technical research report: ${ret.topic ?? topic} ════════`),
     ),
   )
   console.log(
     paint.dim(
-      `角度数=${ret.anglesCovered ?? '?'} 深挖=${ret.findingsDeepened ?? '?'}`,
+      `angles=${ret.anglesCovered ?? '?'} deepened=${ret.findingsDeepened ?? '?'}`,
     ),
   )
   console.log(ret.report ?? '(无报告输出)')

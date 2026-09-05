@@ -47,6 +47,7 @@ export type ModelOption = {
   label: string
   description: string
   descriptionForModel?: string
+  supports1M?: boolean
 }
 
 export function getDefaultOptionForUser(fastMode = false): ModelOption {

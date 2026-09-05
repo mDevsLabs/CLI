@@ -50,7 +50,7 @@ export function SelectEventMode({
 
         <Box flexDirection="column">
           <Text dimColor>
-            {figures.info} This menu is read-only. To add or modify hooks, edit settings.json directly or ask Claude.{' '}
+            {figures.info} This menu is read-only. To add or modify hooks, edit settings.json directly or ask mAI.{' '}
             <Link url="https://mai-devs.vercel.app">Learn more</Link>
           </Text>
         </Box>

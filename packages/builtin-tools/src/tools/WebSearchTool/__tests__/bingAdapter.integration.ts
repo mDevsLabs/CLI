@@ -18,7 +18,7 @@ import { BingSearchAdapter, extractBingResults } from '../adapters/bingAdapter'
 const query = process.env.BING_QUERY || 'Claude AI Anthropic'
 
 async function main() {
-  console.log(`\n🔍 Searching Bing for: "${query}"\n`)
+  console.log(`\nSearching Bing for: "${query}"\n`)
 
   const adapter = new BingSearchAdapter()
   const startTime = Date.now()
@@ -35,10 +35,10 @@ async function main() {
   })
 
   const elapsed = Date.now() - startTime
-  console.log(`\n✅ Done in ${elapsed}ms — ${results.length} result(s)\n`)
+  console.log(`\nDone in ${elapsed}ms — ${results.length} result(s)\n`)
 
   if (results.length === 0) {
-    console.log('⚠️  No results returned. Possible causes:')
+    console.log('[WARN] No results returned. Possible causes:')
     console.log('   - Bing returned a CAPTCHA or rate-limited the request')
     console.log('   - Network/firewall issue')
     console.log('   - Bing HTML structure changed')
@@ -62,23 +62,23 @@ async function main() {
   let passed = true
   for (const [i, r] of results.entries()) {
     if (!r.title || typeof r.title !== 'string') {
-      console.error(`❌ Result ${i + 1}: missing or non-string title`, r)
+      console.error(`[ERROR] Result ${i + 1}: missing or non-string title`, r)
       passed = false
     }
     if (!r.url || !r.url.startsWith('http')) {
-      console.error(`❌ Result ${i + 1}: missing or non-http url`, r)
+      console.error(`[ERROR] Result ${i + 1}: missing or non-http url`, r)
       passed = false
     }
   }
 
   if (passed) {
-    console.log('✅ All results have valid structure.\n')
+    console.log('All results have valid structure.\n')
   } else {
     process.exit(1)
   }
 }
 
 main().catch(e => {
-  console.error('❌ Fatal error:', e)
+  console.error('[ERROR] Fatal error:', e)
   process.exit(1)
 })

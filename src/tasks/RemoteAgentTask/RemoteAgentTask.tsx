@@ -251,7 +251,7 @@ export function formatPreconditionError(error: BackgroundRemoteSessionPreconditi
     case 'no_git_remote':
       return 'Background tasks require a GitHub remote. Add one with `git remote add origin REPO_URL`.';
     case 'github_app_not_installed':
-      return 'The Claude GitHub app must be installed on this repository first.\nhttps://mai-devs.vercel.app';
+      return 'The mAI GitHub app must be installed on this repository first.\nhttps://mai-devs.vercel.app';
     case 'policy_blocked':
       return "Remote sessions are disabled by your organization's policy. Contact your organization admin to enable them.";
   }

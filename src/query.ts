@@ -902,7 +902,7 @@ async function* queryLoop(
           const quotaCheck = await checkQuotaUsage()
           if (!quotaCheck.allowed) {
             yield createAssistantAPIErrorMessage({
-              content: quotaCheck.error || 'Quota de tokens mAI dépassé.',
+              content: quotaCheck.error || 'mAI token quota exceeded.',
               error: 'rate_limit',
             })
             return { reason: 'model_error', error: quotaCheck.error }

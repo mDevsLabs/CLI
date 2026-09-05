@@ -624,7 +624,7 @@ export const SendMessageTool: Tool<InputSchema, SendMessageToolOutput> =
       if (feature('UDS_INBOX') && parseAddress(input.to).scheme === 'bridge') {
         return {
           behavior: 'ask' as const,
-          message: `Send a message to Remote Control session ${input.to}? It arrives as a user prompt on the receiving Claude (possibly another machine) via Anthropic's servers.`,
+          message: `Send a message to Remote Control session ${input.to}? It arrives as a user prompt on the receiving mAI (possibly another machine) via Anthropic's servers.`,
           decisionReason: {
             type: 'safetyCheck',
             reason:

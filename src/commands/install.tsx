@@ -89,7 +89,7 @@ function Install({ onDone, force, target }: InstallProps): React.ReactNode {
         // Check specifically for lock failure
         if (result.lockFailed) {
           throw new Error(
-            'Could not install - another process is currently installing Claude. Please try again in a moment.',
+            'Could not install - another process is currently installing mAI CLI. Please try again in a moment.',
           );
         }
 

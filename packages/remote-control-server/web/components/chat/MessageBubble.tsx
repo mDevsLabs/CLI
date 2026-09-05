@@ -100,7 +100,7 @@ export function AssistantBubble({ entry, isStreaming }: AssistantBubbleProps) {
       {/* 内容 — 无卡片背景，直接排版 */}
       <div className="flex-1 min-w-0 space-y-4">
         {/* Sender label */}
-        <span className="text-sm font-semibold text-text-primary font-display">Claude</span>
+        <span className="text-sm font-semibold text-text-primary font-display">mAI</span>
         {entry.chunks.map((chunk, i) => {
           if (chunk.type === 'thought') {
             const isLastChunk = i === entry.chunks.length - 1;

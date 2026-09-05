@@ -22,12 +22,12 @@ export function ThinkingToggle({ currentValue, onSelect, onCancel, isMidConversa
     {
       value: 'true',
       label: 'Enabled',
-      description: 'Claude will think before responding',
+      description: 'mAI will think before responding',
     },
     {
       value: 'false',
       label: 'Disabled',
-      description: 'Claude will respond without extended thinking',
+      description: 'mAI will respond without extended thinking',
     },
   ];
 

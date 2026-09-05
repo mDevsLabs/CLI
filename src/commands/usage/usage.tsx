@@ -67,7 +67,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
           Authorization: `Bearer ${token}`,
           'x-mai-token': token,
           'x-api-key': token,
-        },
+        } as Record<string, string>,
         body: JSON.stringify({ code: inputCode }),
       });
 
@@ -105,7 +105,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
         Authorization: `Bearer ${token}`,
         'x-mai-token': token,
         'x-api-key': token,
-      },
+      } as Record<string, string>,
     });
     if (res.status === 404) {
       res = await fetch('https://mai.val.run/usage', {
@@ -113,7 +113,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
           Authorization: `Bearer ${token}`,
           'x-mai-token': token,
           'x-api-key': token,
-        },
+        } as Record<string, string>,
       });
     }
     if (res.ok) {

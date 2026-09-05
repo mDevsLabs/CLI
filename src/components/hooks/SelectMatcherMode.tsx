@@ -62,7 +62,7 @@ export function SelectMatcherMode({
       >
         <Box flexDirection="column" gap={1}>
           <Text dimColor>No hooks configured for this event.</Text>
-          <Text dimColor>To add hooks, edit settings.json directly or ask Claude.</Text>
+          <Text dimColor>To add hooks, edit settings.json directly or ask mAI.</Text>
         </Box>
       </Dialog>
     );

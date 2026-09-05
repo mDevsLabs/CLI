@@ -1,16 +1,16 @@
 {
   "name": "@mdevs/mai-cli",
-  "version": "1.0.20",
+  "version": "1.0.21-beta.1",
   "description": "The mAI agent, directly in your terminal!",
   "type": "module",
   "author": "mDevsLabs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mDevsLabs/mAI-CLI.git"
+    "url": "git+https://github.com/mDevsLabs/CLI.git"
   },
-  "homepage": "https://github.com/mDevsLabs/mAI-CLI/#readme",
+  "homepage": "https://github.com/mDevsLabs/CLI/#readme",
   "bugs": {
-    "url": "https://github.com/mDevsLabs/mAI-CLI/issues"
+    "url": "https://github.com/mDevsLabs/CLI/issues"
   },
   "keywords": [
     "mai",

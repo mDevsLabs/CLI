@@ -15,7 +15,7 @@ export async function rollback(
   if (options?.list) {
     console.log('Recent versions:')
     console.log('  (version listing requires access to the release registry)')
-    console.log('  Use `claude update --list` for available versions.')
+    console.log('  Use `mai update --list` for available versions.')
     return
   }
 
@@ -32,15 +32,15 @@ export async function rollback(
 
   if (!target) {
     console.error(
-      'Usage: claude rollback [target]\n\n' +
+      'Usage: mai rollback [target]\n\n' +
         'Options:\n' +
         '  -l, --list     List recent published versions\n' +
         '  --dry-run      Show what would be installed\n' +
         '  --safe         Roll back to server-pinned safe version\n\n' +
         'Examples:\n' +
-        '  claude rollback 2.1.880\n' +
-        '  claude rollback --list\n' +
-        '  claude rollback --safe',
+        '  mai rollback 2.1.880\n' +
+        '  mai rollback --list\n' +
+        '  mai rollback --safe',
     )
     process.exitCode = 1
     return

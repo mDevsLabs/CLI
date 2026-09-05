@@ -945,7 +945,7 @@ export async function main() {
       // Headless (-p) mode is not supported with SSH in v1 — reject early
       // so the flag doesn't silently cause local execution.
       if (rest.includes('-p') || rest.includes('--print')) {
-        process.stderr.write('Error: headless (-p/--print) mode is not supported with claude ssh\n');
+        process.stderr.write('Error: headless (-p/--print) mode is not supported with mai ssh\n');
         gracefulShutdownSync(1);
         return;
       }
@@ -1148,7 +1148,7 @@ async function run(): Promise<CommanderCommand> {
   });
 
   program
-    .name('claude')
+    .name('mai')
     .description(`mAI CLI - starts an interactive session by default, use -p/--print for non-interactive output`)
     .argument('[prompt]', 'Your prompt', String)
     // Subcommands inherit helpOption via commander's copyInheritedSettings —
@@ -1173,7 +1173,7 @@ async function run(): Promise<CommanderCommand> {
     .option('--verbose', 'Override verbose mode setting from config', () => true)
     .option(
       '-p, --print',
-      'Print response and exit (useful for pipes). Note: The workspace trust dialog is skipped when Claude is run with the -p mode. Only use this flag in directories you trust.',
+      'Print response and exit (useful for pipes). Note: The workspace trust dialog is skipped when mAI is run with the -p mode. Only use this flag in directories you trust.',
       () => true,
     )
     .option(
@@ -1425,8 +1425,8 @@ async function run(): Promise<CommanderCommand> {
       [] as string[],
     )
     .option('--disable-slash-commands', 'Disable all skills', () => true)
-    .option('--chrome', 'Enable Claude in Chrome integration')
-    .option('--no-chrome', 'Disable Claude in Chrome integration')
+    .option('--chrome', 'Enable mAI in Chrome integration')
+    .option('--no-chrome', 'Disable mAI in Chrome integration')
     .option(
       '--file <specs...>',
       'File resources to download at startup. Format: file_id:relative_path (e.g., --file file_abc:doc.txt file_def:img.png)',
@@ -1444,7 +1444,7 @@ async function run(): Promise<CommanderCommand> {
       // Ignore "code" as a prompt - treat it the same as no prompt
       if (prompt === 'code') {
         logEvent('tengu_code_prompt_ignored', {});
-        console.warn(chalk.yellow('Tip: You can launch mAI CLI with just `claude`'));
+        console.warn(chalk.yellow('Tip: You can launch mAI CLI with just `mai`'));
         prompt = undefined;
       }
 
@@ -2022,7 +2022,7 @@ async function run(): Promise<CommanderCommand> {
           });
           logForDebugging(`[Claude in Chrome] Error: ${error}`);
           logError(error);
-          console.error(`Error: Failed to run with Claude in Chrome.`);
+          console.error(`Error: Failed to run with mAI in Chrome.`);
           process.exit(1);
         }
       } else if (autoEnableClaudeInChrome) {
@@ -3899,7 +3899,7 @@ async function run(): Promise<CommanderCommand> {
             // establish a bridge session before discovery will find it.
             return await exitWithMessage(
               root,
-              `Assistant installed in ${installedDir}. The daemon is starting up — run \`claude assistant\` again in a few seconds to connect.`,
+              `Assistant installed in ${installedDir}. The daemon is starting up — run \`mai assistant\` again in a few seconds to connect.`,
               {
                 exitCode: 0,
                 beforeExit: () => gracefulShutdown(0),
@@ -4050,7 +4050,7 @@ async function run(): Promise<CommanderCommand> {
           if (!isRemoteTuiEnabled && !hasInitialPrompt) {
             return await exitWithError(
               root,
-              'Error: --remote requires a description.\nUsage: claude --remote "your task description"',
+              'Error: --remote requires a description.\nUsage: mai --remote "your task description"',
               () => gracefulShutdown(1),
             );
           }
@@ -4082,7 +4082,7 @@ async function run(): Promise<CommanderCommand> {
             // Original behavior: print session info and exit
             process.stdout.write(`Created remote session: ${createdSession.title}\n`);
             process.stdout.write(`View: ${getRemoteSessionUrl(createdSession.id)}?m=0\n`);
-            process.stdout.write(`Resume with: claude --teleport ${createdSession.id}\n`);
+            process.stdout.write(`Resume with: mai --teleport ${createdSession.id}\n`);
             await gracefulShutdown(0);
             process.exit(0);
           }
@@ -4203,9 +4203,9 @@ async function run(): Promise<CommanderCommand> {
                   } else {
                     // No known paths - show original error
                     throw new TeleportOperationError(
-                      `You must run claude --teleport ${teleport} from a checkout of ${sessionRepo}.`,
+                      `You must run mai --teleport ${teleport} from a checkout of ${sessionRepo}.`,
                       chalk.red(
-                        `You must run claude --teleport ${teleport} from a checkout of ${chalk.bold(sessionRepo)}.\n`,
+                        `You must run mai --teleport ${teleport} from a checkout of ${chalk.bold(sessionRepo)}.\n`,
                       ),
                     );
                   }
@@ -4503,7 +4503,7 @@ async function run(): Promise<CommanderCommand> {
         .argParser(String)
         .hideHelp(),
     );
-    program.option('--agent-teams', '[ANT-ONLY] Force Claude to use multi-agent mode for solving problems', () => true);
+    program.option('--agent-teams', '[ANT-ONLY] Force mAI to use multi-agent mode for solving problems', () => true);
   }
 
   if (feature('TRANSCRIPT_CLASSIFIER')) {
@@ -4725,7 +4725,7 @@ async function run(): Promise<CommanderCommand> {
 
           const existing = await probeRunningServer();
           if (existing) {
-            process.stderr.write(`A claude server is already running (pid ${existing.pid}) at ${existing.httpUrl}\n`);
+            process.stderr.write(`A mAI CLI server is already running (pid ${existing.pid}) at ${existing.httpUrl}\n`);
             process.exit(1);
           }
 
@@ -4805,9 +4805,9 @@ async function run(): Promise<CommanderCommand> {
         // commander runs. Reaching here means host was missing or the
         // rewrite predicate didn't match.
         process.stderr.write(
-          'Usage: claude ssh <user@host | ssh-config-alias> [dir]\n\n' +
+          'Usage: mai ssh <user@host | ssh-config-alias> [dir]\n\n' +
             "Runs mAI CLI on a remote Linux host. You don't need to install\n" +
-            'anything on the remote or run `claude auth login` there — the binary is\n' +
+            'anything on the remote or run `mai auth login` there — the binary is\n' +
             'deployed over SSH and API auth tunnels back through your local machine.\n',
         );
         process.exit(1);
@@ -4871,8 +4871,8 @@ async function run(): Promise<CommanderCommand> {
     .description('Sign in to your Anthropic account')
     .option('--email <email>', 'Pre-populate email address on the login page')
     .option('--sso', 'Force SSO login flow')
-    .option('--console', 'Use Anthropic Console (API usage billing) instead of Claude subscription')
-    .option('--claudeai', 'Use Claude subscription (default)')
+    .option('--console', 'Use Anthropic Console (API usage billing) instead of mAI subscription')
+    .option('--claudeai', 'Use mAI subscription (default)')
     .action(
       async ({
         email,
@@ -5076,7 +5076,7 @@ async function run(): Promise<CommanderCommand> {
   // Setup token command
   program
     .command('setup-token')
-    .description('Set up a long-lived authentication token (requires Claude subscription)')
+    .description('Set up a long-lived authentication token (requires mAI subscription)')
     .action(async () => {
       const [{ setupTokenHandler }, { createRoot }] = await Promise.all([
         import('./cli/handlers/util.js'),
@@ -5226,7 +5226,7 @@ async function run(): Promise<CommanderCommand> {
         // (e.g. `--debug assistant`) and the position-0 predicate
         // didn't match. Print usage like the ssh stub does.
         process.stderr.write(
-          'Usage: claude assistant [sessionId]\n\n' +
+          'Usage: mai assistant [sessionId]\n\n' +
             'Attach the REPL as a viewer client to a running bridge session.\n' +
             'Omit sessionId to discover and pick from available sessions.\n',
         );
@@ -5268,7 +5268,7 @@ async function run(): Promise<CommanderCommand> {
     program
       .command('rollback [target]')
       .description(
-        '[ANT-ONLY] Roll back to a previous release\n\nExamples:\n  claude rollback                                    Go 1 version back from current\n  claude rollback 3                                  Go 3 versions back from current\n  claude rollback 2.0.73-dev.20251217.t190658        Roll back to a specific version',
+        '[ANT-ONLY] Roll back to a previous release\n\nExamples:\n  mai rollback                                    Go 1 version back from current\n  mai rollback 3                                  Go 3 versions back from current\n  mai rollback 2.0.73-dev.20251217.t190658        Roll back to a specific version',
       )
       .option('-l, --list', 'List recent published versions with ages')
       .option('--dry-run', 'Show what would be installed without installing')
@@ -5351,10 +5351,10 @@ async function run(): Promise<CommanderCommand> {
         'after',
         `
 Examples:
-  $ claude export 0 conversation.txt                Export conversation at log index 0
-  $ claude export <uuid> conversation.txt           Export conversation by session ID
-  $ claude export input.json output.txt             Render JSON log file to text
-  $ claude export <uuid>.jsonl output.txt           Render JSONL session file to text`,
+  $ mai export 0 conversation.txt                Export conversation at log index 0
+  $ mai export <uuid> conversation.txt           Export conversation by session ID
+  $ mai export input.json output.txt             Render JSON log file to text
+  $ mai export <uuid>.jsonl output.txt           Render JSONL session file to text`,
       )
       .action(async (source: string, outputFile: string) => {
         const { exportHandler } = await import('./cli/handlers/ant.js');

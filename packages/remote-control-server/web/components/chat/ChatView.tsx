@@ -27,8 +27,8 @@ export function ChatView({
   entries,
   isLoading = false,
   onPermissionRespond,
-  emptyTitle = '开始对话',
-  emptyDescription = '输入消息开始聊天',
+  emptyTitle = 'Start a conversation',
+  emptyDescription = 'Type a message to begin chatting',
 }: ChatViewProps) {
   // 将相邻的 ToolCallEntry 合并为一组
   const grouped = groupToolCalls(entries);

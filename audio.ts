@@ -1,8 +1,10 @@
 import type { Hono } from "npm:hono@4";
 import {
+  extractTierFromApiKey,
   extractToken,
   getDb,
   getTierSpeechLimit,
+  getUserQuotaBoost,
   getWeekData,
   verifyToken,
 } from "./config.ts";
@@ -290,10 +292,12 @@ export function registerAudioRoutes(app: Hono) {
         `.catch(() => []),
       ]);
 
-      const effectiveTier = uRows[0]?.tier || userPlan || "Free";
+      const keyTier = extractTierFromApiKey(token);
+      const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
       const tokensUsed = Number(usageRows[0]?.tokens_used || 0);
       const requestsCount = Number(usageRows[0]?.requests_count || 0);
-      const weeklyLimit = getTierSpeechLimit(effectiveTier);
+      const audioBoost = await getUserQuotaBoost(sql, userId, "audio");
+      const weeklyLimit = getTierSpeechLimit(effectiveTier) + audioBoost;
 
       return c.json({
         plan: effectiveTier,
@@ -610,8 +614,10 @@ export function registerAudioRoutes(app: Hono) {
         WHERE id::text = ${userId}::text OR username = ${userId}::text 
         LIMIT 1
       `.catch(() => []);
-      const effectiveTier = uRows[0]?.tier || userPlan || "Free";
-      const weeklyLimit = getTierSpeechLimit(effectiveTier);
+      const keyTier = extractTierFromApiKey(token);
+      const effectiveTier = keyTier || uRows[0]?.tier || userPlan || "Free";
+      const audioBoost = await getUserQuotaBoost(sql, userId, "audio");
+      const weeklyLimit = getTierSpeechLimit(effectiveTier) + audioBoost;
 
       // Estimation des tokens utilisés (environ 1 token pour ~3.5 caractères, min 1 token)
       const estimatedTokens = Math.max(1, Math.ceil(input.length / 3.5));
@@ -742,7 +748,7 @@ export function registerAudioRoutes(app: Hono) {
         if (insertRes.length > 0 && insertRes[0].id) {
           savedId = insertRes[0].id;
         }
-      } catch (e) {}
+      } catch {}
 
       // Log dans mprojects_api_logs
       try {
@@ -750,7 +756,7 @@ export function registerAudioRoutes(app: Hono) {
           INSERT INTO mprojects_api_logs (api_key, endpoint, method, status_code, latency_ms, created_at)
           VALUES (${apiKey || "jwt"}::text, ${reqPath || "/v1/speech"}::text, 'POST', 200, 500, NOW())
         `;
-      } catch (e) {}
+      } catch {}
 
       // Vérifier si le client attend du JSON (outil IA, studio web, ou Google TTS)
       const acceptsJson =

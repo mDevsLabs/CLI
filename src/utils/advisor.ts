@@ -51,9 +51,11 @@ type AdvisorConfig = {
 }
 
 function getAdvisorConfig(): AdvisorConfig {
-  return getFeatureValue_CACHED_MAY_BE_STALE<AdvisorConfig>(
-    'tengu_sage_compass',
-    {},
+  return (
+    getFeatureValue_CACHED_MAY_BE_STALE<AdvisorConfig>(
+      'tengu_sage_compass',
+      {},
+    ) ?? {}
   )
 }
 
@@ -65,11 +67,11 @@ export function isAdvisorEnabled(): boolean {
   if (!shouldIncludeFirstPartyOnlyBetas()) {
     return false
   }
-  return getAdvisorConfig().enabled ?? false
+  return getAdvisorConfig()?.enabled ?? false
 }
 
 export function canUserConfigureAdvisor(): boolean {
-  return isAdvisorEnabled() && (getAdvisorConfig().canUserConfigure ?? false)
+  return isAdvisorEnabled() && (getAdvisorConfig()?.canUserConfigure ?? false)
 }
 
 export function getExperimentAdvisorModels():
@@ -78,8 +80,8 @@ export function getExperimentAdvisorModels():
   const config = getAdvisorConfig()
   return isAdvisorEnabled() &&
     !canUserConfigureAdvisor() &&
-    config.baseModel &&
-    config.advisorModel
+    config?.baseModel &&
+    config?.advisorModel
     ? { baseModel: config.baseModel, advisorModel: config.advisorModel }
     : undefined
 }

@@ -613,6 +613,20 @@ export const MAI_MODELS: MaiModel[] = [
     maxOutput: 65536,
   },
   {
+    id: 'google/gemini-3.8-flash',
+    name: 'Gemini 3.8 Flash',
+    provider: 'mAI',
+    maxContext: 1048576,
+    maxOutput: 65536,
+  },
+  {
+    id: 'google/gemini-3.8-pro',
+    name: 'Gemini 3.8 Pro',
+    provider: 'mAI',
+    maxContext: 2097152,
+    maxOutput: 65536,
+  },
+  {
     id: 'google/gemma-2-27b-it',
     name: 'Gemma 2 27B',
     provider: 'mAI',
@@ -2462,6 +2476,23 @@ export function getMaiModelMaxOutput(id: string): number {
   return model ? model.maxOutput : 8192
 }
 
+// API model names may duplicate the lab/vendor from the id as a display
+// prefix ("Poolside: Laguna XS 2.1" for id "poolside/laguna-xs-2.1"); strip
+// it so the label shows just the model name — the vendor stays visible in
+// the description line.
+function stripVendorPrefix(label: string, id: string): string {
+  const vendor = id.split('/')[0]
+  if (!vendor) return label
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '')
+  const normVendor = normalize(vendor)
+  if (!normVendor) return label
+  const match = label.match(/^([^:]+):\s*(.+)$/)
+  if (match && normalize(match[1]) === normVendor) {
+    return match[2]
+  }
+  return label
+}
+
 export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
   try {
     const token =
@@ -2485,7 +2516,7 @@ export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
       const data = Array.isArray(json) ? json : json.data || []
       const options: ModelOption[] = data.map((m: any) => {
         const id = m.id || m.name
-        const label = m.name || m.id || id
+        const label = stripVendorPrefix(m.name || m.id || id, id)
         const context =
           m.maxContext || m.context_length || m.context_window || 128000
         const output = m.maxOutput || m.max_output_tokens || 8192
@@ -2494,6 +2525,7 @@ export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
           value: id as any,
           label,
           description: `Provider: ${provider} | Context: ${Number(context).toLocaleString()} | Output: ${Number(output).toLocaleString()}`,
+          supports1M: Number(context) >= 1_000_000,
         }
       })
       return [
@@ -2526,12 +2558,13 @@ export function getLocalModelOptions(): ModelOption[] {
     if (isFree && !isModelFree) return false
     return true
   }).map(m => {
-    const label = m.name
+    const label = stripVendorPrefix(m.name, m.id)
     const description = `Provider: ${m.provider} | Context: ${m.maxContext.toLocaleString()} | Output: ${m.maxOutput.toLocaleString()}`
     return {
       value: m.id as any,
       label,
       description,
+      supports1M: m.maxContext >= 1_000_000,
     }
   })
 

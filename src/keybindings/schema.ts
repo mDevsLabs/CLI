@@ -28,6 +28,7 @@ export const KEYBINDING_CONTEXTS = [
   'DiffDialog',
   'ModelPicker',
   'Select',
+  'SelectFilter',
   'Plugin',
 ] as const
 
@@ -55,6 +56,8 @@ export const KEYBINDING_CONTEXT_DESCRIPTIONS: Record<
   DiffDialog: 'When the diff dialog is open',
   ModelPicker: 'When the model picker is open',
   Select: 'When a select/list component is focused',
+  SelectFilter:
+    'When a filterable select/list component is focused (letters type into the filter)',
   Plugin: 'When the plugin dialog is open',
 }
 

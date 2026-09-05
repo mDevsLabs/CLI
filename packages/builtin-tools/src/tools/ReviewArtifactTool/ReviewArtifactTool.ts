@@ -62,8 +62,8 @@ export const ReviewArtifactTool = buildTool({
   async description(input) {
     const { title } = input as { title?: string }
     return title
-      ? `Claude wants to review: ${title}`
-      : 'Claude wants to review an artifact'
+      ? `mAI wants to review: ${title}`
+      : 'mAI wants to review an artifact'
   },
   userFacingName() {
     return 'ReviewArtifact'

@@ -80,6 +80,24 @@ export type UseSelectProps<T> = {
    * Returns true if image selection was entered (images exist), false otherwise.
    */
   onEnterImageSelection?: () => boolean
+
+  /**
+   * When true, the select is filterable: navigation runs in the
+   * SelectFilter keybinding context (no j/k bindings) and printable
+   * characters + Backspace edit the filter query via onFilterChange
+   * instead of triggering numeric quick-jump.
+   */
+  filterable?: boolean
+
+  /**
+   * Current filter query (controlled by the parent).
+   */
+  filterQuery?: string
+
+  /**
+   * Called when the user types into or deletes from the filter.
+   */
+  onFilterChange?: (query: string) => void
 }
 
 export const useSelectInput = <T>({
@@ -94,6 +112,9 @@ export const useSelectInput = <T>({
   inputValues,
   imagesSelected = false,
   onEnterImageSelection,
+  filterable = false,
+  filterQuery = '',
+  onFilterChange,
 }: UseSelectProps<T>) => {
   // Automatically register as an overlay when onCancel is provided.
   // This ensures CancelRequestHandler won't intercept Escape when the select is active.
@@ -163,7 +184,9 @@ export const useSelectInput = <T>({
   ])
 
   useKeybindings(keybindingHandlers, {
-    context: 'Select',
+    // SelectFilter binds only arrows/ctrl+n/ctrl+p/enter/escape — no j/k —
+    // so letter keys fall through to the filter input below.
+    context: filterable ? 'SelectFilter' : 'Select',
     isActive: !isDisabled,
   })
 
@@ -227,6 +250,33 @@ export const useSelectInput = <T>({
         // options — the user has focused a text field and expects typing
         // to insert characters, not jump to a different option.
         return
+      }
+
+      // Filter editing: printable characters and Backspace update the query.
+      // Placed after the input-mode block so typing into an input-type
+      // option keeps priority over filtering.
+      if (filterable && onFilterChange) {
+        if ((key.backspace || key.delete) && filterQuery.length > 0) {
+          onFilterChange(filterQuery.slice(0, -1))
+          event.stopImmediatePropagation()
+          return
+        }
+        const isPrintable =
+          !key.ctrl &&
+          !key.meta &&
+          input.length === 1 &&
+          input >= ' ' &&
+          input !== '\u007f'
+        if (isPrintable) {
+          // Empty query: leave Space to the parent (e.g. ModelPicker's 1M
+          // context toggle); once the query is non-empty it's a literal
+          // character.
+          if (!(input === ' ' && filterQuery.length === 0)) {
+            onFilterChange(filterQuery + input)
+            event.stopImmediatePropagation()
+            return
+          }
+        }
       }
 
       if (key.pageDown) {

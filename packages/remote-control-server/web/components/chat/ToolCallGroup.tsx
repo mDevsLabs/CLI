@@ -171,12 +171,12 @@ function buildSummary(entries: ToolCallEntry[]): string {
 
   const parts: string[] = [];
   for (const [name, count] of toolCounts) {
-    parts.push(count === 1 ? name : `${count} 次${name}`);
+    parts.push(count === 1 ? name : `${name} x${count}`);
   }
 
-  if (parts.length === 0) return `${entries.length} 个工具调用`;
+  if (parts.length === 0) return `${entries.length} tool calls`;
   if (parts.length === 1) return parts[0];
-  return `${entries.length} 个工具: ${parts.join('、')}`;
+  return `${entries.length} tools: ${parts.join(', ')}`;
 }
 
 /** 简化工具名称 */

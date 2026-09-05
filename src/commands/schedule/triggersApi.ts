@@ -110,7 +110,7 @@ function classifyError(err: unknown): TriggersApiError {
     }
     if (status === 403) {
       return new TriggersApiError(
-        'Subscription required. Scheduled triggers require a Claude Pro/Max/Team subscription.',
+        'Subscription required. Scheduled triggers require a mAI Pro/Max/Team subscription.',
         403,
       )
     }

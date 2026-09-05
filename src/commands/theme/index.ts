@@ -4,6 +4,7 @@ const theme = {
   type: 'local-jsx',
   name: 'theme',
   description: 'Change the theme',
+  immediate: true,
   load: () => import('./theme.js'),
 } satisfies Command
 

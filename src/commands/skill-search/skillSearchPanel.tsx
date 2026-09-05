@@ -13,29 +13,28 @@ type SkillSearchAction = {
 
 const ACTION_LABEL_COLUMN_WIDTH = 28;
 
-const ABOUT_TEXT = `# Skill Search (自动技能匹配)
+const ABOUT_TEXT = `# Skill Search (Automatic Skill Matching)
 
-Skill Search 控制对话中的自动技能匹配功能。
+Skill Search controls automatic skill matching during conversations.
 
-启用后，mAI CLI 会在每轮对话中自动搜索并加载与当前任务最相关的 skill 文件，
-无需手动指定。搜索基于 TF-IDF 向量余弦相似度，支持英文词干化和 CJK bi-gram 分词。
+When enabled, mAI CLI automatically searches and loads the most relevant skill files for the current task each turn, without manual specification. Search is based on TF-IDF vector cosine similarity, supporting English stemming and CJK bi-gram tokenization.
 
-## 工作原理
-1. 对话开始时，自动索引 .claude/skills/ 和 ~/.claude/skills/ 下的 Markdown 文件
-2. 每轮对话根据上下文自动匹配最相关的 skill
-3. 匹配到的 skill 内容会作为上下文注入，指导 mAI CLI 的行为
+## How It Works
+1. At the start of a conversation, automatically indexes Markdown files under .claude/skills/ and ~/.claude/skills/
+2. Each turn automatically matches the most relevant skill based on context
+3. Matched skill content is injected as context to guide mAI CLI behavior
 
-## 控制方式
-- /skill-search start  — 启用自动匹配
-- /skill-search stop   — 禁用自动匹配
-- /skill-search status — 查看当前状态
+## Controls
+- /skill-search start  — Enable automatic matching
+- /skill-search stop   — Disable automatic matching
+- /skill-search status — View current status
 
-当前状态: ${isSkillSearchEnabled() ? '已启用' : '未启用'}
+Current status: ${isSkillSearchEnabled() ? 'enabled' : 'disabled'}
 `;
 
 function getStatusText(): string {
   return [
-    'Skill Search (自动技能匹配)',
+    'Skill Search (Automatic Skill Matching)',
     `Status: ${isSkillSearchEnabled() ? 'enabled' : 'disabled'}`,
     '',
     'When enabled, relevant skills are automatically matched and',

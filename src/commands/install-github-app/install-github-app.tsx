@@ -198,7 +198,7 @@ function InstallGitHubApp(props: { onDone: (message: string) => void }): React.R
           setState(prev => ({
             ...prev,
             step: 'error',
-            error: 'A Claude workflow file already exists in this repository.',
+            error: 'A mAI workflow file already exists in this repository.',
             errorReason: 'Workflow file conflict',
             errorInstructions: [
               'The file .github/workflows/claude.yml already exists',

@@ -20,7 +20,7 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
   if (!token) {
     return {
       allowed: false,
-      error: 'Non authentifié. Veuillez vous connecter avec la commande /login.',
+      error: 'Not authenticated. Please log in with the /login command.',
     }
   }
 
@@ -76,12 +76,12 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
       if (res.status === 401 || res.status === 403) {
         return {
           allowed: false,
-          error: 'Session expirée ou clé API invalide. Veuillez vous reconnecter avec /login.',
+          error: 'Session expired or invalid API key. Please log in again with /login.',
         }
       }
       return {
         allowed: false,
-        error: `Erreur lors de la vérification du quota sur ${baseUrl}/v1/usage (${res.status}).`,
+        error: `Error while checking quota on ${baseUrl}/v1/usage (${res.status}).`,
       }
     }
 
@@ -96,7 +96,7 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
     if (data.error) {
       return {
         allowed: false,
-        error: `Erreur quota : ${data.error}`,
+        error: `Quota error: ${data.error}`,
       }
     }
 
@@ -109,11 +109,11 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
 
     if (limit > 0 && tokensUsed >= limit) {
       const resetMsg = data.resetAt
-        ? ` (Date de réinitialisation : ${new Date(data.resetAt).toLocaleString()})`
+        ? ` (Reset date: ${new Date(data.resetAt).toLocaleString()})`
         : ''
       return {
         allowed: false,
-        error: `Quota de tokens mAI atteint : ${tokensUsed.toLocaleString()} / ${limit.toLocaleString()} tokens consommés [Forfait ${data.tier || 'Free'}].${resetMsg}\nVeuillez mettre à niveau votre forfait avec /usage.`,
+        error: `mAI token quota reached: ${tokensUsed.toLocaleString()} / ${limit.toLocaleString()} tokens consumed [Plan ${data.tier || 'Free'}].${resetMsg}\nPlease upgrade your plan with /usage.`,
         data: {
           tokensUsed,
           limit,
@@ -124,7 +124,7 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
     }
 
     logForDebugging(
-      `[QuotaCheck] Quota OK : ${tokensUsed}/${limit} tokens (Forfait ${data.tier || 'Free'})`,
+      `[QuotaCheck] Quota OK: ${tokensUsed}/${limit} tokens (Plan ${data.tier || 'Free'})`,
     )
 
     return {
@@ -141,7 +141,7 @@ export async function checkQuotaUsage(): Promise<QuotaCheckResult> {
     logForDebugging(`[QuotaCheck] Erreur d'accès à ${baseUrl}/usage: ${msg}`)
     return {
       allowed: false,
-      error: `Impossible de vérifier le quota sur ${baseUrl}/usage : ${msg}`,
+      error: `Unable to check quota on ${baseUrl}/usage: ${msg}`,
     }
   }
 }

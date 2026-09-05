@@ -173,14 +173,14 @@ function getNotificationMessage(toolUseConfirm: ToolUseConfirm): string {
   }
 
   if (feature('REVIEW_ARTIFACT') && toolUseConfirm.tool === ReviewArtifactTool) {
-    return 'Claude needs your approval for a review artifact';
+    return 'mAI needs your approval for a review artifact';
   }
 
   if (!toolName || toolName.trim() === '') {
     return 'mAI CLI needs your attention';
   }
 
-  return `Claude needs your permission to use ${toolName}`;
+  return `mAI needs your permission to use ${toolName}`;
 }
 
 // TODO: Move this to Tool.renderPermissionRequest

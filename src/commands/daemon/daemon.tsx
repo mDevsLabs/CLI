@@ -16,7 +16,7 @@ export async function call(
 
   // attach is interactive/blocking — not available inside the REPL
   if (sub === 'attach') {
-    onDone('Use `claude daemon attach` from the CLI. Attach is not available inside the REPL.', { display: 'system' });
+    onDone('Use `mai daemon attach` from the CLI. Attach is not available inside the REPL.', { display: 'system' });
     return null;
   }
 

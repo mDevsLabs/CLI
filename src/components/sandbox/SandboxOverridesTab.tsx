@@ -92,7 +92,7 @@ function OverridesSelect({ onComplete, currentMode }: Props & { currentMode: Ove
           <Text bold dimColor>
             Allow unsandboxed fallback:
           </Text>{' '}
-          When a command fails due to sandbox restrictions, Claude can retry with dangerouslyDisableSandbox to run
+          When a command fails due to sandbox restrictions, mAI can retry with dangerouslyDisableSandbox to run
           outside the sandbox (falling back to default permissions).
         </Text>
         <Text dimColor>

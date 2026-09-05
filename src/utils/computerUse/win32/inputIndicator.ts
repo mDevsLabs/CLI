@@ -4,10 +4,10 @@
  *
  * Displays a small overlay near the bottom of the bound window:
  *   ⌨ Typing "hello world..."
- *   🖱 Click (120, 50)
+ *   Click (120, 50)
  *   ⌨ Ctrl+S
- *   📜 Scroll ↓ 3
- *   ✅ Done
+ *   Scroll ↓ 3
+ *   Done
  *
  * Auto-fades after 2 seconds of inactivity.
  * Click-through, TOPMOST, no taskbar icon.
@@ -232,7 +232,7 @@ export function indicateClick(
   button: string = 'left',
 ): void {
   updateIndicator(
-    `\uD83D\uDDB1 ${button === 'right' ? 'Right-click' : 'Click'} (${x}, ${y})`,
+    `${button === 'right' ? 'Right-click' : 'Click'} (${x}, ${y})`,
   )
 }
 
@@ -245,9 +245,9 @@ export function indicateScroll(direction: string, amount: number): void {
         : direction === 'left'
           ? '\u2190'
           : '\u2192'
-  updateIndicator(`\uD83D\uDCDC Scroll ${arrow} ${amount}`)
+  updateIndicator(`Scroll ${arrow} ${amount}`)
 }
 
 export function indicateDone(): void {
-  updateIndicator('\u2705 Done')
+  updateIndicator('Done')
 }

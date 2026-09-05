@@ -50,7 +50,7 @@ export function initLogger(config: LoggerConfig): pino.Logger {
       }),
     )
 
-    console.log(`📝 Debug logging enabled: ${logFile}`)
+    console.log(`Debug logging enabled: ${logFile}`)
   } else {
     rootLogger = pino(
       { level: 'info', timestamp: pino.stdTimeFunctions.isoTime },

@@ -212,7 +212,7 @@ function makePorts(runsDir: string): WorkflowPorts {
 async function main(): Promise<void> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    console.error('✗ 缺少 ANTHROPIC_API_KEY 环境变量')
+    console.error('✗ Missing ANTHROPIC_API_KEY environment variable')
     process.exit(1)
   }
   clientRef.client = new Anthropic({ apiKey, logLevel: 'off' })
@@ -231,18 +231,18 @@ async function main(): Promise<void> {
   })
 
   if (result.status !== 'completed') {
-    console.error(`\n✗ FAIL：${result.status} ${result.error ?? ''}`)
+    console.error(`\n✗ FAIL: ${result.status} ${result.error ?? ''}`)
     process.exit(1)
   }
   const ret = result.returnValue as {
     points: Array<{ point: string }>
     summary: string
   }
-  console.log('\n━━━━━━━━ 冒烟结果 ━━━━━━━━')
+  console.log('\n━━━━━━━━ Smoke result ━━━━━━━━')
   for (const p of ret.points) console.log(`• ${p.point}`)
-  console.log(`\n综合：${ret.summary}`)
+  console.log(`\nSummary: ${ret.summary}`)
   console.log(
-    `\n✓ PASS：端到端通路正常（${ret.points.length} 要点 + 综合，3 次模型调用）`,
+    `\n✓ PASS: end-to-end pipeline OK (${ret.points.length} points + summary, 3 model calls)`,
   )
 }
 

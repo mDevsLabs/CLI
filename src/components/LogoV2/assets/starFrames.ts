@@ -1,14 +1,14 @@
 /**
- * Assets ASCII pour l'étoile du logo (LogoV2 / CondensedLogo / WelcomeV2).
+ * ASCII assets for the logo star (LogoV2 / CondensedLogo / WelcomeV2).
  *
- * Design « étoile polaire / compass » : un cœur (★, orange claude) entouré de
- * rayons (✦/✧/angles, bleu claude animé). Chaque pose fait exactement 3 lignes
- * × 9 colonnes — contrainte de layout (AnimatedStar STAR_HEIGHT=3, test
- * challenger2_empirical) et de largeur (CondensedLogo compte ~11 colonnes pour
- * l'étoile + gap + padding).
+ * "North star / compass" design: a core (★, orange claude) surrounded by
+ * rays (✦/✧/angles, animated claude blue). Every pose is exactly 3 rows
+ * x 9 columns - a layout constraint (AnimatedStar STAR_HEIGHT=3, test
+ * challenger2_empirical) and a width constraint (CondensedLogo budgets ~11
+ * columns for the star + gap + padding).
  *
- * La coloration se fait par rôle de glyphe (voir {@link STAR_GLYPH_ROLE}) puis
- * est découpée en segments contigus par {@link rowToStarSegments}.
+ * Coloring is done by glyph role (see {@link STAR_GLYPH_ROLE}) and then split
+ * into contiguous segments by {@link rowToStarSegments}.
  */
 
 export type StarPose = 'default' | 'flare' | 'spin-45' | 'sparkle-burst'
@@ -20,12 +20,12 @@ export type StarSegments = {
 }
 
 /**
- * Poses de l'étoile — 3 lignes × 9 colonnes.
+ * Star poses - 3 rows x 9 columns.
  *
- * - default       : étoile compass (★ verticale + ★★★ horizontale, ✦ aux bouts).
- * - flare         : étoile pleine brillante (losange épais).
- * - spin-45       : étoile en rotation (angles ◤◥◣◢ suggèrent le mouvement).
- * - sparkle-burst  : étoile + éclats diagonaux ✦.
+ * - default       : compass star (vertical ★ + horizontal ★★★, ✦ at the ends).
+ * - flare         : full bright star (thick diamond).
+ * - spin-45       : rotating star (◤◥◣◢ angles suggest movement).
+ * - sparkle-burst  : star with diagonal ✦ sparkles.
  */
 export const STAR_POSES: Record<StarPose, StarSegments> = {
   //      0123456789
@@ -52,8 +52,8 @@ export const STAR_POSES: Record<StarPose, StarSegments> = {
 }
 
 /**
- * Variante Apple Terminal — mêmes formes. Conservée pour la parité avec
- * l'ancien rendu qui différenciait les terminaux Apple.
+ * Apple Terminal variant - same shapes. Kept for parity with the previous
+ * rendering which differentiated Apple terminals.
  */
 export const APPLE_STAR_POSES: Record<StarPose, StarSegments> = {
   default: STAR_POSES.default,
@@ -63,10 +63,10 @@ export const APPLE_STAR_POSES: Record<StarPose, StarSegments> = {
 }
 
 /**
- * Rôle de couleur par glyphe.
- * - 'core' : cœur de l'étoile → couleur orange `claude` (statique).
- * - 'ray'  : rayons/éclats → couleur animée (claudeBlue via intensityToColor).
- * - 'none' : espaces et glyphes non listés → pas de couleur (fond terminal).
+ * Color role per glyph.
+ * - 'core' : star core -> orange `claude` color (static).
+ * - 'ray'  : rays/sparkles -> animated color (claudeBlue via intensityToColor).
+ * - 'none' : spaces and unlisted glyphs -> no color (terminal background).
  */
 export const STAR_GLYPH_ROLE: Record<string, 'core' | 'ray' | 'none'> = {
   '★': 'core',
@@ -88,9 +88,9 @@ export type StarRowSegment = {
 }
 
 /**
- * Découpe une ligne de pose en segments contigus par rôle de couleur.
- * Préserve la largeur exacte : les espaces forment des segments 'none' qui
- * seront rendus sans couleur (Text sans prop color).
+ * Splits a pose row into contiguous segments by color role.
+ * Preserves the exact width: spaces form 'none' segments which are rendered
+ * without a color (Text without color prop).
  *
  * @example
  * rowToStarSegments('✦  ★★★  ✦')

@@ -126,7 +126,7 @@ function classifyError(err: unknown): SkillsApiError {
     }
     if (status === 403) {
       return new SkillsApiError(
-        'Subscription required. Skill store requires a Claude Pro/Max/Team subscription.',
+        'Subscription required. Skill store requires a mAI Pro/Max/Team subscription.',
         403,
       )
     }

@@ -36,7 +36,7 @@ export function ChatInput({
   isLoading = false,
   onInterrupt,
   disabled = false,
-  placeholder = '给 Claude 发送消息…',
+  placeholder = 'Send a message to mAI…',
   supportsImages = false,
   commands,
   className,
@@ -252,7 +252,7 @@ export function ChatInput({
                     : 'text-text-muted hover:text-text-secondary hover:bg-surface-1/50',
                 )}
                 disabled={disabled}
-                title="命令列表"
+                title="Command list"
               >
                 <Slash className="h-4 w-4" />
               </button>
@@ -298,7 +298,7 @@ export function ChatInput({
 
       {/* 提示文本 */}
       <div className="text-center mt-1.5">
-        <span className="text-[11px] text-text-muted font-display">Enter 发送，Shift+Enter 换行</span>
+        <span className="text-[11px] text-text-muted font-display">Enter to send, Shift+Enter for a new line</span>
       </div>
     </div>
   );

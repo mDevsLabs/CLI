@@ -23,7 +23,7 @@ export function useChromeExtensionNotification(): void {
     if (process.env.USER_TYPE !== 'ant' && !isClaudeAISubscriber()) {
       return {
         key: 'chrome-requires-subscription',
-        jsx: <Text color="error">Claude in Chrome requires a claude.ai subscription</Text>,
+        jsx: <Text color="error">mAI in Chrome requires a claude.ai subscription</Text>,
         priority: 'immediate',
         timeoutMs: 5000,
       };
@@ -45,7 +45,7 @@ export function useChromeExtensionNotification(): void {
       // (not explicitly enabled with --chrome or disabled with --no-chrome)
       return {
         key: 'claude-in-chrome-default-enabled',
-        text: `Claude in Chrome enabled · /chrome`,
+        text: `mAI in Chrome enabled · /chrome`,
         priority: 'low',
       };
     }

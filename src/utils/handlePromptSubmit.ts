@@ -596,7 +596,7 @@ async function executeUserInput(params: ExecuteUserInputParams): Promise<void> {
             if (!quotaCheck.allowed) {
               newMessages.push(
                 createAssistantAPIErrorMessage({
-                  content: quotaCheck.error || 'Quota de tokens mAI dépassé.',
+                  content: quotaCheck.error || 'mAI token quota exceeded.',
                   error: 'rate_limit',
                 }),
               )

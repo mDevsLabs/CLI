@@ -253,7 +253,7 @@ async function handleSwitchBrowser(
       content: [
         {
           type: 'text',
-          text: 'No other browsers available to switch to. Open Chrome with the Claude extension in another browser to switch.',
+          text: 'No other browsers available to switch to. Open Chrome with the mAI extension in another browser to switch.',
         },
       ],
       isError: true,
@@ -272,7 +272,7 @@ async function handleSwitchBrowser(
     content: [
       {
         type: 'text',
-        text: 'No browser responded within the timeout. Make sure Chrome is open with the Claude extension installed, then try again.',
+        text: 'No browser responded within the timeout. Make sure Chrome is open with the mAI extension installed, then try again.',
       },
     ],
     isError: true,

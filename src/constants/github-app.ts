@@ -55,7 +55,7 @@ jobs:
 
 `
 
-export const PR_BODY = `## 🤖 Installing mAI CLI GitHub App
+export const PR_BODY = `## Installing mAI CLI GitHub App
 
 This PR adds a GitHub Actions workflow that enables mAI CLI integration in our repository.
 

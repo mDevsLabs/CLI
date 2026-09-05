@@ -9,6 +9,10 @@ import {
   getAPIProvider,
   isFirstPartyAnthropicBaseUrl,
 } from '../model/providers.js'
+import {
+  setCachedSettingsForSource,
+  resetSettingsCache,
+} from '../settings/settingsCache.js'
 
 // ── 1. Authentication (M3) ───────────────────────────────────────────────
 
@@ -16,7 +20,9 @@ describe('Challenger 1 — Authentication & AuthTokenSource (M3)', () => {
   const envBackup = { ...process.env }
 
   beforeEach(() => {
+    setCachedSettingsForSource('userSettings', {})
     delete process.env.MAI_TOKEN
+    delete process.env.OPENAI_API_KEY
     delete process.env.ANTHROPIC_API_KEY
     delete process.env.CLAUDE_CODE_OAUTH_TOKEN
     delete process.env.ANTHROPIC_AUTH_TOKEN
@@ -31,6 +37,7 @@ describe('Challenger 1 — Authentication & AuthTokenSource (M3)', () => {
   })
 
   afterEach(() => {
+    resetSettingsCache()
     process.env = { ...envBackup }
   })
 

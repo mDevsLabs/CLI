@@ -115,7 +115,7 @@ if (import.meta.main) {
         `research(agentType:researcher) → ${ret.research.startsWith('[strong]') ? 'strong adapter ✓' : '??'}`,
       )
       console.log(
-        `quick(默认)               → ${ret.quick.startsWith('[fast]') ? 'fast adapter ✓' : '??'}`,
+        `quick(default)            → ${ret.quick.startsWith('[fast]') ? 'fast adapter ✓' : '??'}`,
       )
     }
   } finally {

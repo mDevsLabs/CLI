@@ -8,7 +8,7 @@ export function InterruptedByUser(): React.ReactNode {
       {process.env.USER_TYPE === 'ant' ? (
         <Text dimColor>· [ANT-ONLY] /issue to report a model issue</Text>
       ) : (
-        <Text dimColor>· What should Claude do instead?</Text>
+        <Text dimColor>· What should mAI do instead?</Text>
       )}
     </>
   );

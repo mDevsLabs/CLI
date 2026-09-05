@@ -130,7 +130,7 @@ function classifyError(err: unknown): MemoryStoresApiError {
     }
     if (status === 403) {
       return new MemoryStoresApiError(
-        'Subscription required. Memory stores require a Claude Pro/Max/Team subscription.',
+        'Subscription required. Memory stores require a mAI Pro/Max/Team subscription.',
         403,
       )
     }

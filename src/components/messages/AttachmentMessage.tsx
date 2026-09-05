@@ -348,21 +348,12 @@ export function AttachmentMessage({ attachment, addMargin, verbose, isTranscript
         </>
       );
     }
-    case 'hook_non_blocking_error': {
-      // Stop hooks are rendered as a summary in SystemStopHookSummaryMessage
-      if (attachment.hookEvent === 'Stop' || attachment.hookEvent === 'SubagentStop') {
-        return null;
-      }
-      // Full hook output is logged to debug log via hookEvents.ts
-      return <Line color="error">{attachment.hookName} hook error</Line>;
-    }
+    case 'hook_non_blocking_error':
     case 'hook_error_during_execution':
-      // Stop hooks are rendered as a summary in SystemStopHookSummaryMessage
-      if (attachment.hookEvent === 'Stop' || attachment.hookEvent === 'SubagentStop') {
-        return null;
-      }
-      // Full hook output is logged to debug log via hookEvents.ts
-      return <Line>{attachment.hookName} hook warning</Line>;
+      // Not shown in the UI: hook failures (e.g. built-in UserPromptSubmit /
+      // PostToolUse hooks) shouldn't print error lines into the transcript.
+      // Full hook output stays in the debug log via hookEvents.ts.
+      return null;
     case 'hook_success':
       // Full hook output is logged to debug log via hookEvents.ts
       return null;

@@ -73,7 +73,7 @@ function makeNotification(
     case 'prompt_ack':
       return {
         key: `slave-ack-${slaveName}`,
-        text: `[${shortName}] ✓ 已接收任务`,
+        text: `[${shortName}] ✓ Task accepted`,
         priority: 'low',
         timeoutMs: 2500,
         fold: foldSlaveNotif,
@@ -82,7 +82,7 @@ function makeNotification(
     case 'done':
       return {
         key: `slave-done-${slaveName}`,
-        text: `[${shortName}] ✓ 任务完成`,
+        text: `[${shortName}] ✓ Task done`,
         priority: 'medium',
         timeoutMs: 5000,
         fold: foldSlaveNotif,
@@ -91,7 +91,7 @@ function makeNotification(
     case 'error':
       return {
         key: `slave-error-${slaveName}`,
-        text: `[${shortName}] ✗ 错误: ${truncate(entry.content, 60)}`,
+        text: `[${shortName}] ✗ Error: ${truncate(entry.content, 60)}`,
         color: 'error',
         priority: 'high',
         timeoutMs: 8000,
@@ -100,7 +100,7 @@ function makeNotification(
     case 'tool_start':
       return {
         key: `slave-tool-${slaveName}`,
-        text: `[${shortName}] 工具: ${truncate(entry.content, 40)}`,
+        text: `[${shortName}] Tool: ${truncate(entry.content, 40)}`,
         priority: 'low',
         timeoutMs: 3000,
         fold: foldSlaveNotif,
@@ -109,7 +109,7 @@ function makeNotification(
     case 'prompt':
       return {
         key: `slave-prompt-${slaveName}`,
-        text: `[${shortName}] ▶ 开始处理: ${truncate(entry.content, 50)}`,
+        text: `[${shortName}] ▶ Processing: ${truncate(entry.content, 50)}`,
         priority: 'medium',
         timeoutMs: 4000,
       }

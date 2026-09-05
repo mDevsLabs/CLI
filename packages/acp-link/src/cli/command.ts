@@ -112,7 +112,7 @@ export const command = buildCommand({
     let token: string | undefined
     if (noAuth) {
       console.warn(
-        '⚠️  WARNING: Authentication disabled. This is dangerous for remote access!',
+        'WARNING: Authentication disabled. This is dangerous for remote access!',
       )
       token = undefined
     } else {

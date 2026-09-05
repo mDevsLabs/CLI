@@ -236,7 +236,7 @@ export async function startServer(config: ServerConfig): Promise<void> {
 
   // Print startup banner
   console.log()
-  console.log(`  🚀 ACP Proxy Server${https ? ' (HTTPS)' : ''}`)
+  console.log(`  ACP Proxy Server${https ? ' (HTTPS)' : ''}`)
   console.log()
   console.log(`  Connection:`)
   if (host === '0.0.0.0') {
@@ -249,13 +249,13 @@ export async function startServer(config: ServerConfig): Promise<void> {
   }
   console.log()
   if (!token) {
-    console.log(`  ⚠️  Authentication disabled (--no-auth)`)
+    console.log(`  Authentication disabled (--no-auth)`)
     console.log()
   }
 
   const agentDisplay =
     args.length > 0 ? `${command} ${args.join(' ')}` : command
-  console.log(`  📦 Agent: ${agentDisplay}`)
+  console.log(`  Agent: ${agentDisplay}`)
   console.log(`     CWD:   ${cwd}`)
   console.log()
   console.log(`  Press Ctrl+C to stop`)

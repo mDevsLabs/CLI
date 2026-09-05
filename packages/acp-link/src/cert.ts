@@ -85,7 +85,7 @@ export async function getOrCreateCertificate(): Promise<TlsOptions> {
       if (daysUntilExpiry <= 7) {
         // Certificate expired or expiring soon
         console.log(
-          `⚠️  Certificate ${daysUntilExpiry <= 0 ? 'expired' : `expires in ${daysUntilExpiry} days`}, regenerating...`,
+          `Certificate ${daysUntilExpiry <= 0 ? 'expired' : `expires in ${daysUntilExpiry} days`}, regenerating...`,
         )
       } else {
         // Check if current LAN IPs are in the certificate's SAN
@@ -96,24 +96,24 @@ export async function getOrCreateCertificate(): Promise<TlsOptions> {
         const missingIPs = currentLanIPs.filter(ip => !certSanIPs.includes(ip))
 
         if (missingIPs.length === 0) {
-          console.log(`🔐 Using existing certificate from ${CERT_DIR}`)
+          console.log(`Using existing certificate from ${CERT_DIR}`)
           console.log(`   Valid for ${daysUntilExpiry} more days`)
           return { key: keyPem, cert: certPem }
         }
 
         // LAN IP changed, regenerate
         console.log(
-          `⚠️  LAN IP changed (missing: ${missingIPs.join(', ')}), regenerating certificate...`,
+          `LAN IP changed (missing: ${missingIPs.join(', ')}), regenerating certificate...`,
         )
       }
     } catch {
       // Failed to parse certificate, regenerate
-      console.log(`⚠️  Invalid certificate, regenerating...`)
+      console.log(`Invalid certificate, regenerating...`)
     }
   }
 
   // Generate new self-signed certificate
-  console.log(`🔐 Generating self-signed certificate...`)
+  console.log(`Generating self-signed certificate...`)
 
   const attrs = [{ name: 'commonName', value: 'ACP Proxy Server' }]
 
@@ -169,10 +169,10 @@ export async function getOrCreateCertificate(): Promise<TlsOptions> {
   writeFileSync(KEY_PATH, pems.private)
   writeFileSync(CERT_PATH, pems.cert)
 
-  console.log(`✅ Certificate saved to ${CERT_DIR}`)
+  console.log(`Certificate saved to ${CERT_DIR}`)
   console.log(`   Valid for ${CERT_VALIDITY_DAYS} days`)
   console.log(
-    `   ⚠️  First access will show a security warning - click "Advanced" → "Proceed"`,
+    `   First access will show a security warning - click "Advanced" then "Proceed"`,
   )
 
   return {

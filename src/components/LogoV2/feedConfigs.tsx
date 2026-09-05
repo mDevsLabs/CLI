@@ -45,7 +45,7 @@ export function createWhatsNewFeed(releaseNotes: string[]): FeedConfig {
 
   const emptyMessage =
     process.env.USER_TYPE === 'ant'
-      ? 'Unable to fetch latest claude-cli-internal commits'
+      ? 'Unable to fetch latest mAI CLI commits'
       : 'Check the mAI CLI changelog for updates';
 
   return {
@@ -70,7 +70,7 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
 
   const warningText =
     getCwd() === homedir()
-      ? 'Note: You have launched claude in your home directory. For the best experience, launch it in a project directory instead.'
+      ? 'Note: You have launched mai in your home directory. For the best experience, launch it in a project directory instead.'
       : undefined;
 
   if (warningText) {

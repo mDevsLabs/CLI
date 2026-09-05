@@ -317,7 +317,7 @@ function SpinnerWithVerbInner({
     : showClearTip && !nextTask
       ? 'Use /clear to start fresh when switching topics and free up context'
       : showBtwTip && !nextTask
-        ? "Use /btw to ask a quick side question without interrupting Claude's current work"
+        ? "Use /btw to ask a quick side question without interrupting mAI's current work"
         : spinnerTip;
 
   // Budget text (ant-only) — shown above the tip line

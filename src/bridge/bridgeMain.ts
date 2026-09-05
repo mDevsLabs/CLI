@@ -1551,7 +1551,7 @@ export async function runBridgeLoop(
     !fatalExit
   ) {
     logger.logStatus(
-      `Resume this session by running \`claude remote-control --continue\``,
+      `Resume this session by running \`mai remote-control --continue\``,
     )
     logForDebugging(
       `[bridge:shutdown] Skipping archive+deregister to allow resume of session ${initialSessionId}`,
@@ -1842,7 +1842,7 @@ export function parseArgs(args: string[]): ParsedArgs {
       createSessionInDir = false
     } else {
       return makeError(
-        `Unknown argument: ${arg}\nRun 'claude remote-control --help' for usage.`,
+        `Unknown argument: ${arg}\nRun 'mai remote-control --help' for usage.`,
       )
     }
   }
@@ -1943,7 +1943,7 @@ async function printHelp(): Promise<void> {
 Remote Control - Connect your local environment to claude.ai/code
 
 USAGE
-  claude remote-control [options]
+  mai remote-control [options]
 OPTIONS
   --name <name>                    Name for the session (shown in claude.ai/code)
 ${
@@ -1962,11 +1962,11 @@ ${serverOptions}
 DESCRIPTION
   Remote Control allows you to control sessions on your local device from
   claude.ai/code (https://mai-devs.vercel.app). Run this command in the
-  directory you want to work in, then connect from the Claude app or web.
+  directory you want to work in, then connect from the mAI app or web.
 ${serverDescription}
 NOTES
-  - You must be logged in with a Claude account that has a subscription
-  - Run \`claude\` first in the directory to accept the workspace trust dialog
+  - You must be logged in with an mAI account that has a subscription
+  - Run \`mai\` first in the directory to accept the workspace trust dialog
 ${serverNote}`
   console.log(help)
 }
@@ -2103,7 +2103,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
   // so we must verify trust was previously established by a normal `claude` session.
   if (!checkHasTrustDialogAccepted()) {
     console.error(
-      `Error: Workspace not trusted. Please run \`claude\` in ${dir} first to review and accept the workspace trust dialog.`,
+      `Error: Workspace not trusted. Please run \`mai\` in ${dir} first to review and accept the workspace trust dialog.`,
     )
     // eslint-disable-next-line custom-rules/no-process-exit
     process.exit(1)
@@ -2137,7 +2137,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
       output: process.stdout,
     })
     console.log(
-      '\nRemote Control lets you access this CLI session from the web (claude.ai/code)\nor the Claude app, so you can pick up where you left off on any device.\n\nYou can disconnect remote access anytime by running /remote-control again.\n',
+      '\nRemote Control lets you access this CLI session from the web (claude.ai/code)\nor the mAI app, so you can pick up where you left off on any device.\n\nYou can disconnect remote access anytime by running /remote-control again.\n',
     )
     const answer = await new Promise<string>(resolve => {
       rl.question('Enable Remote Control? (y/n) ', resolve)
@@ -2168,7 +2168,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
     const found = await readBridgePointerAcrossWorktrees(dir)
     if (!found) {
       console.error(
-        `Error: No recent session found in this directory or its worktrees. Run \`claude remote-control\` to start a new one.`,
+        `Error: No recent session found in this directory or its worktrees. Run \`mai remote-control\` to start a new one.`,
       )
       // eslint-disable-next-line custom-rules/no-process-exit
       process.exit(1)
@@ -2259,7 +2259,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
       output: process.stdout,
     })
     console.log(
-      `\nClaude Remote Control is launching in spawn mode which lets you create new sessions in this project from mAI CLI on Web or your Mobile app. Learn more here: https://mai-devs.vercel.app\n\n` +
+      `\nRemote Control is launching in spawn mode which lets you create new sessions in this project from mAI CLI on Web or your Mobile app. Learn more here: https://mai-devs.vercel.app\n\n` +
         `Spawn mode for this project:\n` +
         `  [1] same-dir \u2014 sessions share the current directory (default)\n` +
         `  [2] worktree \u2014 each session gets an isolated git worktree\n\n` +
@@ -2396,7 +2396,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
         await clearBridgePointer(resumePointerDir)
       }
       console.error(
-        `Error: Session ${resumeSessionId} not found. It may have been archived or expired, or your login may have lapsed (run \`claude /login\`).`,
+        `Error: Session ${resumeSessionId} not found. It may have been archived or expired, or your login may have lapsed (run \`mai /login\`).`,
       )
       // eslint-disable-next-line custom-rules/no-process-exit
       process.exit(1)
@@ -2830,7 +2830,7 @@ export async function runBridgeHeadless(
 
   if (!checkHasTrustDialogAccepted()) {
     throw new BridgeHeadlessPermanentError(
-      `Workspace not trusted: ${dir}. Run \`claude\` in that directory first to accept the trust dialog.`,
+      `Workspace not trusted: ${dir}. Run \`mai\` in that directory first to accept the trust dialog.`,
     )
   }
 

@@ -87,11 +87,11 @@ export function PackageManagerAutoUpdater({ verbose }: Props): React.ReactNode {
   // rpm: dnf/yum/zypper)
   const updateCommand =
     packageManager === 'homebrew'
-      ? 'brew upgrade claude-code'
+      ? 'npm update -g @mdevs/mai-cli'
       : packageManager === 'winget'
-        ? 'winget upgrade Anthropic.ClaudeCode'
+        ? 'npm update -g @mdevs/mai-cli'
         : packageManager === 'apk'
-          ? 'apk upgrade claude-code'
+          ? 'npm update -g @mdevs/mai-cli'
           : 'your package manager update command';
 
   return (

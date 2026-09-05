@@ -39,7 +39,7 @@ function getMergedEnv(): Record<string, string> {
 const call: LocalCommandCall = async (args, _context) => {
   return {
     type: 'text',
-    value: '🔒 Provider locked to mAI ecosystem. (Command disabled)',
+    value: 'Provider locked to mAI ecosystem. (Command disabled)',
   }
 }
 

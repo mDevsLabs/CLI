@@ -65,7 +65,7 @@ export function WebFetchPermissionRequest({
     result.push({
       label: (
         <Text>
-          No, and tell Claude what to do differently <Text bold>(esc)</Text>
+          No, and tell mAI what to do differently <Text bold>(esc)</Text>
         </Text>
       ),
       value: 'no',
@@ -124,7 +124,7 @@ export function WebFetchPermissionRequest({
 
       <Box flexDirection="column">
         <PermissionRuleExplanation permissionResult={toolUseConfirm.permissionResult} toolType="tool" />
-        <Text>Do you want to allow Claude to fetch this content?</Text>
+        <Text>Do you want to allow mAI to fetch this content?</Text>
         <Select options={options} onChange={onChange} onCancel={() => onChange('no')} />
       </Box>
     </PermissionDialog>

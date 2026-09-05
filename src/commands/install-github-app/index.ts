@@ -4,8 +4,9 @@ import { isEnvTruthy } from '../../utils/envUtils.js'
 const installGitHubApp = {
   type: 'local-jsx',
   name: 'install-github-app',
-  description: 'Set up Claude GitHub Actions for a repository',
+  description: 'Set up mAI GitHub Actions for a repository',
   availability: ['claude-ai', 'console'],
+  isHidden: true,
   isEnabled: () => !isEnvTruthy(process.env.DISABLE_INSTALL_GITHUB_APP_COMMAND),
   load: () => import('./install-github-app.js'),
 } satisfies Command

@@ -285,7 +285,7 @@ export function SessionDetail({ sessionId }: SessionDetailProps) {
         </div>
 
         {/* Chat messages — unified ChatView */}
-        <ChatView entries={entries} isLoading={isLoading} emptyTitle="开始对话" emptyDescription="输入消息开始聊天" />
+        <ChatView entries={entries} isLoading={isLoading} emptyTitle="Start a conversation" emptyDescription="Type a message to begin chatting" />
 
         {/* Unified Permission Panel — above input */}
         {pendingPermissions.length > 0 && (
@@ -311,7 +311,7 @@ export function SessionDetail({ sessionId }: SessionDetailProps) {
           isLoading={isLoading}
           onInterrupt={handleInterrupt}
           disabled={closed}
-          placeholder={closed ? '会话已关闭' : '输入消息...'}
+          placeholder={closed ? 'Session is closed' : 'Type a message...'}
         />
 
         {/* Task Panel */}

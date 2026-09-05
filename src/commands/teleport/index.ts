@@ -9,7 +9,7 @@ const teleport: Command = {
   description: 'Resume a mAI CLI session from mAI CLI',
   // REPL markdown renderer strips `<...>` as HTML tags — use uppercase.
   argumentHint: 'SESSION_ID',
-  isHidden: false,
+  isHidden: true,
   isEnabled: () => true,
   bridgeSafe: false,
   getBridgeInvocationError: (_args: string) =>

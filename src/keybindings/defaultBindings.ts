@@ -356,6 +356,19 @@ export const DEFAULT_BINDINGS: KeybindingBlock[] = [
       escape: 'select:cancel',
     },
   },
+  // Filterable select (e.g. /model search): no j/k or letter bindings so
+  // printable keys reach the filter input instead of navigating.
+  {
+    context: 'SelectFilter',
+    bindings: {
+      up: 'select:previous',
+      down: 'select:next',
+      'ctrl+n': 'select:next',
+      'ctrl+p': 'select:previous',
+      enter: 'select:accept',
+      escape: 'select:cancel',
+    },
+  },
   // Plugin dialog actions (manage, browse, discover plugins)
   // Navigation (select:*) uses the Select context above
   {

@@ -68,7 +68,7 @@ function loadCustomModes(): CCBMode[] {
           if (!data.slug) {
             data.slug = data.name ? kebabCase(String(data.name)) : ''
           }
-          data.icon = data.icon || '🤖'
+          data.icon = data.icon || '◆'
         } else {
           data = parseYaml(raw) as Record<string, unknown>
         }
@@ -77,7 +77,7 @@ function loadCustomModes(): CCBMode[] {
           name: String(data.name),
           slug: String(data.slug),
           description: String(data.description || ''),
-          icon: String(data.icon || '🔧'),
+          icon: String(data.icon || '✱'),
           systemPrompt: String(data.system_prompt || ''),
           model: data.model ? String(data.model) : undefined,
           ui: {

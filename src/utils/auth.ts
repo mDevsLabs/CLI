@@ -218,10 +218,14 @@ export function getAnthropicApiKey(): null | string {
 }
 
 export function hasAnthropicApiKeyAuth(): boolean {
-  const { key, source } = getAnthropicApiKeyWithSource({
-    skipRetrievingKeyFromApiKeyHelper: true,
-  })
-  return key !== null && source !== 'none'
+  try {
+    const { key, source } = getAnthropicApiKeyWithSource({
+      skipRetrievingKeyFromApiKeyHelper: true,
+    })
+    return key !== null && source !== 'none'
+  } catch {
+    return false
+  }
 }
 
 export function getAnthropicApiKeyWithSource(
@@ -1712,15 +1716,15 @@ export function getSubscriptionName(): string {
 
   switch (subscriptionType) {
     case 'enterprise':
-      return 'Claude Enterprise'
+      return 'mAI Enterprise'
     case 'team':
-      return 'Claude Team'
+      return 'mAI Team'
     case 'max':
-      return 'Claude Max'
+      return 'mAI Max'
     case 'pro':
-      return 'Claude Pro'
+      return 'mAI Pro'
     default:
-      return 'Claude API'
+      return 'mAI API'
   }
 }
 

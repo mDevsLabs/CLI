@@ -84,23 +84,6 @@ export function ModelPicker({
     () => new Set(has1mContext(initialValue) ? [initialValue.replace(/\[1m\]/i, '')] : []),
   );
 
-  const handleToggle1M = useCallback(() => {
-    if (!focusedValue || focusedValue === NO_PREFERENCE) return;
-    // Key on the base value so lookups in handleSelect / is1MMarked match the
-    // initializer — predefined 1M options arrive with a `[1m]` suffix in
-    // `focusedValue`, which would diverge from the base-value key set.
-    const baseKey = focusedValue.replace(/\[1m\]/i, '');
-    setMarked1MValues(prev => {
-      const next = new Set(prev);
-      if (next.has(baseKey)) {
-        next.delete(baseKey);
-      } else {
-        next.add(baseKey);
-      }
-      return next;
-    });
-  }, [focusedValue]);
-
   const [hasToggledEffort, setHasToggledEffort] = useState(false);
   const effortValue = useAppState(s => s.effortValue);
   const [effort, setEffort] = useState<EffortLevel | undefined>(
@@ -151,19 +134,64 @@ export function ModelPicker({
       })),
     [optionsWithInitial],
   );
+
+  const [filterQuery, setFilterQuery] = useState('');
+  const filteredOptions = useMemo(() => {
+    const q = filterQuery.trim().toLowerCase();
+    if (!q) return selectOptions;
+    return selectOptions.filter(
+      opt => opt.label.toLowerCase().includes(q) || String(opt.value).toLowerCase().includes(q),
+    );
+  }, [selectOptions, filterQuery]);
+
+  const handleCancel = useCallback(() => {
+    if (filterQuery) {
+      setFilterQuery('');
+      return;
+    }
+    (onCancel ?? (() => {}))();
+  }, [filterQuery, onCancel]);
+
   const initialFocusValue = useMemo(
     () => (selectOptions.some(_ => _.value === initialValue) ? initialValue : (selectOptions[0]?.value ?? undefined)),
     [selectOptions, initialValue],
   );
-  const visibleCount = Math.min(maxVisible, selectOptions.length);
-  const hiddenCount = Math.max(0, selectOptions.length - visibleCount);
+  const visibleCount = Math.min(maxVisible, filteredOptions.length);
+  const hiddenCount = Math.max(0, filteredOptions.length - visibleCount);
 
-  const focusedModelName = selectOptions.find(opt => opt.value === focusedValue)?.label;
+  const focusedOption = selectOptions.find(opt => opt.value === focusedValue);
+  const focusedModelName = focusedOption?.label;
   const focusedModel = resolveOptionModel(focusedValue);
   const is1MMarked =
     focusedValue !== undefined &&
     focusedValue !== NO_PREFERENCE &&
     marked1MValues.has(focusedValue.replace(/\[1m\]/i, ''));
+  // A model supports 1M context when its catalog entry says so, or when a
+  // predefined `[1m]` variant of it exists in the options list.
+  const focusedBaseValue = focusedValue?.replace(/\[1m\]/i, '');
+  const focusedSupports1M =
+    focusedOption?.supports1M === true ||
+    (focusedBaseValue !== undefined && selectOptions.some(o => o.value === `${focusedBaseValue}[1m]`));
+
+  const handleToggle1M = useCallback(() => {
+    if (!focusedValue || focusedValue === NO_PREFERENCE) return;
+    // Models without 1M support hide the status line below the list — keep
+    // Space a no-op for them too.
+    if (focusedOption?.supports1M === false) return;
+    // Key on the base value so lookups in handleSelect / is1MMarked match the
+    // initializer — predefined 1M options arrive with a `[1m]` suffix in
+    // `focusedValue`, which would diverge from the base-value key set.
+    const baseKey = focusedValue.replace(/\[1m\]/i, '');
+    setMarked1MValues(prev => {
+      const next = new Set(prev);
+      if (next.has(baseKey)) {
+        next.delete(baseKey);
+      } else {
+        next.add(baseKey);
+      }
+      return next;
+    });
+  }, [focusedValue, focusedOption]);
   const focusedSupportsEffort = focusedModel ? modelSupportsEffort(focusedModel) : false;
   const focusedSupportsXhigh = focusedModel ? modelSupportsXhighEffort(focusedModel) : false;
   const focusedSupportsMax = focusedModel ? modelSupportsMaxEffort(focusedModel) : false;
@@ -270,7 +298,7 @@ export function ModelPicker({
           </Text>
           <Text dimColor>
             {headerText ??
-              'Choose a model for this and future sessions. Use ← → to adjust effort, Space to toggle 1M context.'}
+              'Choose a model for this and future sessions. Type to filter, ← → to adjust effort, Space to toggle 1M context.'}
           </Text>
           {sessionModel && (
             <Text dimColor>
@@ -282,15 +310,25 @@ export function ModelPicker({
 
         <Box flexDirection="column" marginBottom={1}>
           <Box flexDirection="column">
-            <Select
-              defaultValue={initialValue}
-              defaultFocusValue={initialFocusValue}
-              options={selectOptions}
-              onChange={handleSelect}
-              onFocus={handleFocus}
-              onCancel={onCancel ?? (() => {})}
-              visibleOptionCount={visibleCount}
-            />
+            {filteredOptions.length > 0 ? (
+              <Select
+                defaultValue={initialValue}
+                defaultFocusValue={filterQuery ? undefined : initialFocusValue}
+                options={filteredOptions}
+                onChange={handleSelect}
+                onFocus={handleFocus}
+                onCancel={handleCancel}
+                visibleOptionCount={visibleCount}
+                filterable
+                filterQuery={filterQuery}
+                onFilterChange={setFilterQuery}
+                highlightText={filterQuery || undefined}
+              />
+            ) : (
+              <Box paddingLeft={3}>
+                <Text dimColor>No models matching "{filterQuery.trim()}" — press Esc to clear</Text>
+              </Box>
+            )}
           </Box>
           {hiddenCount > 0 && (
             <Box paddingLeft={3}>
@@ -316,13 +354,13 @@ export function ModelPicker({
               <EffortLevelIndicator effort={'high'} /> 1M context on
               <Text color="subtle"> · Space to toggle</Text>
             </Text>
-          ) : (
+          ) : focusedSupports1M ? (
             <Text color="subtle">
               <EffortLevelIndicator effort={undefined} /> 1M context off
               {focusedModelName ? ` for ${focusedModelName}` : ''}
               <Text color="subtle"> · Space to toggle</Text>
             </Text>
-          )}
+          ) : null}
         </Box>
 
         {isFastModeEnabled() ? (

@@ -161,14 +161,14 @@ function ClaudeInChromeMenu({
 
             <Text>
               <Text dimColor>Usage: </Text>
-              <Text>claude --chrome</Text>
+              <Text>mai --chrome</Text>
               <Text dimColor> or </Text>
-              <Text>claude --no-chrome</Text>
+              <Text>mai --no-chrome</Text>
             </Text>
 
             <Text dimColor>
               Site-level permissions are inherited from the Chrome extension. Manage permissions in the Chrome extension
-              settings to control which sites Claude can browse, click, and type on.
+              settings to control which sites mAI can browse, click, and type on.
             </Text>
           </>
         )}

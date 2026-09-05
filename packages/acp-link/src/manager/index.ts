@@ -34,7 +34,7 @@ export async function startManager(port: number): Promise<void> {
   })
 
   console.log()
-  console.log(`  🖥️  ACP Manager`)
+  console.log(`  ACP Manager`)
   console.log()
   console.log(`    URL:   http://localhost:${port}`)
   console.log()

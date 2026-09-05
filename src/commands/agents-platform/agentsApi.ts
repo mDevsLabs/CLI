@@ -85,7 +85,7 @@ function classifyError(err: unknown): AgentsApiError {
     }
     if (status === 403) {
       return new AgentsApiError(
-        'Subscription required. Scheduled agents require a Claude Pro/Max/Team subscription.',
+        'Subscription required. Scheduled agents require a mAI Pro/Max/Team subscription.',
         403,
       )
     }

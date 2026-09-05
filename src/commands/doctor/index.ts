@@ -5,6 +5,7 @@ const doctor: Command = {
   name: 'doctor',
   description: 'Diagnose and verify your mAI CLI installation and settings',
   isEnabled: () => !isEnvTruthy(process.env.DISABLE_DOCTOR_COMMAND),
+  immediate: true,
   type: 'local-jsx',
   load: () => import('./doctor.js'),
 }

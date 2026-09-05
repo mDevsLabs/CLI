@@ -21,6 +21,11 @@ function getTextContent(node: ReactNode): string {
   return '';
 }
 
+function indexOfCaseInsensitive(haystack: string, needle: string): number {
+  if (!needle) return -1;
+  return haystack.toLowerCase().indexOf(needle.toLowerCase());
+}
+
 type BaseOption<T> = {
   description?: string;
   dimDescription?: boolean;
@@ -194,6 +199,28 @@ export type SelectProps<T> = {
    * Callback to remove a pasted image by its ID.
    */
   readonly onRemoveImage?: (id: number) => void;
+
+  /**
+   * When true, renders a filter line above the options and routes printable
+   * input to onFilterChange (SelectFilter keybinding context) instead of
+   * numeric quick-jump. Options themselves are filtered by the parent.
+   */
+  readonly filterable?: boolean;
+
+  /**
+   * Current filter query (controlled by the parent).
+   */
+  readonly filterQuery?: string;
+
+  /**
+   * Called when the user types into or deletes from the filter.
+   */
+  readonly onFilterChange?: (query: string) => void;
+
+  /**
+   * Placeholder shown in the filter line when the query is empty.
+   */
+  readonly filterPlaceholder?: string;
 };
 
 export function Select<T>({
@@ -217,6 +244,10 @@ export function Select<T>({
   onImagePaste,
   pastedContents,
   onRemoveImage,
+  filterable = false,
+  filterQuery = '',
+  onFilterChange,
+  filterPlaceholder,
 }: SelectProps<T>): React.ReactNode {
   // Image selection mode state
   const [imagesSelected, setImagesSelected] = useState(false);
@@ -282,6 +313,9 @@ export function Select<T>({
     onInputModeToggle,
     inputValues,
     imagesSelected,
+    filterable,
+    filterQuery,
+    onFilterChange,
     onEnterImageSelection: () => {
       if (pastedContents && Object.values(pastedContents).some(c => c.type === 'image')) {
         const imageCount = count(Object.values(pastedContents), c => c.type === 'image');
@@ -298,11 +332,19 @@ export function Select<T>({
     highlightedText: () => ({ bold: true }),
   };
 
+  const filterLine = filterable ? (
+    <Box paddingLeft={1}>
+      <Text color="suggestion">Search: </Text>
+      {filterQuery ? <Text bold>{filterQuery}</Text> : <Text dimColor>{filterPlaceholder ?? 'type to filter'}</Text>}
+    </Box>
+  ) : null;
+
   if (layout === 'expanded') {
     const maxIndexWidth = state.options.length.toString().length;
 
     return (
       <Box {...styles.container()}>
+        {filterLine}
         {state.visibleOptions.map((option, index) => {
           const isFirstVisibleOption = option.index === state.visibleFromIndex;
           const isLastVisibleOption = option.index === state.visibleToIndex - 1;
@@ -366,18 +408,20 @@ export function Select<T>({
           // Handle text type options
           let label: ReactNode = option.label;
 
-          // Only apply highlight when label is a string
-          if (typeof option.label === 'string' && highlightText && option.label.includes(highlightText)) {
-            const labelText = option.label;
-            const index = labelText.indexOf(highlightText);
-
-            label = (
-              <>
-                {labelText.slice(0, index)}
-                <Text {...styles.highlightedText()}>{highlightText}</Text>
-                {labelText.slice(index + highlightText.length)}
-              </>
-            );
+          // Only apply highlight when label is a string (case-insensitive,
+          // matching the filter matching)
+          if (typeof option.label === 'string' && highlightText) {
+            const idx = indexOfCaseInsensitive(option.label, highlightText);
+            if (idx >= 0) {
+              const matched = option.label.slice(idx, idx + highlightText.length);
+              label = (
+                <>
+                  {option.label.slice(0, idx)}
+                  <Text {...styles.highlightedText()}>{matched}</Text>
+                  {option.label.slice(idx + matched.length)}
+                </>
+              );
+            }
           }
 
           const isOptionDisabled = option.disabled === true;
@@ -421,6 +465,7 @@ export function Select<T>({
 
     return (
       <Box {...styles.container()}>
+        {filterLine}
         {state.visibleOptions.map((option, index) => {
           const isFirstVisibleOption = option.index === state.visibleFromIndex;
           const isLastVisibleOption = option.index === state.visibleToIndex - 1;
@@ -484,18 +529,20 @@ export function Select<T>({
           // Handle text type options
           let label: ReactNode = option.label;
 
-          // Only apply highlight when label is a string
-          if (typeof option.label === 'string' && highlightText && option.label.includes(highlightText)) {
-            const labelText = option.label;
-            const index = labelText.indexOf(highlightText);
-
-            label = (
-              <>
-                {labelText.slice(0, index)}
-                <Text {...styles.highlightedText()}>{highlightText}</Text>
-                {labelText.slice(index + highlightText.length)}
-              </>
-            );
+          // Only apply highlight when label is a string (case-insensitive,
+          // matching the filter matching)
+          if (typeof option.label === 'string' && highlightText) {
+            const idx = indexOfCaseInsensitive(option.label, highlightText);
+            if (idx >= 0) {
+              const matched = option.label.slice(idx, idx + highlightText.length);
+              label = (
+                <>
+                  {option.label.slice(0, idx)}
+                  <Text {...styles.highlightedText()}>{matched}</Text>
+                  {option.label.slice(idx + matched.length)}
+                </>
+              );
+            }
           }
 
           const isOptionDisabled = option.disabled === true;
@@ -555,16 +602,18 @@ export function Select<T>({
     const isOptionDisabled = option.disabled === true;
 
     let label: ReactNode = option.label;
-    if (typeof option.label === 'string' && highlightText && option.label.includes(highlightText)) {
-      const labelText = option.label;
-      const idx = labelText.indexOf(highlightText);
-      label = (
-        <>
-          {labelText.slice(0, idx)}
-          <Text {...styles.highlightedText()}>{highlightText}</Text>
-          {labelText.slice(idx + highlightText.length)}
-        </>
-      );
+    if (typeof option.label === 'string' && highlightText) {
+      const idx = indexOfCaseInsensitive(option.label, highlightText);
+      if (idx >= 0) {
+        const matched = option.label.slice(idx, idx + highlightText.length);
+        label = (
+          <>
+            {option.label.slice(0, idx)}
+            <Text {...styles.highlightedText()}>{matched}</Text>
+            {option.label.slice(idx + matched.length)}
+          </>
+        );
+      }
     }
 
     return {
@@ -594,6 +643,7 @@ export function Select<T>({
 
     return (
       <Box {...styles.container()}>
+        {filterLine}
         {optionData.map(data => {
           if (data.option.type === 'input') {
             // Input options not supported in two-column layout
@@ -665,6 +715,7 @@ export function Select<T>({
 
   return (
     <Box {...styles.container()}>
+      {filterLine}
       {state.visibleOptions.map((option, index) => {
         // Handle input type options
         if (option.type === 'input') {
@@ -726,18 +777,20 @@ export function Select<T>({
         // Handle text type options
         let label: ReactNode = option.label;
 
-        // Only apply highlight when label is a string
-        if (typeof option.label === 'string' && highlightText && option.label.includes(highlightText)) {
-          const labelText = option.label;
-          const index = labelText.indexOf(highlightText);
-
-          label = (
-            <>
-              {labelText.slice(0, index)}
-              <Text {...styles.highlightedText()}>{highlightText}</Text>
-              {labelText.slice(index + highlightText.length)}
-            </>
-          );
+        // Only apply highlight when label is a string (case-insensitive,
+        // matching the filter matching)
+        if (typeof option.label === 'string' && highlightText) {
+          const idx = indexOfCaseInsensitive(option.label, highlightText);
+          if (idx >= 0) {
+            const matched = option.label.slice(idx, idx + highlightText.length);
+            label = (
+              <>
+                {option.label.slice(0, idx)}
+                <Text {...styles.highlightedText()}>{matched}</Text>
+                {option.label.slice(idx + matched.length)}
+              </>
+            );
+          }
         }
 
         const isFirstVisibleOption = option.index === state.visibleFromIndex;

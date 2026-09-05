@@ -523,7 +523,7 @@ async function runInputActionGates(
         `"${frontmost.displayName}" is granted at tier "read" — ` +
           `visible in screenshots only, no clicks or typing.` +
           (isBrowser
-            ? ' Use the Claude-in-Chrome MCP for browser interaction (tools ' +
+            ? ' Use the mAI-in-Chrome MCP for browser interaction (tools ' +
               'named `mcp__Claude_in_Chrome__*`; load via SearchExtraTools if ' +
               'deferred).'
             : ' No interaction is permitted; ask the user to take any ' +
@@ -567,7 +567,7 @@ async function runInputActionGates(
     // Keyboard safety net — defocus (prepareForAction step B) should have
     // moved us off. If we're still here, typing would go to our chat box.
     return errorResult(
-      "Claude's own window still has keyboard focus. This should not happen " +
+      "mAI's own window still has keyboard focus. This should not happen " +
         'after the pre-action defocus. Click on the target application first.',
       'state_conflict',
     )
@@ -669,7 +669,7 @@ async function runHitTestGate(
     `Click at these coordinates would land on "${target.displayName}", ` +
       `which is granted at tier "read" (screenshots only, no interaction). ` +
       (isBrowser
-        ? 'Use the Claude-in-Chrome MCP for browser interaction.'
+        ? 'Use the mAI-in-Chrome MCP for browser interaction.'
         : 'Ask the user to take any actions in this app themselves.') +
       TIER_ANTI_SUBVERSION,
     'tier_insufficient',
@@ -1308,7 +1308,7 @@ function buildTierGuidanceMessage(tiered: TieredApp[]): string {
         `granted at tier "read" (visible in screenshots only; no clicks or ` +
         `typing). You can read what's on screen but cannot navigate, click, ` +
         `or type into ${readBrowsers.length === 1 ? 'it' : 'them'}. For browser ` +
-        `interaction, use the Claude-in-Chrome MCP (tools named ` +
+        `interaction, use the mAI-in-Chrome MCP (tools named ` +
         `\`mcp__Claude_in_Chrome__*\`; load via SearchExtraTools if deferred).`,
     )
   }
@@ -4380,8 +4380,8 @@ export async function handleToolCall(
   if (lock) {
     if (lock.holder !== undefined && !lock.isSelf) {
       return errorResult(
-        'Another Claude session is currently using the computer. Wait for ' +
-          'the user to acknowledge it is finished (stop button in the Claude ' +
+        'Another mAI session is currently using the computer. Wait for ' +
+          'the user to acknowledge it is finished (stop button in the mAI ' +
           'window), or find a non-computer-use approach if one is readily ' +
           'apparent.',
         'cu_lock_held',

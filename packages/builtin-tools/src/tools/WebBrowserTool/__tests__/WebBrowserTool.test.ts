@@ -53,7 +53,7 @@ describe('WebBrowserTool', () => {
     const prompt = await WebBrowserTool.prompt()
     expect(prompt).toContain('Limitations')
     expect(prompt).toContain('No JavaScript')
-    expect(prompt).toContain('Claude-in-Chrome')
+    expect(prompt).toContain('mAI-in-Chrome')
   })
 
   test('navigate fetches URL', async () => {

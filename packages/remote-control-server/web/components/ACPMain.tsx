@@ -48,7 +48,7 @@ export function ACPMain({ client, agentId }: ACPMainProps) {
         <div className="flex items-center justify-between px-3 py-4">
           {!sidebarCollapsed && (
             <span className="text-xs font-display font-semibold text-text-muted uppercase tracking-widest px-1">
-              会话
+              Sessions
             </span>
           )}
           <div className={cn('flex items-center gap-0.5', sidebarCollapsed && 'mx-auto')}>
@@ -59,7 +59,7 @@ export function ACPMain({ client, agentId }: ACPMainProps) {
                   // ChatInterface handles new session internally
                 }}
                 className="h-7 w-7 flex items-center justify-center rounded-lg text-text-muted hover:text-brand hover:bg-brand/10 transition-colors"
-                title="新会话"
+                title="New session"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -155,7 +155,7 @@ function SidebarSessionList({
   if (loading && sessions.length === 0) {
     return (
       <div className="flex items-center justify-center py-8">
-        <span className="text-xs text-text-muted font-display">加载中...</span>
+        <span className="text-xs text-text-muted font-display">Loading...</span>
       </div>
     );
   }
@@ -163,7 +163,7 @@ function SidebarSessionList({
   if (sessions.length === 0) {
     return (
       <div className="flex items-center justify-center py-8">
-        <span className="text-xs text-text-muted font-display">暂无会话</span>
+        <span className="text-xs text-text-muted font-display">No sessions yet</span>
       </div>
     );
   }
@@ -172,7 +172,7 @@ function SidebarSessionList({
   const groups = groupByRecency(sorted);
 
   return (
-    <nav className="py-1" aria-label="历史会话">
+    <nav className="py-1" aria-label="Session history">
       {groups.map((group, gi) => (
         <div key={group.label}>
           {gi > 0 && <div className="mx-3 my-2 border-t border-border/40" />}
@@ -199,7 +199,7 @@ function SidebarSessionList({
             >
               <MessageSquare className="h-3.5 w-3.5 flex-shrink-0 opacity-50" />
               <span className="text-[13px] font-display truncate leading-snug">
-                {session.title && session.title.trim() ? session.title : '新会话'}
+                {session.title && session.title.trim() ? session.title : 'New session'}
               </span>
             </button>
           ))}
@@ -224,9 +224,9 @@ function groupByRecency(sessions: AgentSessionInfo[]): SessionGroup[] {
   const yesterday = new Date(today.getTime() - 86400000);
 
   const groups: SessionGroup[] = [
-    { label: '今天', sessions: [] },
-    { label: '昨天', sessions: [] },
-    { label: '更早', sessions: [] },
+    { label: 'Today', sessions: [] },
+    { label: 'Yesterday', sessions: [] },
+    { label: 'Earlier', sessions: [] },
   ];
 
   for (const session of sessions) {

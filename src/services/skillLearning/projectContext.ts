@@ -8,6 +8,7 @@ import {
   writeFileSync,
 } from 'fs'
 import { basename, join, resolve } from 'path'
+import { homedir } from 'os'
 import { getClaudeConfigHomeDir } from '../../utils/envUtils.js'
 import type {
   ProjectContextSource,
@@ -121,26 +122,26 @@ function resolveContext(cwd: string): SkillLearningProjectContext {
     })
   }
 
-  const gitRemote = git(['remote', 'get-url', 'origin'], cwd)
-  if (gitRemote) {
-    const projectRoot = git(['rev-parse', '--show-toplevel'], cwd)
-    const normalizedRemote = normalizeGitRemote(gitRemote)
-    return buildContext({
-      source: 'git_remote',
-      scope: 'project',
-      cwd,
-      projectRoot: projectRoot
-        ? normalizePath(projectRoot)
-        : normalizePath(cwd),
-      gitRemote: normalizedRemote,
-      identity: `git-remote:${normalizedRemote}`,
-      projectName: projectNameFromRemote(normalizedRemote),
-    })
-  }
+  const rawGitRoot = git(['rev-parse', '--show-toplevel'], cwd)
+  const home = homedir()
+  const isHomeOrEmpty = !rawGitRoot || normalizePath(rawGitRoot) === normalizePath(home)
 
-  const gitRoot = git(['rev-parse', '--show-toplevel'], cwd)
-  if (gitRoot) {
-    const projectRoot = normalizePath(gitRoot)
+  if (rawGitRoot && !isHomeOrEmpty) {
+    const projectRoot = normalizePath(rawGitRoot)
+    const gitRemote = git(['remote', 'get-url', 'origin'], cwd)
+    if (gitRemote) {
+      const normalizedRemote = normalizeGitRemote(gitRemote)
+      return buildContext({
+        source: 'git_remote',
+        scope: 'project',
+        cwd,
+        projectRoot,
+        gitRemote: normalizedRemote,
+        identity: `git-remote:${normalizedRemote}`,
+        projectName: projectNameFromRemote(normalizedRemote),
+      })
+    }
+
     return buildContext({
       source: 'git_root',
       scope: 'project',

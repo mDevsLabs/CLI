@@ -80,12 +80,12 @@ interface ChatInterfaceProps {
 // =============================================================================
 
 const PERMISSION_MODES = [
-  { value: 'default', label: '默认', description: '手动审批权限请求' },
-  { value: 'acceptEdits', label: '自动接受编辑', description: '自动允许文件编辑操作' },
-  { value: 'bypassPermissions', label: '跳过权限', description: '跳过所有权限检查' },
-  { value: 'plan', label: '规划模式', description: '仅规划，不执行工具' },
-  { value: 'dontAsk', label: '不询问', description: '不弹出询问，自动拒绝' },
-  { value: 'auto', label: '自动判断', description: 'AI 自动判断是否批准' },
+  { value: 'default', label: 'Default', description: 'Manually approve permission requests' },
+  { value: 'acceptEdits', label: 'Auto-accept edits', description: 'Automatically allow file edit operations' },
+  { value: 'bypassPermissions', label: 'Bypass permissions', description: 'Skip all permission checks' },
+  { value: 'plan', label: 'Plan mode', description: 'Plan only, do not execute tools' },
+  { value: 'dontAsk', label: 'Don\'t ask', description: 'Do not prompt, auto-reject' },
+  { value: 'auto', label: 'Auto-decide', description: 'AI automatically decides whether to approve' },
 ] as const;
 
 function PermissionModeSelector({ mode, onModeChange }: { mode: string; onModeChange: (mode: string) => void }) {
@@ -810,8 +810,8 @@ export function ChatInterface({ client, agentId }: ChatInterfaceProps) {
         onPermissionRespond={(requestId, optionId, optionKind) => {
           handlePermissionResponse(requestId, optionId, optionKind as PermissionOption['kind'] | null);
         }}
-        emptyTitle={sessionReady ? '开始对话' : undefined}
-        emptyDescription={sessionReady ? '输入消息开始与 ACP agent 聊天' : undefined}
+        emptyTitle={sessionReady ? 'Start a conversation' : undefined}
+        emptyDescription={sessionReady ? 'Type a message to start chatting with the ACP agent' : undefined}
       />
 
       {/* Permission panel — fixed above input */}
@@ -856,7 +856,7 @@ export function ChatInterface({ client, agentId }: ChatInterfaceProps) {
                   onClick={handleNewSession}
                 >
                   <Plus className="h-3 w-3" />
-                  新会话
+                  New session
                 </Button>
               </TooltipTrigger>
               <TooltipContent>New Thread</TooltipContent>
@@ -868,7 +868,7 @@ export function ChatInterface({ client, agentId }: ChatInterfaceProps) {
           isLoading={isLoading}
           onInterrupt={handleCancel}
           disabled={!sessionReady}
-          placeholder={sessionReady ? '给 Claude 发送消息…' : '等待会话...'}
+          placeholder={sessionReady ? 'Send a message to mAI…' : 'Waiting for session...'}
           supportsImages={supportsImages}
           commands={availableCommands.length > 0 ? availableCommands : undefined}
         />

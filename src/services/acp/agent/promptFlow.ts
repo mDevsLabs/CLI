@@ -173,7 +173,7 @@ async function prompt(
     ) {
       await this.teardownSession(params.sessionId)
       throw new Error(
-        'The Claude Agent process exited unexpectedly. Please start a new session.',
+        'The mAI Agent process exited unexpectedly. Please start a new session.',
       )
     }
 

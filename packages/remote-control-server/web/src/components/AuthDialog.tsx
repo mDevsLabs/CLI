@@ -55,7 +55,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
           phone: fields.phone.trim() || undefined,
           password: fields.password,
         });
-        setSuccess(`Compte créé ! Bienvenue, ${result.username} 🎉`);
+        setSuccess(`Account created! Welcome, ${result.username}`);
       } else {
         // Login accepts username OR email
         const isEmail = fields.username.includes('@');
@@ -63,7 +63,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
           [isEmail ? 'email' : 'username']: fields.username.trim(),
           password: fields.password,
         });
-        setSuccess(`Connecté en tant que ${result.username} ✓`);
+        setSuccess(`Logged in as ${result.username}`);
       }
       onSuccess?.(result);
       setTimeout(() => {
@@ -72,7 +72,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
         onClose();
       }, 1200);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -94,10 +94,10 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
         <div className="p-6 space-y-5">
           <DialogHeader>
             <DialogTitle className="font-display text-lg font-semibold text-text-primary">
-              {isRegister ? 'Créer un compte' : 'Connexion'}
+              {isRegister ? 'Create account' : 'Sign in'}
             </DialogTitle>
             <p className="text-sm text-text-muted">
-              {isRegister ? 'Rejoignez mAI CLI Remote Control' : 'Accédez à votre tableau de bord'}
+              {isRegister ? 'Join mAI CLI Remote Control' : 'Access your dashboard'}
             </p>
           </DialogHeader>
 
@@ -113,7 +113,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                   mode === m ? 'bg-surface-1 text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary',
                 )}
               >
-                {m === 'login' ? 'Connexion' : 'Inscription'}
+                {m === 'login' ? 'Sign in' : 'Sign up'}
               </button>
             ))}
           </div>
@@ -124,7 +124,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
               id="auth-username"
               icon={<User className="h-4 w-4" />}
               type="text"
-              placeholder={isRegister ? "Nom d'utilisateur" : "Nom d'utilisateur ou email"}
+              placeholder={isRegister ? 'Username' : 'Username or email'}
               value={fields.username}
               onChange={set('username')}
               required
@@ -136,7 +136,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                 id="auth-email"
                 icon={<Mail className="h-4 w-4" />}
                 type="email"
-                placeholder="Adresse email"
+                placeholder="Email address"
                 value={fields.email}
                 onChange={set('email')}
                 required
@@ -149,7 +149,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                 id="auth-phone"
                 icon={<Phone className="h-4 w-4" />}
                 type="tel"
-                placeholder="Téléphone (optionnel)"
+                placeholder="Phone (optional)"
                 value={fields.phone}
                 onChange={set('phone')}
               />
@@ -161,7 +161,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                 id="auth-password"
                 icon={<Lock className="h-4 w-4" />}
                 type={showPwd ? 'text' : 'password'}
-                placeholder="Mot de passe"
+                placeholder="Password"
                 value={fields.password}
                 onChange={set('password')}
                 required
@@ -172,7 +172,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                 tabIndex={-1}
                 onClick={() => setShowPwd(v => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
-                aria-label={showPwd ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                aria-label={showPwd ? 'Hide password' : 'Show password'}
               >
                 {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -206,7 +206,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  {isRegister ? "S'inscrire" : 'Se connecter'}
+                  {isRegister ? 'Sign up' : 'Sign in'}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}

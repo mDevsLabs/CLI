@@ -53,7 +53,7 @@ export function IdeOnboardingDialog({ onDone, installationStatus }: Props): Reac
       >
         <Box flexDirection="column" gap={1}>
           <Text>
-            • Claude has context of <Text color="suggestion">⧉ open files</Text> and{' '}
+            • mAI has context of <Text color="suggestion">⧉ open files</Text> and{' '}
             <Text color="suggestion">⧉ selected lines</Text>
           </Text>
           <Text>

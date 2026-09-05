@@ -954,7 +954,7 @@ export function LogSelector({
       {agenticSearchState.status === 'results' && agenticSearchState.results.length > 0 && (
         <Box paddingLeft={1} marginBottom={1} flexShrink={0}>
           <Text dimColor italic>
-            Claude found these results:
+            mAI found these results:
           </Text>
         </Box>
       )}
@@ -992,7 +992,7 @@ export function LogSelector({
                 {isAgenticSearchOptionFocused ? figures.pointer : ' '}
               </Text>
               <Text color={isAgenticSearchOptionFocused ? 'suggestion' : undefined} bold={isAgenticSearchOptionFocused}>
-                Search deeply using Claude →
+                Search deeply using mAI →
               </Text>
             </Box>
             <Box height={1} />
@@ -1095,7 +1095,7 @@ export function LogSelector({
         ) : agenticSearchState.status === 'searching' ? (
           <Text dimColor>
             <Byline>
-              <Text>Searching with Claude…</Text>
+              <Text>Searching with mAI…</Text>
               <ConfigurableShortcutHint
                 action="confirm:no"
                 context="Confirmation"

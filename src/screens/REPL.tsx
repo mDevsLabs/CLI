@@ -4052,6 +4052,14 @@ export function REPL({
             setPastedContents({});
           }
 
+          // /exit submitted from the prompt must hide the prompt and its
+          // suggestion list before the final frame is written: in non-alt-screen
+          // mode the last frame stays in scrollback and the shell prompt would
+          // otherwise land on top of it. handleExit does the same for Ctrl+D.
+          if (matchingCommand.name === 'exit') {
+            setIsExiting(true);
+          }
+
           const pastedTextRefs = parseReferences(input).filter(r => pastedContents[r.id]?.type === 'text');
           const pastedTextCount = pastedTextRefs.length;
           const pastedTextBytes = pastedTextRefs.reduce(
@@ -4133,6 +4141,11 @@ export function REPL({
 
             const mod = await matchingCommand.load();
             const jsx = await mod.call(onDone, context, commandArgs);
+            // Reached only when the process did not exit (bg detach, worktree
+            // ExitFlow) — gracefulShutdown never returns on the normal path.
+            if (matchingCommand.name === 'exit') {
+              setIsExiting(false);
+            }
 
             // Skip if onDone already fired — prevents stuck isLocalJSXCommand
             // (see processSlashCommand.tsx local-jsx case for full mechanism).
@@ -4888,7 +4901,7 @@ export function REPL({
         ) {
           void sendNotification(
             {
-              message: 'Claude is waiting for your input',
+              message: 'mAI is waiting for your input',
               notificationType: 'idle_prompt',
             },
             terminal,
@@ -6446,7 +6459,7 @@ export function REPL({
                         inputValue={inputValue}
                         setInputValue={setInputValue}
                         onRequestFeedback={handleSurveyRequestFeedback}
-                        message="How well did Claude use its memory? (optional)"
+                        message="How well did mAI use its memory? (optional)"
                       />
                     ) : (
                       <FeedbackSurvey

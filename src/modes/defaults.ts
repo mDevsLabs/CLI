@@ -50,7 +50,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Default',
     slug: 'default',
     description: 'Balanced mode for everyday development',
-    icon: '⚡',
+    icon: '★',
     systemPrompt: '',
     ui: {
       accentColor: '#D77757',
@@ -69,7 +69,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Gentle',
     slug: 'gentle',
     description: 'Patient explanations, great for learning',
-    icon: '🌸',
+    icon: '♥',
     companionSpecies: 'cat',
     systemPrompt:
       'You are in gentle learning mode. Explain concepts clearly with examples. ' +
@@ -92,7 +92,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Dr. Sharp',
     slug: 'sharp',
     description: 'Strict review, focused on code quality',
-    icon: '🔍',
+    icon: '❮',
     companionSpecies: 'owl',
     systemPrompt: DR_SHARP_SYSTEM_PROMPT,
     ui: {
@@ -111,7 +111,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Workhorse',
     slug: 'workhorse',
     description: 'Auto-execute, minimal confirmations',
-    icon: '🐴',
+    icon: '»',
     companionSpecies: 'capybara',
     systemPrompt:
       'You are in workhorse mode. Execute tasks efficiently with minimal back-and-forth. ' +
@@ -134,7 +134,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Token Saver',
     slug: 'token-saver',
     description: 'Minimal replies, save tokens',
-    icon: '💰',
+    icon: '¢',
     companionSpecies: 'snail',
     systemPrompt:
       'You are in token-saving mode. ' +
@@ -158,7 +158,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Super AI',
     slug: 'super-ai',
     description: 'Deep thinking, comprehensive analysis',
-    icon: '🧠',
+    icon: '♞',
     companionSpecies: 'dragon',
     systemPrompt:
       'You are in super AI mode. Think deeply before responding. ' +

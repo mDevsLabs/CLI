@@ -1044,6 +1044,11 @@ export default class Ink {
     // Cancel any pending throttled render so it doesn't fire between
     // cleanupTerminalModes() and process.exit() and write to main screen.
     this.scheduleRender.cancel?.();
+    // Same for the scroll-drain timer (parity with unmount()).
+    if (this.drainTimer !== null) {
+      clearTimeout(this.drainTimer);
+      this.drainTimer = null;
+    }
     // Restore stdin from raw mode. unmount() used to do this via React
     // unmount (App.componentWillUnmount → handleSetRawMode(false)) but we're
     // short-circuiting that path. Must use this.options.stdin — NOT
@@ -1606,6 +1611,23 @@ export default class Ink {
     // only render last frame of non-static output
     const diff = this.log.renderPreviousOutput_DEPRECATED(this.frontFrame);
     writeDiffToTerminal(this.terminal, optimize(diff));
+
+    // Non-alt-screen mode: the final frame stays in scrollback and the shell
+    // prompt resumes wherever the physical cursor was left — parked mid-frame
+    // at a declared cursor (prompt input) when one exists, otherwise just
+    // below the content from the cursor-restore. Move below the last frame
+    // row so the shell prompt starts on a fresh line instead of overwriting
+    // the frame content left in scrollback. LFs (not CNL — CNL can't scroll)
+    // with a leading CR to resolve any pending wrap.
+    if (!this.altScreenActive && this.options.stdout.isTTY) {
+      const parked = this.displayCursor;
+      const { screen } = this.frontFrame;
+      const fromY = parked !== null ? parked.y : screen.height - 1;
+      const rows = screen.height - fromY;
+      if (rows > 0) {
+        writeSync(1, '\r' + '\n'.repeat(rows));
+      }
+    }
 
     // Clean up terminal modes synchronously before process exit.
     // React's componentWillUnmount won't run in time when process.exit() is called,

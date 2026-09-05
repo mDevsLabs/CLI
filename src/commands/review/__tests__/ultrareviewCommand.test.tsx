@@ -230,7 +230,7 @@ describe('ultrareviewCommand.call: gate branches', () => {
     expect(result).toBeNull();
     expect(messages).toHaveLength(1);
     expect(messages[0]).toContain('Free ultrareviews used');
-    expect(messages[0]).toContain('mAI CLI/settings/billing');
+    expect(messages[0]).toContain('https://mai-devs.vercel.app');
     expect((opts[0] as { display: string }).display).toBe('system');
     // launchRemoteReview must NOT be called when paywalled.
     expect(_capturedLaunchArgs).toEqual([]);
@@ -252,7 +252,7 @@ describe('ultrareviewCommand.call: gate branches', () => {
     expect(messages).toHaveLength(1);
     expect(messages[0]).toContain('Balance too low');
     expect(messages[0]).toContain('$4.50');
-    expect(messages[0]).toContain('mAI CLI/settings/billing');
+    expect(messages[0]).toContain('https://mai-devs.vercel.app');
     expect((opts[0] as { display: string }).display).toBe('system');
     expect(_capturedLaunchArgs).toEqual([]);
   });

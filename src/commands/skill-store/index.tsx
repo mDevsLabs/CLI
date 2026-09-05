@@ -6,7 +6,7 @@ const skillStoreCommand: Command = {
   name: 'skill-store',
   aliases: ['ss', 'cloud-skills'],
   description:
-    'Browse and install remote skills from the Anthropic skill marketplace. Requires Claude Pro/Max/Team subscription.',
+    'Browse and install remote skills from the Anthropic skill marketplace. Requires mAI Pro/Max/Team subscription.',
   // REPL markdown renderer strips `<...>` as HTML tags — use uppercase.
   argumentHint:
     'list | get ID | versions ID | version ID VER | create NAME MARKDOWN | delete ID | install ID[@VERSION]',

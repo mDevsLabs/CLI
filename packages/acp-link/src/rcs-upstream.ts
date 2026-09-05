@@ -184,7 +184,7 @@ export class RcsUpstreamClient {
               .replace(/\/acp\/ws.*$/, '')
               .replace(/\/$/, '')
             console.log()
-            console.log(`  🔗 Dashboard: ${webBase}/code/`)
+            console.log(`  Dashboard: ${webBase}/code/`)
             if (this.agentId) {
               console.log(`     Agent ID: ${this.agentId}`)
             }
