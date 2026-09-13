@@ -3,9 +3,9 @@
  * on the bound window.
  *
  * Displays a small overlay near the bottom of the bound window:
- *   ⌨ Typing "hello world..."
+ *   Typing "hello world..."
  *   Click (120, 50)
- *   ⌨ Ctrl+S
+ *   Ctrl+S
  *   Scroll ↓ 3
  *   Done
  *
@@ -219,11 +219,11 @@ export function hideIndicator(): void {
 
 export function indicateTyping(text: string): void {
   const preview = text.length > 30 ? text.slice(0, 30) + '...' : text
-  updateIndicator(`\u2328 Typing "${preview}"`)
+  updateIndicator(`Typing "${preview}"`)
 }
 
 export function indicateKey(combo: string): void {
-  updateIndicator(`\u2328 ${combo}`)
+  updateIndicator(`${combo}`)
 }
 
 export function indicateClick(

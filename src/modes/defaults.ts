@@ -69,7 +69,7 @@ export const DEFAULT_MODES: CCBMode[] = [
     name: 'Gentle',
     slug: 'gentle',
     description: 'Patient explanations, great for learning',
-    icon: '♥',
+    icon: '<3',
     companionSpecies: 'cat',
     systemPrompt:
       'You are in gentle learning mode. Explain concepts clearly with examples. ' +

@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import type { RefObject } from 'react';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { Box, Text } from '@anthropic/ink';

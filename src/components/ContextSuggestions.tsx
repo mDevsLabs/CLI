@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { Box, Text, StatusIcon } from '@anthropic/ink';
 import type { ContextSuggestion } from '../utils/contextSuggestions.js';

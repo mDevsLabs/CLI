@@ -89,10 +89,10 @@ export function Navbar({
               id="navbar-auth-btn"
               onClick={onAuthClick}
               className="flex items-center gap-1 rounded-md px-2 sm:px-3 py-1.5 text-sm font-medium bg-brand/10 text-brand hover:bg-brand/20 transition-colors"
-              title="Connexion / Inscription"
+              title="Login / Sign up"
             >
               <LogIn className="h-4 w-4" />
-              <span className="hidden sm:inline">Connexion</span>
+              <span className="hidden sm:inline">Login</span>
             </button>
           )}
         </div>

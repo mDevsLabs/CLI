@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInterval } from 'usehooks-ts';
@@ -426,7 +426,7 @@ function TeammateDetailView({ teammate, teamName, onCancel }: TeammateDetailView
             <Text bold>Tasks</Text>
             {teammateTasks.map(task => (
               <Text key={task.id} color={task.status === 'completed' ? 'success' : undefined}>
-                {task.status === 'completed' ? figures.tick : '◼'} {task.subject}
+                {task.status === 'completed' ? figures.tick : '○'} {task.subject}
               </Text>
             ))}
           </Box>

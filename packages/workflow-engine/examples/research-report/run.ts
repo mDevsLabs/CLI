@@ -212,7 +212,7 @@ function makeTaskRegistrar(): WorkflowPorts['taskRegistrar'] {
 function printProgress(e: ProgressEvent): void {
   switch (e.type) {
     case 'run_started':
-      console.log(paint.bold(paint.cyan(`\n▶ ${e.workflowName}`)))
+      console.log(paint.bold(paint.cyan(`\n▸ ${e.workflowName}`)))
       break
     case 'phase_started':
       console.log(paint.cyan(`\n━ phase: ${e.phase}`))

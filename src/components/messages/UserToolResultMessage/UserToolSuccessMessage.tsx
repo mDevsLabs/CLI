@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { SentryErrorBoundary } from 'src/components/SentryErrorBoundary.js';
 import { Box, Text, useTheme } from '@anthropic/ink';

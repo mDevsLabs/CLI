@@ -34,21 +34,33 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [infoMsg, setInfoMsg] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [termsAccepted, setTermsAccepted] = React.useState(true);
 
   useInput((input, key) => {
     if (loading) return;
 
     if (mode === 'select') {
       if (input === '1') {
+        if (!termsAccepted) {
+          setErrorMsg('Connexion refusée : veuillez accepter les conditions (https://mai-devs.vercel.app)');
+          return;
+        }
         setMode('login');
         setStep('email');
         setErrorMsg(null);
         setInfoMsg(null);
       } else if (input === '2') {
+        if (!termsAccepted) {
+          setErrorMsg('Inscription refusée : veuillez accepter les conditions (https://mai-devs.vercel.app)');
+          return;
+        }
         setMode('register');
         setStep('email');
         setErrorMsg(null);
         setInfoMsg(null);
+      } else if (input === '3' || input === 'c' || input === 'C') {
+        setTermsAccepted(prev => !prev);
+        setErrorMsg(null);
       }
       return;
     }
@@ -152,6 +164,10 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
   }
 
   async function submitForm() {
+    if (!termsAccepted) {
+      setErrorMsg('Connexion refusée : vous devez accepter les conditions (https://mai-devs.vercel.app).');
+      return;
+    }
     setLoading(true);
     setErrorMsg(null);
     setInfoMsg(null);
@@ -197,8 +213,7 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
     setInfoMsg(null);
     try {
       const targetEmail = verifiedEmail || email.trim();
-      const endpoint =
-        mode === 'login' ? 'https://mai.val.run/verify-login' : 'https://mai.val.run/verify-register';
+      const endpoint = mode === 'login' ? 'https://mai.val.run/verify-login' : 'https://mai.val.run/verify-register';
       const body =
         mode === 'login'
           ? { email: targetEmail, code: code.trim() }
@@ -260,6 +275,11 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
             <Text>Choose an option:</Text>
             <Text>1. Log in</Text>
             <Text>2. Register</Text>
+            <Box marginTop={1} flexDirection="column">
+              <Text color={termsAccepted ? ('green' as keyof Theme) : ('red' as keyof Theme)}>
+                3. [{termsAccepted ? 'x' : ' '}] Accepter les conditions : https://mai-devs.vercel.app (Touche 3)
+              </Text>
+            </Box>
             <Box marginTop={1}>
               <Text>{'> '}</Text>
             </Box>
@@ -267,6 +287,11 @@ export function Login(props: { onDone: (success: boolean) => void }): React.Reac
         ) : (
           <Box marginTop={1} flexDirection="column">
             <Text bold>{mode === 'login' ? 'Login' : 'Register'}</Text>
+            <Box marginY={1}>
+              <Text color={termsAccepted ? ('gray' as keyof Theme) : ('red' as keyof Theme)}>
+                [{termsAccepted ? 'x' : ' '}] Conditions acceptées : https://mai-devs.vercel.app
+              </Text>
+            </Box>
             {step === 'code' ? (
               <>
                 <Text>Verification Code (6 digits): </Text>

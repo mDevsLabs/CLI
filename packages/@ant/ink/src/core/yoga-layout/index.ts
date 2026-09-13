@@ -111,7 +111,7 @@ function isDefined(n: number): boolean {
 
 // NaN-safe equality for layout-cache input comparison
 function sameFloat(a: number, b: number): boolean {
-  // biome-ignore lint/suspicious/noSelfCompare: intentional NaN check (x !== x ↔ isNaN)
+  // biome-ignore lint/suspicious/noSelfCompare: intentional NaN check (x !== x <-> isNaN)
   return a === b || (a !== a && b !== b)
 }
 

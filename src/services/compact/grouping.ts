@@ -15,7 +15,7 @@ import type { Message } from '../../types/message.js'
  * compact to operate on single-prompt agentic sessions (SDK/CCR/eval
  * callers) where the entire workload is one human turn.
  *
- * Extracted to its own file to break the compact.ts ↔ compactMessages.ts
+ * Extracted to its own file to break the compact.ts <-> compactMessages.ts
  * cycle (CC-1180) — the cycle shifted module-init order enough to surface
  * a latent ws CJS/ESM resolution race in CI shard-2.
  */

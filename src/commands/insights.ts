@@ -2184,7 +2184,7 @@ function generateHtmlReport(
         ? `
     <div class="collapsible-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
-        <span class="collapsible-arrow">▶</span>
+        <span class="collapsible-arrow">&gt;</span>
         <h3>Product Improvements for CC Team</h3>
       </div>
       <div class="collapsible-content">
@@ -2211,7 +2211,7 @@ function generateHtmlReport(
         ? `
     <div class="collapsible-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
-        <span class="collapsible-arrow">▶</span>
+        <span class="collapsible-arrow">&gt;</span>
         <h3>Model Behavior Improvements</h3>
       </div>
       <div class="collapsible-content">

@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { Box, color, Text, useTheme } from '@anthropic/ink';
 import { plural } from '../../utils/stringUtils.js';

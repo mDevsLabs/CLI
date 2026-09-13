@@ -29,7 +29,7 @@ type PreviousState = {
   systemHash: number
   toolsHash: number
   /** Hash of system blocks WITH cache_control intact. Catches scope/TTL flips
-   *  (global↔org, 1h↔5m) that stripCacheControl erases from systemHash. */
+   *  (global<->org, 1h<->5m) that stripCacheControl erases from systemHash. */
   cacheControlHash: number
   toolNames: string[]
   /** Per-tool schema hash. Diffed to name which tool's description changed
@@ -274,7 +274,7 @@ export function recordPromptState(snapshot: PromptStateSnapshot): void {
     const systemHash = computeHash(strippedSystem)
     const toolsHash = computeHash(strippedTools)
     // Hash the full system array INCLUDING cache_control — this catches
-    // scope flips (global↔org/none) and TTL flips (1h↔5m) that the stripped
+    // scope flips (global<->org/none) and TTL flips (1h<->5m) that the stripped
     // hash can't see because the text content is identical.
     const cacheControlHash = computeHash(
       system.map(b => ('cache_control' in b ? b.cache_control : null)),

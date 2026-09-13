@@ -202,19 +202,19 @@ export const DeniedMcpServerEntrySchema = lazySchema(() =>
 /**
  * Unified schema for settings files
  *
- * ⚠️ BACKWARD COMPATIBILITY NOTICE ⚠️
+ * BACKWARD COMPATIBILITY NOTICE
  *
  * This schema defines the structure of user settings files (.claude/settings.json).
  * We support backward-compatible changes! Here's how:
  *
- * ✅ ALLOWED CHANGES:
+ * ALLOWED CHANGES:
  * - Adding new optional fields (always use .optional())
  * - Adding new enum values (keeping existing ones)
  * - Adding new properties to objects
  * - Making validation more permissive
  * - Using union types for gradual migration (e.g., z.union([oldType, newType]))
  *
- * ❌ BREAKING CHANGES TO AVOID:
+ * BREAKING CHANGES TO AVOID:
  * - Removing fields (mark as deprecated instead)
  * - Removing enum values
  * - Making optional fields required
@@ -1155,7 +1155,7 @@ export const SettingsSchema = lazySchema(() =>
       /**
        * Workspace API key stored in settings.json for /login UI convenience.
        *
-       * ⚠️ SECURITY NOTICE: stored in plaintext in ~/.claude.json — ensure this
+       * SECURITY NOTICE: stored in plaintext in ~/.claude.json — ensure this
        * file is gitignored and has restricted permissions (chmod 600 on POSIX).
        * Use ANTHROPIC_API_KEY env var in CI/CD or shared environments instead.
        *

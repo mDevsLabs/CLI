@@ -3,7 +3,7 @@
  * These are dynamically imported only when `claude plugin *` or `claude plugin marketplace *` runs.
  */
 /* eslint-disable custom-rules/no-process-exit -- CLI subcommand handlers intentionally exit */
-import figures from 'figures'
+import figures from 'src/utils/terminalFigures.js'
 import { basename, dirname } from 'path'
 import { setUseCoworkPlugins } from '../../bootstrap/state.js'
 import {

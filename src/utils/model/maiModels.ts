@@ -96,7 +96,7 @@ export const MAI_MODELS: MaiModel[] = [
   },
   {
     id: 'anthropic/claude-3-haiku',
-    name: 'mAI CLI 3 Haiku',
+    name: 'mAI CLI Haiku 3',
     provider: 'mAI',
     maxContext: 200000,
     maxOutput: 4096,
@@ -2482,15 +2482,48 @@ export function getMaiModelMaxOutput(id: string): number {
 // the description line.
 function stripVendorPrefix(label: string, id: string): string {
   const vendor = id.split('/')[0]
-  if (!vendor) return label
+  if (!vendor) return label.trim()
   const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '')
   const normVendor = normalize(vendor)
-  if (!normVendor) return label
+  if (!normVendor) return label.trim()
   const match = label.match(/^([^:]+):\s*(.+)$/)
   if (match && normalize(match[1]) === normVendor) {
-    return match[2]
+    return match[2].trim()
   }
-  return label
+  return label.trim()
+}
+
+// True when the user should see the full catalog. The Claude.ai OAuth
+// subscription types returned by getSubscriptionType() never apply to mAI
+// logins (API key / token) — without this check every mAI user would be
+// treated as free-tier and the local fallback would hide all non-:free models.
+function isPaidTierUser(): boolean {
+  const subType = getSubscriptionType()
+  const isPaidSubscription =
+    subType === 'max' ||
+    subType === 'pro' ||
+    subType === 'plus' ||
+    subType === 'team' ||
+    subType === 'enterprise'
+  return (
+    isPaidSubscription ||
+    Boolean(
+      process.env.MAI_API_KEY ||
+        process.env.MAI_TOKEN ||
+        process.env.OPENAI_API_KEY ||
+        process.env.OPENAI_BASE_URL,
+    )
+  )
+}
+
+/**
+ * Gate catalog options by tier: users without paid credentials only see the
+ * `:free` model variants. The "Default" option (value: null) always passes.
+ * Applied to both the API-fetched and the local fallback catalogs.
+ */
+export function filterMaiOptionsForUser(options: ModelOption[]): ModelOption[] {
+  if (isPaidTierUser()) return options
+  return options.filter(opt => opt.value === null || String(opt.value).includes(':free'))
 }
 
 export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
@@ -2510,7 +2543,11 @@ export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
     const baseUrl = (process.env.OPENAI_BASE_URL || 'https://mai.val.run')
       .replace(/\/+$/, '')
       .replace(/\/v1$/, '')
-    const res = await fetch(`${baseUrl}/v1/models`, { headers })
+    const res = await fetch(`${baseUrl}/v1/models`, {
+      headers,
+      // Don't let a hung catalog endpoint block the picker indefinitely.
+      signal: AbortSignal.timeout(5_000),
+    })
     if (res.ok) {
       const json = await res.json()
       const data = Array.isArray(json) ? json : json.data || []
@@ -2534,7 +2571,7 @@ export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
           label: 'Default (recommended)',
           description: 'Use the default model for your plan',
         },
-        ...options,
+        ...filterMaiOptionsForUser(options),
       ]
     }
   } catch {
@@ -2544,20 +2581,7 @@ export async function fetchModelOptionsFromApi(): Promise<ModelOption[]> {
 }
 
 export function getLocalModelOptions(): ModelOption[] {
-  const subType = getSubscriptionType()
-  const isPaid =
-    subType === 'max' ||
-    subType === 'pro' ||
-    subType === 'plus' ||
-    subType === 'team' ||
-    subType === 'enterprise'
-  const isFree = !isPaid
-
-  const options = MAI_MODELS.filter(m => {
-    const isModelFree = m.id.includes(':free')
-    if (isFree && !isModelFree) return false
-    return true
-  }).map(m => {
+  const options = MAI_MODELS.map(m => {
     const label = stripVendorPrefix(m.name, m.id)
     const description = `Provider: ${m.provider} | Context: ${m.maxContext.toLocaleString()} | Output: ${m.maxOutput.toLocaleString()}`
     return {
@@ -2574,6 +2598,6 @@ export function getLocalModelOptions(): ModelOption[] {
       label: 'Default (recommended)',
       description: 'Use the default model for your plan',
     },
-    ...options,
+    ...filterMaiOptionsForUser(options),
   ]
 }

@@ -980,7 +980,7 @@ export function collapseReadSearchGroups(
     ) {
       // Absorb auto-injected memory attachments so "recalled N memories"
       // renders inline with "ran N bash commands" instead of as a separate
-      // ⏺ block. Do NOT add paths to readFilePaths/memoryReadFilePaths —
+      // ● block. Do NOT add paths to readFilePaths/memoryReadFilePaths —
       // that would poison the readOperationCount fallback (bash-only reads
       // have no paths; adding memory paths makes readFilePaths.size > 0 and
       // suppresses the fallback). createCollapsedGroup adds .length to

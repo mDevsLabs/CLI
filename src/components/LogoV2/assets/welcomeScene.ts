@@ -1,27 +1,27 @@
 /**
- * Assets ASCII pour la scène de bienvenue (WelcomeV2 / onboarding).
+ * ASCII assets for the welcome scene (WelcomeV2 / onboarding).
  *
- * Design : une grande étoile « polaire » 13×7 centrée dans un cadre de 58
- * colonnes (WELCOME_SCENE_WIDTH), encadrée par un halo en losange de sparkles
- * (✦/✧) et deux lignes de points. La coloration se fait par rôle de glyphe
- * (voir {@link WELCOME_GLYPH_ROLE}) puis découpage en segments par
+ * Design: a large 13x7 "polar" star centered in a 58-column frame
+ * (WELCOME_SCENE_WIDTH), surrounded by a diamond-shaped halo of sparkles
+ * (✦/✧) and two dotted lines. Coloring is done by glyph role (see
+ * {@link WELCOME_GLYPH_ROLE}) then split into segments by
  * {@link rowToWelcomeSegments}.
  *
- * Une seule scène sert les 4 variantes (dark/light × normal/Apple Terminal) :
- * seules les couleurs changent, jamais la layout. Cela élimine la duplication
- * des anciens blocs inline.
+ * A single scene serves all 4 variants (dark/light x normal/Apple Terminal):
+ * only the colors change, never the layout. This removes the duplication
+ * of the former inline blocks.
  */
 
 export const WELCOME_SCENE_WIDTH = 58
 
 /**
- * Rôle de couleur par glyphe.
- * - 'core'    : cœur █████ → orange `claude` (statique, pulsant).
- * - 'star'    : ★ moyennes → `claudeShimmer`.
- * - 'ray'     : ✦ rayons → `claudeBlue` animé (intensityToColor).
+ * Color role per glyph.
+ * - 'core'    : core █████ → orange `claude` (static, pulsing).
+ * - 'star'    : ★ mid stars → `claudeShimmer`.
+ * - 'ray'     : ✦ rays → animated `claudeBlue` (intensityToColor).
  * - 'sparkle' : ✧ halo → dimColor.
- * - 'dot'     : … lignes → dimColor.
- * - 'none'    : espaces → pas de couleur.
+ * - 'dot'     : … lines → dimColor.
+ * - 'none'    : spaces → no color.
  */
 export const WELCOME_GLYPH_ROLE: Record<
   string,
@@ -39,7 +39,7 @@ export type WelcomeSegment = {
   role: 'core' | 'star' | 'ray' | 'sparkle' | 'dot' | 'none'
 }
 
-// Grande étoile 13×7, alignée à gauche (sera centrée par padLine).
+// Large 13x7 star, left-aligned (centered later by padLine).
 const STAR_ROWS = [
   '      ✦      ', // 6sp + ✦ + 6sp  (pointe haute)
   '    ✦ ★ ✦    ', // 4sp + ✦ sp ★ sp ✦ + 4sp
@@ -50,13 +50,13 @@ const STAR_ROWS = [
   '      ✦      ',
 ]
 
-const STAR_W = 13 // largeur de l'étoile
+const STAR_W = 13 // star width
 
 /**
- * Halo en losange autour de l'étoile. Chaque entrée = [rowIndex, col, glyph].
- * Les positions sont symétriques autour du centre (col 28.5 pour largeur 58).
- * - ✦ aux 4 sommets du losange (lignes 0 et 6 de l'étoile, cols 14 et 43).
- * - ✧ aux milieux des côtés (lignes 1 et 5, cols 18 et 39).
+ * Diamond-shaped halo around the star. Each entry = [rowIndex, col, glyph].
+ * Positions are symmetric around the center (col 28.5 for width 58).
+ * - ✦ at the 4 diamond tips (star rows 0 and 6, cols 14 and 43).
+ * - ✧ at the side midpoints (rows 1 and 5, cols 18 and 39).
  */
 const HALO: Array<{ starRow: number; col: number; glyph: string }> = [
   { starRow: 0, col: 14, glyph: '✦' },
@@ -70,8 +70,8 @@ const HALO: Array<{ starRow: number; col: number; glyph: string }> = [
 ]
 
 /**
- * Construit une ligne de largeur WELCOME_SCENE_WIDTH à partir d'un contenu
- * positionné. Remplit le reste d'espaces. Garantit la largeur exacte.
+ * Builds a single WELCOME_SCENE_WIDTH-wide row from positioned content.
+ * Fills the remainder with spaces. Guarantees the exact width.
  */
 function padLine(
   width: number,
@@ -88,20 +88,20 @@ function padLine(
 }
 
 /**
- * Construit les 11 lignes de la scène (largeur WELCOME_SCENE_WIDTH chacune).
- * Lancé une fois au chargement du module — les assets sont statiques.
+ * Builds the 11 scene rows (each WELCOME_SCENE_WIDTH wide).
+ * Runs once at module load — the assets are static.
  */
 function buildSceneRows(): string[] {
   const W = WELCOME_SCENE_WIDTH
   const leftPad = Math.floor((W - STAR_W) / 2) // 22
   const rows: string[] = []
 
-  // Ligne 1 : points
+  // Row 1: dots
   rows.push('…'.repeat(W))
-  // Ligne 2 : vide
+  // Row 2: blank
   rows.push(' '.repeat(W))
 
-  // Lignes 3-9 : étoile + halo
+  // Rows 3-9: star + halo
   for (let r = 0; r < STAR_ROWS.length; r++) {
     const placements: Array<{ col: number; text: string }> = [
       { col: leftPad, text: STAR_ROWS[r]! },
@@ -114,9 +114,9 @@ function buildSceneRows(): string[] {
     rows.push(padLine(W, placements))
   }
 
-  // Ligne 10 : vide
+  // Row 10: blank
   rows.push(' '.repeat(W))
-  // Ligne 11 : points
+  // Row 11: dots
   rows.push('…'.repeat(W))
 
   return rows
@@ -125,8 +125,8 @@ function buildSceneRows(): string[] {
 export const WELCOME_SCENE_ROWS: string[] = buildSceneRows()
 
 /**
- * Découpe une ligne de scène en segments contigus par rôle de couleur.
- * Préserve la largeur exacte : les espaces forment des segments 'none'.
+ * Splits a scene row into contiguous color-role segments.
+ * Preserves the exact width: spaces form 'none' segments.
  */
 export function rowToWelcomeSegments(line: string): WelcomeSegment[] {
   const segments: WelcomeSegment[] = []

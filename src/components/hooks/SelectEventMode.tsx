@@ -7,7 +7,7 @@
  * edit settings.json directly or ask Claude.
  */
 
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import type { HookEvent } from 'src/entrypoints/agentSdkTypes.js';
 import type { HookEventMetadata } from 'src/utils/hooks/hooksConfigManager.js';

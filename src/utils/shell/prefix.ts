@@ -203,7 +203,7 @@ async function getCommandPrefixImpl(
         if (nonInteractive) {
           process.stderr.write(jsonStringify({ level: 'warn', message }) + '\n')
         } else {
-          console.warn(chalk.yellow(`⚠️  ${message}`))
+          console.warn(chalk.yellow(`Warning: ${message}`))
         }
       },
       10000, // 10 seconds

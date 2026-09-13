@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import type { SettingSource } from 'src/utils/settings/constants.js';
 import { type KeyboardEvent, Box, Text } from '@anthropic/ink';

@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { type ReactNode, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import { isCoordinatorMode } from 'src/coordinator/coordinatorMode.js';
 import { useTerminalSize } from 'src/hooks/useTerminalSize.js';

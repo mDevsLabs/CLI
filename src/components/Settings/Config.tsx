@@ -4,7 +4,7 @@ import { type KeyboardEvent, Box, Text, useTheme, useThemeSetting, useTerminalFo
 import * as React from 'react';
 import { useState, useCallback } from 'react';
 import { useKeybinding, useKeybindings } from '../../keybindings/useKeybinding.js';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import { type GlobalConfig, saveGlobalConfig, getCurrentProjectConfig, type OutputStyle } from '../../utils/config.js';
 import { normalizeApiKeyForConfig } from '../../utils/authPortable.js';
 import {

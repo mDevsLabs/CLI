@@ -66,7 +66,7 @@ function computeSearchText(msg: RenderableMessage): string {
     case 'assistant': {
       const c = msg.message.content
       if (Array.isArray(c)) {
-        // text blocks + tool_use inputs. tool_use renders as "⏺ Bash(cmd)"
+        // text blocks + tool_use inputs. tool_use renders as "● Bash(cmd)"
         // — the command/pattern/path is visible and searchable-expected.
         // Skip thinking (hidden by hidePastThinking in transcript mount).
         raw = c
@@ -140,7 +140,7 @@ export function toolUseSearchText(input: unknown): string {
   const o = input as Record<string, unknown>
   const parts: string[] = []
   // renderToolUseMessage typically shows one or two of these as the
-  // primary argument. tool_name itself is in the "⏺ Bash(...)" chrome,
+  // primary argument. tool_name itself is in the "● Bash(...)" chrome,
   // handled by under-count (the overlay matches it but we don't count it).
   for (const k of [
     'command',

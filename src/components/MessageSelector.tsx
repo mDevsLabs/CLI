@@ -1,6 +1,6 @@
 import type { ContentBlockParam, TextBlockParam } from '@anthropic-ai/sdk/resources/index.mjs';
 import { randomUUID, type UUID } from 'crypto';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {

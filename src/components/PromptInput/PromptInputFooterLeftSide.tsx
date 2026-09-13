@@ -8,7 +8,7 @@ const coordinatorModule = feature('COORDINATOR_MODE')
 /* eslint-enable @typescript-eslint/no-require-imports */
 import { Box, Text, Link } from '@anthropic/ink';
 import * as React from 'react';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { VimMode, PromptInputMode } from '../../types/textInputTypes.js';
 import type { ToolPermissionContext } from '../../Tool.js';

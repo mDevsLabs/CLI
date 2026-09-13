@@ -72,7 +72,7 @@ export function LocalVaultView(props: LocalVaultViewProps): React.ReactNode {
         </Box>
         <Box marginTop={1}>
           <Text dimColor color={'warning' as keyof Theme}>
-            ⚠ Secret revealed in terminal — clear scrollback if this session is shared.
+            Warning: Secret revealed in terminal — clear scrollback if this session is shared.
           </Text>
         </Box>
       </Box>

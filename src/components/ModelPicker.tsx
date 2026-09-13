@@ -1,4 +1,5 @@
 import capitalize from 'lodash-es/capitalize.js';
+import Fuse from 'fuse.js';
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { has1mContext } from '../utils/context.js';
@@ -34,7 +35,10 @@ import {
   modelDisplayString,
   parseUserSpecifiedModel,
 } from '../utils/model/model.js';
-import { getModelOptions } from '../utils/model/modelOptions.js';
+import {
+  filterModelOptionsByAllowlist,
+  getModelOptions,
+} from '../utils/model/modelOptions.js';
 import { getSettingsForSource, updateSettingsForSource } from '../utils/settings/settings.js';
 import { ConfigurableShortcutHint } from './ConfigurableShortcutHint.js';
 import { Select } from './CustomSelect/index.js';
@@ -60,6 +64,9 @@ export type Props = {
 };
 
 const NO_PREFERENCE = '__NO_PREFERENCE__';
+
+// Max wait for the catalog API before falling back to the local model list.
+const MODEL_FETCH_TIMEOUT_MS = 5_000;
 
 export function ModelPicker({
   initial,
@@ -94,16 +101,28 @@ export function ModelPicker({
   const [loadingModels, setLoadingModels] = useState(true);
 
   React.useEffect(() => {
+    let cancelled = false;
+    let settled = false;
+    const settle = (options: ModelOption[]): void => {
+      if (settled || cancelled) return;
+      settled = true;
+      setDynamicModelOptions(filterModelOptionsByAllowlist(options));
+      setLoadingModels(false);
+    };
     import('../utils/model/maiModels.js')
       .then(module => module.fetchModelOptionsFromApi())
-      .then(options => {
-        setDynamicModelOptions(options);
-        setLoadingModels(false);
-      })
-      .catch(() => {
-        setDynamicModelOptions(getModelOptions(isFastMode ?? false));
-        setLoadingModels(false);
-      });
+      .then(settle)
+      .catch(() => settle(getModelOptions(isFastMode ?? false)));
+    // Never leave the picker stuck on the loading screen if the catalog
+    // endpoint hangs — fall back to the local list.
+    const timeoutId = setTimeout(
+      () => settle(getModelOptions(isFastMode ?? false)),
+      MODEL_FETCH_TIMEOUT_MS,
+    );
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, [isFastMode]);
 
   // Memoize all derived values to prevent re-renders
@@ -136,13 +155,23 @@ export function ModelPicker({
   );
 
   const [filterQuery, setFilterQuery] = useState('');
+  // Fuzzy match across label, model id and description (provider, context
+  // size, output). Fuse ranks results by score.
+  const fuse = useMemo(
+    () =>
+      new Fuse(selectOptions, {
+        keys: ['label', 'value', 'description'],
+        threshold: 0.4,
+        ignoreLocation: true,
+        minMatchCharLength: 1,
+      }),
+    [selectOptions],
+  );
   const filteredOptions = useMemo(() => {
-    const q = filterQuery.trim().toLowerCase();
+    const q = filterQuery.trim();
     if (!q) return selectOptions;
-    return selectOptions.filter(
-      opt => opt.label.toLowerCase().includes(q) || String(opt.value).toLowerCase().includes(q),
-    );
-  }, [selectOptions, filterQuery]);
+    return fuse.search(q).map(result => result.item);
+  }, [selectOptions, fuse, filterQuery]);
 
   const handleCancel = useCallback(() => {
     if (filterQuery) {
@@ -159,7 +188,9 @@ export function ModelPicker({
   const visibleCount = Math.min(maxVisible, filteredOptions.length);
   const hiddenCount = Math.max(0, filteredOptions.length - visibleCount);
 
-  const focusedOption = selectOptions.find(opt => opt.value === focusedValue);
+  // Look the focused option up in the *filtered* list so the status line never
+  // describes a model that is no longer visible.
+  const focusedOption = filteredOptions.find(opt => opt.value === focusedValue);
   const focusedModelName = focusedOption?.label;
   const focusedModel = resolveOptionModel(focusedValue);
   const is1MMarked =
@@ -272,7 +303,10 @@ export function ModelPicker({
     // base form — not `value`, which may carry a `[1m]` suffix from predefined
     // 1M options and would never match.
     const baseValue = value.replace(/\[1m\]/i, '');
-    const wants1M = marked1MValues.has(baseValue);
+    // Honor both the Space toggle and a predefined `[1m]` variant the user
+    // explicitly picked from the list (selecting `sonnet[1m]` directly must
+    // not silently drop the suffix).
+    const wants1M = marked1MValues.has(baseValue) || /\[1m\]$/i.test(value);
     const finalValue = wants1M ? `${baseValue}[1m]` : baseValue;
     onSelect(finalValue, selectedEffort);
   }
@@ -298,7 +332,7 @@ export function ModelPicker({
           </Text>
           <Text dimColor>
             {headerText ??
-              'Choose a model for this and future sessions. Type to filter, ← → to adjust effort, Space to toggle 1M context.'}
+              'Choose a model for this and future sessions. Type to fuzzy-search models, ← → to adjust effort, Space to toggle 1M context.'}
           </Text>
           {sessionModel && (
             <Text dimColor>
@@ -310,23 +344,24 @@ export function ModelPicker({
 
         <Box flexDirection="column" marginBottom={1}>
           <Box flexDirection="column">
-            {filteredOptions.length > 0 ? (
-              <Select
-                defaultValue={initialValue}
-                defaultFocusValue={filterQuery ? undefined : initialFocusValue}
-                options={filteredOptions}
-                onChange={handleSelect}
-                onFocus={handleFocus}
-                onCancel={handleCancel}
-                visibleOptionCount={visibleCount}
-                filterable
-                filterQuery={filterQuery}
-                onFilterChange={setFilterQuery}
-                highlightText={filterQuery || undefined}
-              />
-            ) : (
+            <Select
+              defaultValue={initialValue}
+              defaultFocusValue={filterQuery ? undefined : initialFocusValue}
+              options={filteredOptions}
+              onChange={handleSelect}
+              onFocus={handleFocus}
+              onCancel={handleCancel}
+              visibleOptionCount={visibleCount}
+              filterable
+              filterQuery={filterQuery}
+              onFilterChange={setFilterQuery}
+              highlightText={filterQuery || undefined}
+            />
+            {filteredOptions.length === 0 && (
               <Box paddingLeft={3}>
-                <Text dimColor>No models matching "{filterQuery.trim()}" — press Esc to clear</Text>
+                <Text dimColor>
+                  No models matching "{filterQuery.trim()}" — press Esc to clear
+                </Text>
               </Box>
             )}
           </Box>

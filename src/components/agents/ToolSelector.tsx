@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useCallback, useMemo, useState } from 'react';
 import { mcpInfoFromString } from 'src/services/mcp/mcpStringUtils.js';
 import { isMcpTool } from 'src/services/mcp/utils.js';

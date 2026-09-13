@@ -176,7 +176,7 @@ export function ListItem({
         ) : (
           children
         )}
-        {isSelected && !disabled && <Text color="success">{figures.tick}</Text>}
+        {isSelected && !disabled && <Text color="success">{'✓'}</Text>}
       </Box>
       {description && (
         <Box paddingLeft={2}>

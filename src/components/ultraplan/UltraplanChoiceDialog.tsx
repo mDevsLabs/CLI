@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { join } from 'path';
 import { stat, writeFile } from 'fs/promises';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import { Box, Text, useInput, wrapText } from '@anthropic/ink';
 import { useTerminalSize } from '../../hooks/useTerminalSize.js';
 import { Select } from '../CustomSelect/select.js';

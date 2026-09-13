@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTerminalSize } from '../hooks/useTerminalSize.js';
 import { Box, Text, stringWidth } from '@anthropic/ink';

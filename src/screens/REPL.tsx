@@ -12,7 +12,7 @@ import { parseTokenBudget } from '../utils/tokenBudget.js';
 import { count } from '../utils/array.js';
 import { dirname, join } from 'path';
 import { tmpdir } from 'os';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 // eslint-disable-next-line custom-rules/prefer-use-keybindings -- / n N Esc [ v are bare letters in transcript modal context, same class as g/G/j/k in ScrollKeybindingHandler
 import { useInput } from '@anthropic/ink';
 import { useSearchInput } from '../hooks/useSearchInput.js';
@@ -728,7 +728,7 @@ function TranscriptSearchBar({
 }
 
 const TITLE_ANIMATION_FRAMES = ['⠂', '⠐'];
-const TITLE_STATIC_PREFIX = '✳';
+const TITLE_STATIC_PREFIX = '*';
 const TITLE_ANIMATION_INTERVAL_MS = 960;
 
 /**
@@ -2838,7 +2838,7 @@ export function REPL({
     // If sandboxing is enabled (setting.sandbox is defined, initialise the manager)
     SandboxManager.initialize(sandboxAskCallback).catch(err => {
       // Initialization/validation failed - display error and exit
-      process.stderr.write(`\n❌ Sandbox Error: ${errorMessage(err)}\n`);
+      process.stderr.write(`\nSandbox Error: ${errorMessage(err)}\n`);
       gracefulShutdownSync(1, 'other');
     });
   }
@@ -4139,27 +4139,44 @@ export function REPL({
             // pinning stale REPL render scopes in downstream closures.
             const context = getToolUseContext(messagesRef.current, [], createAbortController(), mainLoopModel);
 
-            const mod = await matchingCommand.load();
-            const jsx = await mod.call(onDone, context, commandArgs);
-            // Reached only when the process did not exit (bg detach, worktree
-            // ExitFlow) — gracefulShutdown never returns on the normal path.
+            try {
+              const mod = await matchingCommand.load();
+              const jsx = await mod.call(onDone, context, commandArgs);
+              // Reached only when the process did not exit (bg detach, worktree
+              // ExitFlow) — gracefulShutdown never returns on the normal path.
+              if (matchingCommand.name === 'exit') {
+                setIsExiting(false);
+              }
+
+              // Skip if onDone already fired — prevents stuck isLocalJSXCommand
+              // (see processSlashCommand.tsx local-jsx case for full mechanism).
+              if (jsx && !doneWasCalled) {
+                // shouldHidePromptInput: false keeps Notifications mounted
+                // so the onDone result isn't lost
+                setToolJSX({
+                  jsx,
+                  shouldHidePromptInput: false,
+                  isLocalJSXCommand: true,
+                });
+              }
+            } finally {
+              // A failed load()/call() must never leave the prompt hidden
+              // (isExiting gates prompt rendering).
+              if (matchingCommand.name === 'exit') {
+                setIsExiting(false);
+              }
+            }
+          };
+          void executeImmediateCommand().catch(error => {
             if (matchingCommand.name === 'exit') {
               setIsExiting(false);
             }
-
-            // Skip if onDone already fired — prevents stuck isLocalJSXCommand
-            // (see processSlashCommand.tsx local-jsx case for full mechanism).
-            if (jsx && !doneWasCalled) {
-              // shouldHidePromptInput: false keeps Notifications mounted
-              // so the onDone result isn't lost
-              setToolJSX({
-                jsx,
-                shouldHidePromptInput: false,
-                isLocalJSXCommand: true,
-              });
-            }
-          };
-          void executeImmediateCommand();
+            addNotification({
+              key: `immediate-command-error-${matchingCommand.name}`,
+              text: `Command '${matchingCommand.name}' failed: ${(error as Error).message}`,
+              priority: 'immediate',
+            });
+          });
           return; // Always return early - don't add to history or queue
         }
       }

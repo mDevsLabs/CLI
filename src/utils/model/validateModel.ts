@@ -10,6 +10,7 @@ import {
   AuthenticationError,
 } from '@anthropic-ai/sdk'
 import { getModelStrings } from './modelStrings.js'
+import { getMaiModelById } from './maiModels.js'
 
 // Cache valid models to avoid repeated API calls
 const validModelCache = new Map<string, boolean>()
@@ -48,6 +49,15 @@ export async function validateModel(
 
   // Check cache first
   if (validModelCache.has(normalizedModel)) {
+    return { valid: true }
+  }
+
+  // Check the local mAI catalog before any API call — avoids a slow, billable
+  // round-trip for models we already know about. A trailing `[1m]` suffix
+  // selects the same model with the 1M-context beta, so validate the base id.
+  const baseForCatalog = normalizedModel.replace(/\[1m\]$/i, '')
+  if (getMaiModelById(baseForCatalog)) {
+    validModelCache.set(normalizedModel, true)
     return { valid: true }
   }
 

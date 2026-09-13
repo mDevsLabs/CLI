@@ -84,7 +84,7 @@ export type ParsedCommandElement = {
   elementTypes?: CommandElementType[]
   /**
    * Child nodes of each argument, aligned with `args[]` (so
-   * `children[i]` ↔ `args[i]` ↔ `elementTypes[i+1]`). Only populated for
+   * `children[i]` <-> `args[i]` <-> `elementTypes[i+1]`). Only populated for
    * Parameter elements with a colon-bound argument. Undefined for elements
    * with no children. Lets consumers check `children[i].some(c => c.type
    * !== 'StringConstant')` instead of parsing the arg text for `:` + `$`.

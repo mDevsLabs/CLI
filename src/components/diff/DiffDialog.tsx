@@ -166,7 +166,7 @@ export function DiffDialog({ messages, onDone }: Props): React.ReactNode {
   const sourceSelector =
     sources.length > 1 ? (
       <Box>
-        {sourceIndex > 0 && <Text dimColor>◀ </Text>}
+        {sourceIndex > 0 && <Text dimColor>◂ </Text>}
         {sources.map((source, i) => {
           const isSelected = i === sourceIndex;
           const label = source.type === 'current' ? 'Current' : `T${source.turn.turnIndex}`;
@@ -177,7 +177,7 @@ export function DiffDialog({ messages, onDone }: Props): React.ReactNode {
             </Text>
           );
         })}
-        {sourceIndex < sources.length - 1 && <Text dimColor> ▶</Text>}
+        {sourceIndex < sources.length - 1 && <Text dimColor> ▸</Text>}
       </Box>
     ) : null;
 

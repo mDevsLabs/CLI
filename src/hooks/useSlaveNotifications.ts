@@ -109,7 +109,7 @@ function makeNotification(
     case 'prompt':
       return {
         key: `slave-prompt-${slaveName}`,
-        text: `[${shortName}] ▶ Processing: ${truncate(entry.content, 50)}`,
+        text: `[${shortName}] ▸ Processing: ${truncate(entry.content, 50)}`,
         priority: 'medium',
         timeoutMs: 4000,
       }

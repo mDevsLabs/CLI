@@ -114,7 +114,7 @@ const VCS_DIRECTORIES_TO_EXCLUDE = [
  * removed from the tool registry when embedded search tools are available),
  * so they're tuned to match those tools' semantics, not GNU find/grep.
  *
- * `find` ↔ GlobTool:
+ * `find` <-> GlobTool:
  * - Inject `-regextype findutils-default`: bfs defaults to POSIX BRE for
  *   -regex, but GNU find defaults to emacs-flavor (which supports `\|`
  *   alternation). Without this, `find . -regex '.*\.\(js\|ts\)'` silently
@@ -128,7 +128,7 @@ const VCS_DIRECTORIES_TO_EXCLUDE = [
  * one alternative is a prefix of another (e.g., `\(ts\|tsx\)`) may miss
  * matches that GNU find catches. Workaround: put the longer alternative first.
  *
- * `grep` ↔ GrepTool (file filtering) + GNU grep (regex syntax):
+ * `grep` <-> GrepTool (file filtering) + GNU grep (regex syntax):
  * - `-G` (basic regex / BRE): GNU grep defaults to BRE where `\|` is
  *   alternation. ugrep defaults to ERE where `|` is alternation and `\|` is a
  *   literal pipe. Without -G, `grep "foo\|bar"` silently returns zero results.

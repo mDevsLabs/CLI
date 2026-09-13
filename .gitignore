@@ -4,6 +4,7 @@ dist
 coverage
 .env
 *.log
+.tsbuildinfo
 .idea
 .vscode/*
 !.vscode/extensions.json

@@ -304,7 +304,7 @@ export function checkPermissionMode(
             }
           }
           if (t === 'Parameter') {
-            // elementTypes[i] ↔ args[i-1] (elementTypes[0] is the command name).
+            // elementTypes[i] <-> args[i-1] (elementTypes[0] is the command name).
             const arg = cmd.args[i - 1] ?? ''
             const colonIdx = arg.indexOf(':')
             if (colonIdx > 0 && /[$(@{[]/.test(arg.slice(colonIdx + 1))) {

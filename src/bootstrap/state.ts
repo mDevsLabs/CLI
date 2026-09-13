@@ -1352,7 +1352,7 @@ export function handleAutoModeTransition(
   fromMode: string,
   toMode: string,
 ): void {
-  // Auto↔plan transitions are handled by prepareContextForPlanMode (auto may
+  // Auto<->plan transitions are handled by prepareContextForPlanMode (auto may
   // stay active through plan if opted in) and ExitPlanMode (restores mode).
   // Skip both directions so this function only handles direct auto transitions.
   if (

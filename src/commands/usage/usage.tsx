@@ -14,6 +14,14 @@ interface UsageData {
   resetAt: string;
 }
 
+// Respect OPENAI_BASE_URL so /usage and the quota check (quotaCheck.ts) always
+// talk to the same backend.
+function getMaiBaseUrl(): string {
+  return (process.env.OPENAI_BASE_URL || 'https://mai.val.run')
+    .replace(/\/+$/, '')
+    .replace(/\/v1$/, '');
+}
+
 function UsageScreen({ onDone }: { onDone: () => void }) {
   const [data, setData] = useState<UsageData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +68,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
         process.env.MAI_API_KEY ||
         process.env.OPENAI_API_KEY ||
         process.env.MAI_TOKEN;
-      const res = await fetch('https://mai.val.run/verify-code', {
+      const res = await fetch(`${getMaiBaseUrl()}/verify-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +108,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
       setLoading(false);
       return;
     }
-    let res = await fetch('https://mai.val.run/v1/usage', {
+    let res = await fetch(`${getMaiBaseUrl()}/v1/usage`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'x-mai-token': token,
@@ -108,7 +116,7 @@ function UsageScreen({ onDone }: { onDone: () => void }) {
       } as Record<string, string>,
     });
     if (res.status === 404) {
-      res = await fetch('https://mai.val.run/usage', {
+      res = await fetch(`${getMaiBaseUrl()}/usage`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'x-mai-token': token,

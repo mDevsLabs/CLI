@@ -101,7 +101,7 @@ export function SandboxConfigTab(): React.ReactNode {
       {globPatternWarnings.length > 0 && (
         <Box marginTop={1} flexDirection="column">
           <Text bold color="warning">
-            ⚠ Warning: Glob patterns not fully supported on Linux
+            Warning: Glob patterns not fully supported on Linux
           </Text>
           <Text dimColor>
             The following patterns will be ignored: {globPatternWarnings.slice(0, 3).join(', ')}

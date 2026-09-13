@@ -12,11 +12,11 @@
  * Visibility Rules:
  * | Content          | External | Ant  |
  * |------------------|----------|------|
- * | System prompts   | ✅                  | ✅   |
- * | Model output     | ✅                  | ✅   |
- * | Thinking output  | ❌                  | ✅   |
- * | Tools            | ✅                  | ✅   |
- * | new_context      | ✅                  | ✅   |
+ * | System prompts   | ok                 | ok  |
+ * | Model output     | ok                 | ok  |
+ * | Thinking output  | no                 | ok  |
+ * | Tools            | ok                 | ok  |
+ * | new_context      | ok                 | ok  |
  *
  * Features:
  * - Per-agent message tracking with hash-based deduplication

@@ -3,9 +3,9 @@ import type { RGBColor as RGBColorType } from './types.js'
 
 export function getDefaultCharacters(): string[] {
   if (process.env.TERM === 'xterm-ghostty') {
-    return ['·', '✢', '✱', '✶', '✻', '*'] // ✱ replaces ✳ (emoji, renders offset in Ghostty); * replaces ✽ (same)
+    return ['·', '✢', '✱', '✶', '✻', '*'] // ASCII-only frames: no Extended_Pictographic chars (they render offset in Ghostty)
   }
-  // ✳ (U+2733) is matched by emoji-regex in Node.js → stringWidth returns 2 instead of 1,
+  // Extended_Pictographic chars are matched by emoji-regex in Node.js, so stringWidth returns 2 instead of 1 —
   // causing layout jitter when the spinner cycles frames. ✱ (U+2731) is visually similar but not emoji.
   return process.platform === 'darwin'
     ? ['·', '✢', '✱', '✶', '✻', '✽']

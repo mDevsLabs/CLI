@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import { join } from 'path';
 import React, { Suspense, use, useCallback, useEffect, useMemo, useState } from 'react';
 import { KeybindingWarnings } from 'src/components/KeybindingWarnings.js';

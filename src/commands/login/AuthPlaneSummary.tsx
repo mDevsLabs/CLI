@@ -5,15 +5,15 @@
  * without arguments:
  *
  *   Anthropic auth status:
- *     ☑ Subscription (mAI CLI)         pro plan
- *     ☐ Workspace API key                not set
+ *     [x] Subscription (mAI CLI)       pro plan
+ *     [ ] Workspace API key            not set
  *          To enable /vault /agents-platform /memory-stores:
  *          1. Open https://console.anthropic.com/settings/keys
  *          ...
  *
  *   Third-party providers:
  *     ✓ Cerebras   (CEREBRAS_API_KEY set)
- *     ☐ Groq       (GROQ_API_KEY not set)
+ *     [ ] Groq     (GROQ_API_KEY not set)
  *     ...
  *
  * Security: never renders raw API key values. All output uses masked previews.
@@ -27,7 +27,7 @@ import type { AuthStatus } from './getAuthStatus.js';
 // ---------------------------------------------------------------------------
 
 function SubscriptionRow({ subscription }: { subscription: AuthStatus['subscription'] }): React.ReactNode {
-  const icon = subscription.active ? '☑' : '☐';
+  const icon = subscription.active ? '[x]' : '[ ]';
   const planLabel = subscription.active && subscription.plan ? ` ${subscription.plan} plan` : '';
   const statusText = subscription.active ? `logged in${planLabel}` : 'not logged in';
 
@@ -45,7 +45,7 @@ function WorkspaceKeyRow({ workspaceKey }: { workspaceKey: AuthStatus['workspace
   if (!workspaceKey.set) {
     return (
       <Box>
-        <Text>{'☐ Workspace API key                '}</Text>
+        <Text>{'[ ] Workspace API key              '}</Text>
         <Text dimColor>not set</Text>
       </Box>
     );
@@ -54,7 +54,7 @@ function WorkspaceKeyRow({ workspaceKey }: { workspaceKey: AuthStatus['workspace
   if (!workspaceKey.prefixValid) {
     return (
       <Box>
-        <Text color="warning">{'⚠ Workspace API key                '}</Text>
+        <Text color="warning">{'[!] Workspace API key              '}</Text>
         <Text>{workspaceKey.keyPreview}</Text>
         <Text color="warning">{'  (sk-ant-api03-* required)'}</Text>
       </Box>
@@ -71,7 +71,7 @@ function WorkspaceKeyRow({ workspaceKey }: { workspaceKey: AuthStatus['workspace
 
   return (
     <Box>
-      <Text color="success">{'☑ Workspace API key                '}</Text>
+      <Text color="success">{'[x] Workspace API key              '}</Text>
       <Text>{workspaceKey.keyPreview}</Text>
       {sourceLabel ? <Text dimColor>{sourceLabel}</Text> : null}
     </Box>

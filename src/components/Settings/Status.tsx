@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { Suspense, use } from 'react';
 import { getSessionId } from '../../bootstrap/state.js';

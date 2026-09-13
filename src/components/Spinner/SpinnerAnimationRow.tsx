@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useMemo, useRef } from 'react';
 import { Box, Text, useAnimationFrame, stringWidth, Byline, ProgressBar } from '@anthropic/ink';

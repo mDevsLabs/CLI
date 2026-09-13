@@ -12,7 +12,7 @@ export function renderToolResultMessage(
   if (content.error) {
     return (
       <Box>
-        <Text color="error">⚠ Artifact upload failed: {content.error}</Text>
+        <Text color="error">Artifact upload failed: {content.error}</Text>
       </Box>
     );
   }

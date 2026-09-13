@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useEffect } from 'react';
 import { getAdditionalDirectoriesForClaudeMd, setAdditionalDirectoriesForClaudeMd } from '../../bootstrap/state.js';
 import type { LocalJSXCommandContext } from '../../commands.js';

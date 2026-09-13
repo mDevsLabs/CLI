@@ -100,7 +100,7 @@ const UNDERLINE_CODE: AnsiCode = {
   endCode: '\x1b[24m',
 }
 // fg→yellow (SGR 33). With inverse already in the stack, the terminal
-// swaps fg↔bg at render — so yellow-fg becomes yellow-BG. Original bg
+// swaps fg<->bg at render — so yellow-fg becomes yellow-BG. Original bg
 // becomes fg (readable on most themes: dark-bg → dark-text on yellow).
 // endCode 39 is 'default fg' — cancels any prior fg color cleanly.
 const YELLOW_FG_CODE: AnsiCode = {
@@ -232,7 +232,7 @@ export class StylePool {
       const baseCodes = this.get(baseId)
       // Filter BOTH fg + bg so yellow-via-inverse is unambiguous.
       // User-prompt cells have an explicit bg (grey box); with that bg
-      // still set, inverse swaps yellow-fg↔grey-bg → grey-on-yellow on
+      // still set, inverse swaps yellow-fg<->grey-bg → grey-on-yellow on
       // SOME terminals, yellow-on-grey on others (inverse semantics vary
       // when both colors are explicit). Filtering both gives clean
       // yellow-bg + terminal-default-fg everywhere. Bold/dim/italic
@@ -816,8 +816,8 @@ export function setCellAt(
       // clear ITS SpacerTail at x+2 too. Otherwise the orphan SpacerTail
       // makes diffEach report it as `added` and log-update's skip-spacer
       // rule prevents clearing whatever prev content was at that column.
-      // Scenario: [a, 💻, spacer] → [本, spacer, ORPHAN spacer] when
-      // yoga squishes a💻 to height 0 and 本 renders at the same y.
+      // Scenario: [a, <emoji>, spacer] -> [<cjk>, spacer, ORPHAN spacer] when
+      // yoga squishes the emoji to height 0 and the CJK glyph renders at the same y.
       if ((cells[spacerCI + 1]! & WIDTH_MASK) === CellWidth.Wide) {
         const orphanCI = spacerCI + 2
         if (

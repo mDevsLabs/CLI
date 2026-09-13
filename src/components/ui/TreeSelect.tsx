@@ -85,7 +85,7 @@ export type TreeSelectProps<T> = {
   /**
    * Custom prefix function for parent nodes
    * @param isExpanded - Whether the parent node is currently expanded
-   * @returns The prefix string to display (default: '▼ ' when expanded, '▶ ' when collapsed)
+   * @returns The prefix string to display (default: '▼ ' when expanded, '▸ ' when collapsed)
    */
   readonly getParentPrefix?: (isExpanded: boolean) => string;
 
@@ -177,7 +177,7 @@ export function TreeSelect<T>({
   }, [nodes, isExpanded]);
 
   // Default prefix functions
-  const defaultGetParentPrefix = React.useCallback((isExpanded: boolean): string => (isExpanded ? '▼ ' : '▶ '), []);
+  const defaultGetParentPrefix = React.useCallback((isExpanded: boolean): string => (isExpanded ? '▼ ' : '▸ '), []);
   const defaultGetChildPrefix = React.useCallback((_depth: number): string => '  ▸ ', []);
 
   const parentPrefixFn = getParentPrefix ?? defaultGetParentPrefix;

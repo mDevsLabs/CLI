@@ -4,7 +4,7 @@ import type {
   ElicitResult,
   PrimitiveSchemaDefinition,
 } from '@modelcontextprotocol/sdk/types.js';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRegisterOverlay } from '../../context/overlayContext.js';
 import { useNotifyAfterTimeout } from '../../hooks/useNotifyAfterTimeout.js';
@@ -816,7 +816,7 @@ function ElicitationFormDialog({
           const hasValue = value !== undefined && (!Array.isArray(value) || value.length > 0);
           const error = validationErrors[name];
 
-          // Checkbox: spinner → ⚠ error → ✔ set → * required → space
+          // Checkbox: spinner -> error -> set -> * required -> space
           const isResolving = resolvingFields.has(name);
           const checkbox = isResolving ? (
             <ResolvingSpinner />

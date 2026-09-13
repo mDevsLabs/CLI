@@ -73,7 +73,7 @@ export function GlobalKeybindingHandlers({
             return { ...prev, expandedView: 'none' as const };
         }
       }
-      // Only tasks: none ↔ tasks
+      // Only tasks: none <-> tasks
       return {
         ...prev,
         expandedView: prev.expandedView === 'tasks' ? ('none' as const) : ('tasks' as const),
@@ -81,7 +81,7 @@ export function GlobalKeybindingHandlers({
     });
   }, [expandedView, setAppState]);
 
-  // Toggle transcript mode (ctrl+o). Two-way prompt ↔ transcript.
+  // Toggle transcript mode (ctrl+o). Two-way prompt <-> transcript.
   // Brief view has its own dedicated toggle on ctrl+shift+b.
   const isBriefOnlyState = useAppState(s => s.isBriefOnly);
   const handleToggleTranscript = useCallback(() => {

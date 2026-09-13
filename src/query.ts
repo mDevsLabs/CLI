@@ -898,7 +898,8 @@ async function* queryLoop(
           let streamingFallbackOccured = false
           queryCheckpoint('query_api_streaming_start')
 
-          // Vérification systématique du quota sur /usage avec jeton JWT avant chaque message
+          // Systematic quota check on /usage with the JWT token before every
+          // message (cached for 30s — see checkQuotaUsage)
           const quotaCheck = await checkQuotaUsage()
           if (!quotaCheck.allowed) {
             yield createAssistantAPIErrorMessage({

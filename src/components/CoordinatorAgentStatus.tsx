@@ -6,7 +6,7 @@
  * always; a timestamp shows until passed. Enter to view/steer, x to dismiss.
  */
 
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { BLACK_CIRCLE, PAUSE_ICON, PLAY_ICON } from '../constants/figures.js';
 import { useTerminalSize } from '../hooks/useTerminalSize.js';

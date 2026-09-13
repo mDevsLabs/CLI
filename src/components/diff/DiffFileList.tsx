@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useMemo } from 'react';
 import type { DiffFile } from '../../hooks/useDiffData.js';
 import { useTerminalSize } from '../../hooks/useTerminalSize.js';

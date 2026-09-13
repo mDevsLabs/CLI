@@ -4,7 +4,7 @@
  * and success/failure notification JSX so new sources stay small.
  */
 
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { getIsRemoteMode } from '../bootstrap/state.js';
 import type { useNotifications } from '../context/notifications.js';

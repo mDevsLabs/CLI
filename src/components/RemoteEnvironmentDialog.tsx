@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Text } from '@anthropic/ink';

@@ -392,7 +392,7 @@ function PipeStatusInline(): React.ReactNode {
               color={isSelected ? 'success' : isConnected ? undefined : 'error'}
               dimColor={!isConnected && !isCursor}
             >
-              {isSelected ? '☑' : '☐'} {name}
+              {isSelected ? '[x]' : '[ ]'} {name}
               {isConnected ? '' : ' [offline]'}
               {label ? ` (${label})` : ''}
             </Text>

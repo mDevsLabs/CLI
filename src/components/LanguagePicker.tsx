@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useState } from 'react';
 import { Box, Text } from '@anthropic/ink';
 import { useKeybinding } from '../keybindings/useKeybinding.js';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 import { apiLogin, apiRegister, type AuthResult } from '../api/client';
-import { Phone, Mail, User, Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
+import { Phone, Mail, User, Lock, Eye, EyeOff, Loader2, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface AuthDialogProps {
@@ -29,6 +29,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(true);
 
   const set = (key: keyof FieldState) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFields(prev => ({ ...prev, [key]: e.target.value }));
@@ -40,11 +41,22 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
     setFields(EMPTY);
     setError(null);
     setSuccess(null);
+    setAcceptedTerms(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!acceptedTerms) {
+      setError(
+        mode === 'register'
+          ? "Connexion refusée : vous devez accepter les conditions d'utilisation pour créer un compte."
+          : "Connexion refusée : vous devez accepter les conditions d'utilisation pour vous connecter.",
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       let result: AuthResult;
@@ -178,6 +190,34 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
               </button>
             </div>
 
+            {/* Terms and conditions checkbox */}
+            <div className="flex items-start gap-2 pt-1">
+              <input
+                id="auth-terms"
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={e => {
+                  setAcceptedTerms(e.target.checked);
+                  if (e.target.checked) setError(null);
+                }}
+                className="mt-0.5 h-4 w-4 rounded border-border text-brand focus:ring-brand accent-[#c96442] cursor-pointer"
+                required
+              />
+              <label htmlFor="auth-terms" className="text-xs text-text-muted leading-snug cursor-pointer select-none">
+                J'accepte les conditions d'utilisation.{' '}
+                <a
+                  href="https://mai-devs.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand hover:underline font-medium inline-flex items-center gap-0.5 ml-0.5"
+                  onClick={e => e.stopPropagation()}
+                >
+                  Lire les conditions
+                  <ExternalLink className="h-3 w-3 inline" />
+                </a>
+              </label>
+            </div>
+
             {/* Error / Success banners */}
             {error && (
               <div className="rounded-lg bg-status-error/10 border border-status-error/20 px-3 py-2 text-sm text-status-error animate-in fade-in slide-in-from-top-1 duration-200">
@@ -194,7 +234,7 @@ export function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps) {
             <button
               id="auth-submit-btn"
               type="submit"
-              disabled={loading}
+              disabled={loading || !acceptedTerms}
               className={cn(
                 'w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold',
                 'bg-brand text-white hover:bg-brand-light transition-all duration-200',

@@ -1011,7 +1011,7 @@ export function resolveToCanonical(name: string): string {
  * Any compound containing one of these cannot have its later statements'
  * relative/drive-prefixed paths validated against the stale validator cwd.
  *
- * Name kept for BashTool parity (isCwdChangingCmdlet ↔ compoundCommandHasCd);
+ * Name kept for BashTool parity (isCwdChangingCmdlet <-> compoundCommandHasCd);
  * semantically this is "alters path-resolution namespace".
  */
 export function isCwdChangingCmdlet(name: string): boolean {

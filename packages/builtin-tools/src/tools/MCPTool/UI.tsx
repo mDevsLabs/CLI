@@ -1,5 +1,4 @@
 import { feature } from 'bun:bundle';
-import figures from 'figures';
 import * as React from 'react';
 import type { z } from 'zod/v4';
 import { ProgressBar } from '@anthropic/ink';
@@ -125,7 +124,7 @@ export function renderToolResultMessage(
   const estimatedTokens = getContentSizeEstimate(mcpOutput);
   const showWarning = estimatedTokens > MCP_OUTPUT_WARNING_THRESHOLD_TOKENS;
   const warningMessage = showWarning
-    ? `${figures.warning} Large MCP response (~${formatNumber(estimatedTokens)} tokens), this can fill up context quickly`
+    ? `${'!'} Large MCP response (~${formatNumber(estimatedTokens)} tokens), this can fill up context quickly`
     : null;
 
   let contentElement: React.ReactNode;

@@ -98,7 +98,7 @@ export function resetYankState(): void {
  *
  * This flow ensures consistent Unicode handling:
  * - NFD/NFC normalization differences don't break cursor movement
- * - Grapheme clusters (like 👨‍👩‍👧‍👦) are treated as single units
+ * - Grapheme clusters (like a multi-codepoint family emoji) are treated as single units
  * - Display width calculations are accurate for CJK characters
  *
  * RULE: Once text enters MeasuredText, all operations

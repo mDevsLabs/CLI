@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useCallback, useState } from 'react';
 import { Dialog } from '@anthropic/ink';
 // eslint-disable-next-line custom-rules/prefer-use-keybindings -- raw text input for config dialog

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useSetAppState } from 'src/state/AppState.js';

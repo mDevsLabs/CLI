@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useEffect, useState } from 'react';
 import { Box, Text, Dialog } from '@anthropic/ink';
 import { logForDebugging } from '../utils/debug.js';

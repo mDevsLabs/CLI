@@ -187,7 +187,7 @@ export function EffortPanel({ appStateEffort, onDone }: Props): React.ReactNode 
       <Text bold color="suggestion">
         Effort
       </Text>
-      {envActive && <Text color="warning">{`⚠ CLAUDE_CODE_EFFORT_LEVEL=${envRaw} overrides this session`}</Text>}
+      {envActive && <Text color="warning">{`Warning: CLAUDE_CODE_EFFORT_LEVEL=${envRaw} overrides this session`}</Text>}
       {showingRipple ? (
         <RippleContent
           renderRow={renderRippleRow}

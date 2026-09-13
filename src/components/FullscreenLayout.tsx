@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, {
   createContext,
   type ReactNode,
@@ -207,7 +207,7 @@ export function useUnseenDivider(messageCount: number): {
  * (one turn yields multiple entries: tool_use blocks + text blocks). We count
  * non-assistant→assistant transitions, but only for entries that actually
  * carry text — tool-use-only entries are skipped (like progress messages)
- * so "⏺ Searched for 13 patterns, read 6 files" doesn't tick the pill.
+ * so "● Searched for 13 patterns, read 6 files" doesn't tick the pill.
  */
 export function countUnseenAssistantTurns(messages: readonly Message[], dividerIndex: number): number {
   let count = 0;

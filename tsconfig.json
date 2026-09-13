@@ -12,6 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "types": ["bun"],
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "paths": {
       "src/*": ["./src/*"],
       "@claude-code-best/builtin-tools/*": ["./packages/builtin-tools/src/*"],

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import Fuse from 'fuse.js';
 import React from 'react';
 import { getOriginalCwd, getSessionId } from '../bootstrap/state.js';
@@ -69,7 +69,7 @@ function normalizeAndTruncateToWidth(text: string, maxWidth: number): string {
 }
 
 // Width of prefixes that TreeSelect will add
-const PARENT_PREFIX_WIDTH = 2; // '▼ ' or '▶ '
+const PARENT_PREFIX_WIDTH = 2; // '▼ ' or '▸ '
 const CHILD_PREFIX_WIDTH = 4; // '  ▸ '
 
 // Deep search constants

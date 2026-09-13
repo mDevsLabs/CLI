@@ -152,7 +152,7 @@ export async function call(
 
   const stars = RARITY_STARS[r.bones.rarity]
   const sprite = renderSprite(r.bones, 0)
-  const shiny = r.bones.shiny ? ' \u2728 Shiny!' : ''
+  const shiny = r.bones.shiny ? ' Shiny!' : ''
 
   const lines = [
     'A wild companion appeared!',

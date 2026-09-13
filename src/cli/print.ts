@@ -622,7 +622,7 @@ export async function runHeadless(
       return
     }
     process.stderr.write(
-      `\n⚠ Sandbox disabled: ${sandboxUnavailableReason}\n` +
+      `\nWarning: Sandbox disabled: ${sandboxUnavailableReason}\n` +
         `  Commands will run WITHOUT sandboxing. Network and filesystem restrictions will NOT be enforced.\n\n`,
     )
   } else if (SandboxManager.isSandboxingEnabled()) {
@@ -632,7 +632,7 @@ export async function runHeadless(
     try {
       await SandboxManager.initialize(structuredIO.createSandboxAskCallback())
     } catch (err) {
-      process.stderr.write(`\n❌ Sandbox Error: ${errorMessage(err)}\n`)
+      process.stderr.write(`\nSandbox Error: ${errorMessage(err)}\n`)
       gracefulShutdownSync(1, 'other')
       return
     }

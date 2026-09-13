@@ -9,6 +9,7 @@ import {
   getChatGPTModelContextWindow,
 } from './model/chatgptModels.js'
 import { getModelCapability } from './model/modelCapabilities.js'
+import { getMaiModelById } from './model/maiModels.js'
 
 // Model context window size (200k tokens for all models right now)
 export const MODEL_CONTEXT_WINDOW_DEFAULT = 200_000
@@ -103,6 +104,21 @@ export function getContextWindowForModel(
       return MODEL_CONTEXT_WINDOW_DEFAULT
     }
     return cap.max_input_tokens
+  }
+
+  // mAI catalog: models carry their real context window — use it so
+  // auto-compact thresholds and local budgeting match the provider's actual
+  // limit instead of the 200k default (e.g. glm models at 131072, 1M models).
+  const maiModel =
+    getMaiModelById(model) ?? getMaiModelById(getCanonicalName(model))
+  if (maiModel && maiModel.maxContext >= 100_000) {
+    if (
+      maiModel.maxContext > MODEL_CONTEXT_WINDOW_DEFAULT &&
+      is1mContextDisabled()
+    ) {
+      return MODEL_CONTEXT_WINDOW_DEFAULT
+    }
+    return maiModel.maxContext
   }
 
   if (betas?.includes(CONTEXT_1M_BETA_HEADER) && modelSupports1M(model)) {

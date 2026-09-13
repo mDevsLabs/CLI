@@ -117,7 +117,7 @@ const BASE_QUESTION = 'What would you like to do with scheduled remote agents?'
  */
 function formatSetupNotes(notes: string[]): string {
   const items = notes.map(n => `- ${n}`).join('\n')
-  return `⚠ Heads-up:\n${items}`
+  return `Heads-up:\n${items}`
 }
 
 async function getCurrentRepoHttpsUrl(): Promise<string | null> {

@@ -1,6 +1,6 @@
 import { feature } from 'bun:bundle';
 import chalk from 'chalk';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useMemo } from 'react';
 import { Ansi, Box, color, Text, useTheme } from '@anthropic/ink';
 import { useAppState } from '../../state/AppState.js';

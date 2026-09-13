@@ -148,7 +148,7 @@ export const call: LocalCommandCall = async (_args, context) => {
     const alive = await isPipeAlive(sub.pipeName, 1000)
     const isSelf = sub.pipeName === myName
     const isSelected = selected.includes(sub.pipeName)
-    const checkbox = isSelected ? '☑' : '☐'
+    const checkbox = isSelected ? '[x]' : '[ ]'
     const isAttached = pipeState.slaves[sub.pipeName] ? ' [connected]' : ''
     lines.push(
       `  ${checkbox} [sub-${sub.subIndex}] ${sub.pipeName}  ${sub.hostname}/${sub.ip}  [${alive ? 'alive' : 'stale'}]${isAttached}${isSelf ? ' (you)' : ''}`,
@@ -184,7 +184,7 @@ export const call: LocalCommandCall = async (_args, context) => {
         lines.push('LAN Peers:')
         for (const peer of lanOnly) {
           const isSelected = selected.includes(peer.pipeName)
-          const checkbox = isSelected ? '☑' : '☐'
+          const checkbox = isSelected ? '[x]' : '[ ]'
           const ep = peer.tcpEndpoint
             ? `tcp:${peer.tcpEndpoint.host}:${peer.tcpEndpoint.port}`
             : ''

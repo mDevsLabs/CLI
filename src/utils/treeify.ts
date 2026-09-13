@@ -1,4 +1,4 @@
-import figures from 'figures'
+import figures from 'src/utils/terminalFigures.js'
 import { color } from '@anthropic/ink'
 import type { Theme, ThemeName } from './theme.js'
 

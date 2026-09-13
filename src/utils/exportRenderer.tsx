@@ -55,7 +55,7 @@ function normalizedUpperBound(m: Message): number {
  *
  * Messages.renderRange slices AFTER normalize→group→collapse, so tool-call
  * grouping stays correct across chunk seams; buildMessageLookups runs on
- * the full normalized array so tool_use↔tool_result resolves regardless of
+ * the full normalized array so tool_use<->tool_result resolves regardless of
  * which chunk each landed in.
  */
 export async function streamRenderedMessages(

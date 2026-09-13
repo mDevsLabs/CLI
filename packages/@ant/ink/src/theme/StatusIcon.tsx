@@ -10,8 +10,8 @@ type Props = {
    *
    * - `success`: Green checkmark (✓)
    * - `error`: Red cross (✗)
-   * - `warning`: Yellow warning symbol (⚠)
-   * - `info`: Blue info symbol (ℹ)
+   * - `warning`: Warning mark (!)
+   * - `info`: Info mark (i)
    * - `pending`: Dimmed circle (○)
    * - `loading`: Dimmed ellipsis (…)
    */
@@ -30,10 +30,10 @@ const STATUS_CONFIG: Record<
     color: 'success' | 'error' | 'warning' | 'suggestion' | undefined;
   }
 > = {
-  success: { icon: figures.tick, color: 'success' },
-  error: { icon: figures.cross, color: 'error' },
-  warning: { icon: figures.warning, color: 'warning' },
-  info: { icon: figures.info, color: 'suggestion' },
+  success: { icon: '✓', color: 'success' },
+  error: { icon: '✗', color: 'error' },
+  warning: { icon: '!', color: 'warning' },
+  info: { icon: 'i', color: 'suggestion' },
   pending: { icon: figures.circle, color: undefined },
   loading: { icon: '…', color: undefined },
 };

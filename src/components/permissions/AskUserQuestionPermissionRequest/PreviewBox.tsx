@@ -96,11 +96,11 @@ function PreviewBoxBody({
   // Render bottom border
   const bottomBorder = `${BOX_CHARS.bottomLeft}${BOX_CHARS.horizontal.repeat(boxWidth - 2)}${BOX_CHARS.bottomRight}`;
 
-  // Build the truncation separator bar (e.g. ├─── ✂ ─── 42 lines hidden ──────┤)
+  // Build the truncation separator bar (e.g. ├─── 42 lines hidden ──────┤)
   const truncationBar = isTruncated
     ? (() => {
         const hiddenCount = contentLines.length - effectiveMaxLines;
-        const label = `${BOX_CHARS.horizontal.repeat(3)} \u2702 ${BOX_CHARS.horizontal.repeat(3)} ${hiddenCount} lines hidden `;
+        const label = `${BOX_CHARS.horizontal.repeat(3)} ${hiddenCount} lines hidden ${BOX_CHARS.horizontal.repeat(3)}`;
         const labelWidth = stringWidth(label);
         const fillWidth = Math.max(0, boxWidth - 2 - labelWidth);
         return `${BOX_CHARS.teeLeft}${label}${BOX_CHARS.horizontal.repeat(fillWidth)}${BOX_CHARS.teeRight}`;

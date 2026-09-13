@@ -1,7 +1,7 @@
 import { getSentinelCategory } from '@ant/computer-use-mcp/sentinelApps';
 import type { CuPermissionRequest, CuPermissionResponse } from '@ant/computer-use-mcp/types';
 import { DEFAULT_GRANT_FLAGS } from '@ant/computer-use-mcp/types';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { useMemo, useState } from 'react';
 import { Box, Text } from '@anthropic/ink';

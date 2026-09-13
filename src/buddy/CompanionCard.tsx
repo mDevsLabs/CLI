@@ -63,7 +63,7 @@ export function CompanionCard({
       {/* Shiny indicator */}
       {companion.shiny && (
         <Text color="warning" bold>
-          {'\u2728'} SHINY {'\u2728'}
+          SHINY
         </Text>
       )}
 

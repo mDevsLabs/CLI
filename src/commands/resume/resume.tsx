@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import type { UUID } from 'crypto';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import * as React from 'react';
 import { getOriginalCwd, getSessionId } from '../../bootstrap/state.js';
 import type { CommandResultDisplay, ResumeEntrypoint } from '../../commands.js';

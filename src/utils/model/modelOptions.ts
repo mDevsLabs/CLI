@@ -519,7 +519,11 @@ export function getModelOptions(fastMode = false): ModelOption[] {
  * Filter model options by the availableModels allowlist.
  * Always preserves the "Default" option (value: null).
  */
-function filterModelOptionsByAllowlist(options: ModelOption[]): ModelOption[] {
+/**
+ * Filter model options by the availableModels allowlist.
+ * Always preserves the "Default" option (value: null).
+ */
+export function filterModelOptionsByAllowlist(options: ModelOption[]): ModelOption[] {
   const settings = getSettings_DEPRECATED() || {}
   if (!settings.availableModels) {
     return options // No restrictions

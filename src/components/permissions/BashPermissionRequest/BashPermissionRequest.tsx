@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle';
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Text, useTheme } from '@anthropic/ink';
 import { useKeybinding } from '../../../keybindings/useKeybinding.js';

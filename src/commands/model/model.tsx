@@ -228,10 +228,16 @@ function isOpus1mUnavailable(model: string): boolean {
 }
 
 function isSonnet1mUnavailable(model: string): boolean {
-  const m = model.toLowerCase();
   // Warn about Sonnet and Sonnet 4.6, but not Sonnet 4.5 since that had
-  // a different access criteria.
-  return !checkSonnet1mAccess() && (m.includes('sonnet[1m]') || m.includes('sonnet-4-6[1m]'));
+  // a different access criteria. Catalog ids may be vendor-prefixed and use
+  // a dotted version ("anthropic/claude-sonnet-4.6[1m]"), so match those
+  // forms too instead of only the bare aliases.
+  const m = model.toLowerCase();
+  if (!m.endsWith('[1m]')) {
+    return false;
+  }
+  const base = m.replace(/\[1m\]$/, '');
+  return !checkSonnet1mAccess() && /(?:^|\/)(?:claude-)?sonnet(?:-4-6|-4\.6)?$/.test(base);
 }
 
 function ShowModelAndClose({ onDone }: { onDone: (result?: string) => void }): React.ReactNode {

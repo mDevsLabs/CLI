@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useMemo } from 'react';
 import { useTerminalSize } from '../../../hooks/useTerminalSize.js';
 import { Box, Text, stringWidth } from '@anthropic/ink';

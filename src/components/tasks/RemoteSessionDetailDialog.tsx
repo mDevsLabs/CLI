@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { useMemo, useState } from 'react';
 import type { SDKMessage } from 'src/entrypoints/agentSdkTypes.js';
 import type { ToolUseContext } from 'src/Tool.js';

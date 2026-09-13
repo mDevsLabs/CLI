@@ -26,7 +26,7 @@ export function renderToolResultMessage(
     return null;
   }
 
-  // In transcript mode (ctrl+o), model text is NOT filtered — keep the ⏺ so
+  // In transcript mode (ctrl+o), model text is NOT filtered — keep the ● so
   // SendUserMessage is visually distinct from the surrounding text blocks.
   if (options?.isTranscriptMode) {
     return (
@@ -66,7 +66,7 @@ export function renderToolResultMessage(
   // only text-like content in its turn. No gutter mark; read as plain text.
   // userFacingName() returns '' so UserToolSuccessMessage drops its columns-5
   // width constraint and AssistantToolUseMessage renders null (no tool chrome).
-  // Empty minWidth={2} box mirrors AssistantTextMessage's ⏺ gutter spacing.
+  // Empty minWidth={2} box mirrors AssistantTextMessage's ● gutter spacing.
   return (
     <Box flexDirection="row" marginTop={1}>
       <Box minWidth={2} />

@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React, { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Ansi, Box, Text, stringWidth, useDeclaredCursor } from '@anthropic/ink';
 import { count } from '../../utils/array.js';

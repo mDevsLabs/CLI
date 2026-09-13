@@ -1,4 +1,4 @@
-import figures from 'figures';
+import figures from 'src/utils/terminalFigures.js';
 import React from 'react';
 import { Box, Text } from '@anthropic/ink';
 import type { AdvisorBlock } from '../../utils/advisor.js';
